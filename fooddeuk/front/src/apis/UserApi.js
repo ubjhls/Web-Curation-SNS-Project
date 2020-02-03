@@ -41,7 +41,7 @@ const requestCheckNick = (data, callback, errorCallback) => {
 const requestCheckEmail= (data, callback, errorCallback) => {
     //백앤드와 닉네임 중복체크 통신하는 부분
     
-    return http.get('/account/checkEmail' + data.email).then( response => {
+    return http.get('/account/email?email=' + data.email).then( response => {
             callback(response.data.status);
             // console.log('response', response.data);
         }).catch( error => {
