@@ -63,6 +63,7 @@
 <script>
 import {mapState} from 'vuex';
 import Axios from 'axios';
+import http from '../../../http-common'
 
   export default {
     props : ['drawer'],
@@ -107,7 +108,7 @@ import Axios from 'axios';
       getFollower() {
         let form = new FormData()
         form.append('email', this.email)
-        Axios.post("http://192.168.31.103:8080/follow/countFollower", form)
+        http.get("/follow/follower?email="+this.email)
         .then(Response => {
           // console.log(Response)
           this.follower = Response.data;
@@ -118,8 +119,7 @@ import Axios from 'axios';
       },
       getFollowing() {
         let form = new FormData()
-        form.append('email', this.email)
-        Axios.post("http://192.168.31.103:8080/follow/countFollowing", form)
+        http.get("/follow/following?email="+this.email)
         .then(Response => {
           // console.log(Response)
           this.following = Response.data;

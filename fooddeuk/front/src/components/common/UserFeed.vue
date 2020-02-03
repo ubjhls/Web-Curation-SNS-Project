@@ -102,6 +102,7 @@
     import '../../assets/css/profile.scss'
     import UserApi from '../../apis/UserApi'
     import Axios from 'axios'
+    import http from '../../../http-common'
     
 
     export default {
@@ -136,11 +137,8 @@
                 })
             },
             followgo(){
-                let form = new FormData()
                 let myn  = this.$store.state.userinfo.nickName;
-                form.append('mynickname', myn)
-                form.append('nickname',this.nickname)
-                Axios.post("http://192.168.31.103:8080/follow/follow", form)
+                http.get("/follow/follow?mynickname=" + myn + "&nickname=" + this.nickname)
                 .then(Response => {
                     this.isfollow = 1;
                     // console.log(Response.data)
@@ -152,12 +150,9 @@
                 })
             },
             followcheck(nick) {
-                let form = new FormData()
                 let myn  = this.$store.state.userinfo.nickName;
  
-                form.append('mynickname', myn)
-                form.append('nickname', nick)
-                Axios.post("http://192.168.31.103:8080/follow/checkFollow", form)
+                http.get("/follow/follow?mynickname=" + myn + "&nickname=" + nick)
                 .then(Response => {
                     if(Response.data==0){
                        
@@ -176,9 +171,7 @@
                 })
             },
             getComment(num) {
-                let form = new FormData()
-                form.append('num', num)
-                Axios.post("http://192.168.31.103:8080/comment/getAllComment", form)
+                http.get("/comment/comment?num=" + num)
                 .then(Response => {
                     this.commentNum = Response.data.object[0].num;
                 })
@@ -187,8 +180,7 @@
                 })
             },getFollower() {
                 let form = new FormData()
-                form.append('email', this.email)
-                Axios.post("http://192.168.31.103:8080/follow/countFollower", form)
+                http.get("/follow/follower?email="+this.email)
                 .then(Response => {
                 this.follower = Response.data;
                 })
@@ -198,8 +190,7 @@
             },
             getFollowing() {
                 let form = new FormData()
-                form.append('email', this.email)
-                Axios.post("http://192.168.31.103:8080/follow/countFollowing", form)
+                http.get("/follow/following?email="+this.email)
                 .then(Response => {
                 this.following = Response.data;
                 })
@@ -210,7 +201,7 @@
             getUserByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
-                Axios.post("http://192.168.31.103:8080/user/getUserInfoByNickname", form)
+                http.get("/user/userinfo/{nickname}?nickname="+nick)
                 .then(Response => {
                     this.num = Response.data.num;
                     this.intro = Response.data.intro;
@@ -226,7 +217,7 @@
             getPostByNum(num) {
                 let form = new FormData()
                 form.append('num', num)
-                Axios.post("http://192.168.31.103:8080/post/getMyPost", form)
+                http.get("/post/post/{num}?num="+num)
                 .then(Response => {
                     this.post = Response.data.object; 
                     // console.log(this.post)

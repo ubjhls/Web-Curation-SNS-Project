@@ -98,16 +98,18 @@
                 if (this.isSubmit) {
                     this.isSubmit = false;
                     UserApi.requestFindPassword(this.email, res => {
+                        alert("성공")
+                        console.log(res)
                         if (res == 'success') {
                             var router = this.$router;
-                            router.push({
-                                name: "FindPasswordSendEmail",
-                                params: {
-                                    "nickName": this.nickName,
-                                    "email": this.email,
-                                    "password": this.password
-                                }
-                            });
+                            // router.push({
+                            //     name: "FindPasswordSendEmail",
+                            //     params: {
+                            //         "nickName": this.nickName,
+                            //         "email": this.email,
+                            //         "password": this.password
+                            //     }
+                            // });
                         } else {
                             alert("존재하지 않는 이메일입니다");
                         }

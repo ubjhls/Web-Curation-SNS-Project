@@ -1,5 +1,5 @@
 import Axios from "axios";
-
+import http from '../../http-common'
 /*
  User API 예시
  */
@@ -29,12 +29,8 @@ import Axios from "axios";
 // }
 const requestCheckNick = (data, callback, errorCallback) => {
     //백앤드와 닉네임 중복체크 통신하는 부분
-
-    let form = new FormData();
-    form.append('nickname', data.nickName);
     
-    return Axios.post('http://192.168.31.103:8080/account/checkNick', 
-    form).then( response => {
+    return http.get('/account/nickname?nickname='+ data.nickName).then( response => {
             callback(response.data.status);
             // console.log('response', response.data);
         }).catch( error => {
@@ -44,12 +40,8 @@ const requestCheckNick = (data, callback, errorCallback) => {
 }
 const requestCheckEmail= (data, callback, errorCallback) => {
     //백앤드와 닉네임 중복체크 통신하는 부분
-
-    let form = new FormData();
-    form.append('email', data.email);
     
-    return Axios.post('http://192.168.31.103:8080/account/checkEmail', 
-    form).then( response => {
+    return http.get('/account/checkEmail' + data.email).then( response => {
             callback(response.data.status);
             // console.log('response', response.data);
         }).catch( error => {
@@ -64,7 +56,7 @@ const requestCheckEmail= (data, callback, errorCallback) => {
 //     return Axios.post('http://192.168.31.103:8080/',
 // }
 const requestJoin = (data,callback,errorCallback) => {
-    Axios.post("http://192.168.31.103:8080/account/signUp", {
+    http.post("/account/user", {
         email:data.email,
         nickname:data.nickName,
         name:data.name,
@@ -92,7 +84,7 @@ const requestJoin = (data,callback,errorCallback) => {
 const requestFindPassword = (data,callback,errorCallback) => {
         let form = new FormData()
         form.append('email', data)
-        Axios.post("http://192.168.31.103:8080/account/findPassword", form)
+        http.post("/mail/certification", form)  //비밀번호 찾기시 이메일 보내기  이거해야댐!!!!   //추가해야됨 post(/mail/password) {email}
         .then(Response => {
             // console.log("response : ", JSON.stringify(Response, null, 2));
             if(Response.data.data == "success"){
@@ -111,7 +103,7 @@ const requestEmailConfirm = (data,callback,errorCallback) => {
     let form = new FormData()
     form.append('email', data.email)
     form.append('key', data.key)
-    Axios.post("http://192.168.31.103:8080/mail/updateConfirm", form)
+    http.patch("/mail/confirm?email="+data.email + "&key=" + data.key)
     .then(Response => {
         // console.log(Response)
         if(Response.data == "success"){
@@ -130,7 +122,7 @@ const requestSendEmail = (data,callback,errorCallback) => {
     let form = new FormData()
     form.append('email', data.email)
     // console.log(data.email);
-    Axios.post("http://192.168.31.103:8080/mail/reSendMailForJoin", form)
+    http.post("/mail/resend", form)
     .then(Response => {
         // console.log(Response)
         if(Response.data == "success"){
@@ -149,7 +141,7 @@ const requestGetAllSearch= (data,callback,errorCallback) => {
     let form = new FormData()
     form.append('email', data.email)
     // console.log(data.email);
-    Axios.post("http://192.168.31.103:8080/search/getAllSearch", form)
+    http.get("/search/all?email=" + data.email)
     .then(Response => {
         // console.log(Response);
         if(Response!=null)
@@ -166,7 +158,7 @@ const requestSearchNickname= (data,callback,errorCallback) => {
     form.append('nickname', data.nickName)
     // console.log(data.email);
     // console.log(form.get('nickname'))
-    Axios.post("http://192.168.31.103:8080/search/searchNickname", form)
+    http.get("/search/nickname?nickname=" + data.nickName)
     .then(Response => {
     //    console.log(Response)
        if(Response.data.data!='failed'){
@@ -190,7 +182,7 @@ const requestDeleteSearch= (data,callback,errorCallback) => {
     form.append('myNick', data.myNick)
     form.append('otherNick', data.otherNick)
     
-    Axios.post("http://192.168.31.103:8080/search/deleteSearch", form)
+    http.delete("/search/search?myNick=" + data.myNick + "&otherNick="+data.otherNick)
     .then(Response => {
         // console.log(Response)
         if(Response.data == "success"){
@@ -207,11 +199,11 @@ const requestDeleteSearch= (data,callback,errorCallback) => {
 
 const requestModifyProfile = (data,callback,errorCallback) => {
     let form = new FormData()
-    form.append('nickname', data.nickName)
-    form.append('intro', data.intro)
-    form.append('auth', data.authData)
-    form.append('email', data.email)
-    Axios.post("http://192.168.31.103:8080/user/updateUser", form)
+    // form.append('nickname', data.nickName)
+    // form.append('intro', data.intro)
+    // form.append('auth', data.authData)
+    // form.append('email', data.email)
+    http.patch("/user/user?auth="+data.authData + "&email="+data.email + "&intro="+data.intro+"&nickname=" +data.nickName)
     .then(Response => {
         // console.log("response : ", JSON.stringify(Response, null, 2));
         // console.log(Response.data)

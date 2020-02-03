@@ -73,12 +73,13 @@
 
 <script>
 import Axios from "axios";
+import http from '../../../http-common'
 import '../../assets/css/address.scss'
   export default {
     created(){
       let form = new FormData()
-      form.append('email', this.$store.state.userinfo.email)
-      Axios.post("http://192.168.31.103:8080/profile/getMyPlace", form)
+      // form.append('email', this.$store.state.userinfo.email)
+      http.get("/profile/myplace?email=" +this.$store.state.userinfo.email)
                  .then(Response => {
                   
                     this.firstresult = Response.data.object[0];
@@ -156,7 +157,7 @@ import '../../assets/css/address.scss'
         form.append('place1', this.select.state)
         form.append('place2', this.selectt)
 
-        Axios.post("http://192.168.31.103:8080/profile/updatePlace", form)
+        http.patch("/profile/place?email=" +this.$store.state.userinfo.email + "&place1=" + this.select.state + "&place2=" + this.selectt)
           .then(Response => {
             alert('지역정보가 수정되었습니다.')
             var router = this.$router;
