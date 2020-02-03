@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="follow">
+
+	<select id="countFollower" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM FOLLOW WHERE FOLLOWING=#{num}
+	</select>
+	
+	<select id="countFollowing" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM FOLLOW WHERE FOLLOWER=#{num}
+	</select>
+	
+	<select id="checkFollow" parameterType="follow" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM FOLLOW WHERE FOLLOWER=#{follower} AND FOLLOWING=#{following}
+	</select>
+	
+	<insert id="follow" parameterType="follow">
+		INSERT INTO FOLLOW(FOLLOWER, FOLLOWING, DATE)
+		VALUES(#{follower}, #{following}, NOW())
+	</insert>
+	
+	<delete id="unFollow" parameterType="follow">
+		DELETE FROM FOLLOW WHERE FOLLOWER=#{follower} AND FOLLOWING=#{following}
+	</delete>
+	
+ </mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="search">
+
+	<select id="getAllSearch" parameterType="java.lang.Integer" resultType="search">
+		SELECT WHO FROM SEARCH WHERE NUM=#{num} ORDER BY DATE DESC
+	</select>
+	
+	<select id="getNickname" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT NICKNAME FROM USER WHERE NUM=#{num}
+	</select>
+	
+	<select id="searchNickname" parameterType="java.lang.String" resultType="user">
+		SELECT NUM, EMAIL, NICKNAME, NAME, PASSWORD, INTRO, AUTH, CONFIRM, SOCIAL FROM USER WHERE NICKNAME LIKE CONCAT('%', #{nickname}, '%') AND CONFIRM='Y'
+	</select>
+	
+	<select id="isSearched" parameterType="search" resultType="search">
+		SELECT * FROM SEARCH WHERE NUM=#{num} AND WHO=#{who}
+	</select>
+	
+	<insert id="search" parameterType="search">
+		INSERT INTO SEARCH(NUM, WHO, DATE) VALUES(#{num}, #{who}, now()) 
+	</insert>
+	
+	<delete id="deleteSearch" parameterType="search">
+		DELETE FROM SEARCH WHERE NUM=#{num} AND WHO=#{who}
+	</delete>
+	
+	<update id="updateSearch" parameterType="search">
+		UPDATE SEARCH SET DATE=NOW() WHERE NUM=#{num} AND WHO=#{who}
+	</update>
+	
+ </mapper>

@@ -1,0 +1,136 @@
+<template>
+
+  <v-navigation-drawer v-model="propDrawer" temporary>
+
+      <v-list-item>
+        <v-list-item-avatar style="margin-top:20%; margin-left:41%">
+          <v-img src="https://randomuser.me/api/portraits/men/73.jpg"></v-img>
+        </v-list-item-avatar>
+      </v-list-item>
+
+      <div style="padding-top:10px; text-align:center">
+        <p>{{userinfo.nickName}}</p>
+        <p>{{userinfo.email}}</p>
+      </div>
+
+      <div style="text-align:center; padding-top:20px">
+        <div style="float:left; width:50%">팔로워</div>
+        <div>팔로잉</div>
+      </div>
+
+      <div style="text-align:center; padding-top:10px; padding-bottom:20px">
+        <div style="float:left; width:50%">{{this.follower}}</div>
+        <div>{{this.following}}</div>
+      </div>
+
+      <v-divider style="margin-left:10%; width:80%"></v-divider>
+
+      <v-list dense>
+        <div style="padding-top:5%; padding-bottom:5%; padding-left:10%" @click="modifyProfile">
+          회원정보 수정
+        </div>
+        <div style="padding-top:5%; padding-bottom:5%; padding-left:10%" @click="modifyPassword">
+          비밀번호 설정
+        </div>
+      </v-list>
+
+      <v-divider style="margin-left:10%; width:80%"></v-divider>
+
+      
+        <div style="padding-top:5%; padding-bottom:5%; padding-left:10%" @click="Address">
+          뉴스피드 설정
+        </div>
+     
+
+      <v-divider style="margin-left:10%; width:80%"></v-divider>
+
+      <v-list dense>
+        <div style="padding-top:5%; padding-bottom:5%; padding-left:10%">
+          통계
+        </div>
+      </v-list>
+
+      <v-divider style="margin-left:10%; width:80%"></v-divider>
+      <v-list dense>
+        <div style="padding-top:5%; padding-bottom:5%; padding-left:10%" @click="$store.dispatch('logout')">
+          로그아웃
+        </div>
+      </v-list>
+
+    </v-navigation-drawer>
+</template>
+
+<script>
+import {mapState} from 'vuex';
+import Axios from 'axios';
+
+  export default {
+    props : ['drawer'],
+    created() {
+      this.email = this.$store.state.userinfo.email;
+      this.getFollowing();
+      this.getFollower();
+    },
+    data () {
+      return {
+        propDrawer : this.drawer,
+        nickName : '',
+        email : '',
+        follower : 0,
+        following : 0,
+      }
+    },
+
+    watch : {
+      propDrawer : function(v) {
+        this.updateParentNavi();
+      }
+    },
+    methods : {
+      Address() {
+        this.$router.push({name:"Address"})
+      },
+      updateParentNavi() {
+        this.$emit('child', this.propDrawer)
+      },  
+      modifyPassword() {
+        var router = this.$router;
+          router.push({
+              name: "ModifyPassword"
+          });
+      },
+      modifyProfile() {
+        this.$router.push({
+          name:"ModifyProfile"
+        })
+      },
+      getFollower() {
+        let form = new FormData()
+        form.append('email', this.email)
+        Axios.post("http://192.168.31.103:8080/follow/countFollower", form)
+        .then(Response => {
+          // console.log(Response)
+          this.follower = Response.data;
+        })
+        .catch(Error => {
+            console.log(Error)
+        })
+      },
+      getFollowing() {
+        let form = new FormData()
+        form.append('email', this.email)
+        Axios.post("http://192.168.31.103:8080/follow/countFollowing", form)
+        .then(Response => {
+          // console.log(Response)
+          this.following = Response.data;
+        })
+        .catch(Error => {
+            console.log(Error)
+        })
+      }
+    },
+    computed : {
+      ...mapState(['userinfo']),
+    }
+  }
+</script>

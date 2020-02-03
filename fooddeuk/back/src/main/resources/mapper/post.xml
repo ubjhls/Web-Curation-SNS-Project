@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="post">
+
+	<insert id="insertPost" parameterType="post">
+		INSERT INTO POST(AUTHOR, TITLE, CONTENT, DATE, COUNT_STAR, ADDRESS)
+		VALUES(#{author}, #{title}, #{content}, NOW(), #{count_star}, #{address})
+	</insert>
+	
+	<select id="getAllPost" parameterType="java.lang.Integer" resultType="post">
+		SELECT * FROM POST WHERE AUTHOR=#{num} ORDER BY DATE DESC
+	</select>
+	
+ </mapper>
