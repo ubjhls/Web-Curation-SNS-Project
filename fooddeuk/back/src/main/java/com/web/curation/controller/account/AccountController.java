@@ -1,13 +1,11 @@
 package com.web.curation.controller.account;
 
-<<<<<<< HEAD
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-=======
+
 import java.util.Date;
->>>>>>> 64061fcca4631267e8ae7fbc203700e7dfb1cb72
 
 import javax.validation.Valid;
 
@@ -24,24 +22,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-<<<<<<< HEAD
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-=======
+
 import com.web.curation.model.Follow;
->>>>>>> 64061fcca4631267e8ae7fbc203700e7dfb1cb72
+
 import com.web.curation.controller.mail.MailUtil;
 import com.web.curation.jwt.JwtService;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
-<<<<<<< HEAD
+
 import com.web.curation.service.IFollowService;
 import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
-=======
-import com.web.curation.service.Ifollowservice;
->>>>>>> 64061fcca4631267e8ae7fbc203700e7dfb1cb72
+
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -324,7 +320,7 @@ public class AccountController {
 
 	}
 	
-<<<<<<< HEAD
+
 	// 토큰 검사 함수(내 정보 토큰)
 	@PostMapping("/account/loginToken")
 	@ApiOperation(value = "로그인 시 토큰 발급")
@@ -347,18 +343,6 @@ public class AccountController {
 	}
 	
 	
-=======
-	 @ApiOperation(value = "팔로워를 등록한다.", response = Follow.class)
-	 @RequestMapping(value = "/addfollower", method = RequestMethod.POST)
-	public ResponseEntity<Follow> addfollower(@RequestBody Follow follow) throws Exception {
-	   	System.out.println();
-	   	Ifollowservice.addfollower(follow);
-		Follow emps = null;
-	
-		return new ResponseEntity<Follow>(emps, HttpStatus.OK);
-	}
-	    
-	
 
->>>>>>> 64061fcca4631267e8ae7fbc203700e7dfb1cb72
+
 }

@@ -52,8 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="successJoin" parameterType="java.lang.String">
 		UPDATE USER SET CONFIRM='Y' WHERE EMAIL=#{email}
 	</update>
-<<<<<<< HEAD
-	
+
 	<select id="getNumByEmail" parameterType="java.lang.String" resultType="java.lang.Integer">
 		SELECT NUM FROM USER WHERE EMAIL=#{email}
 	</select>
@@ -74,9 +73,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT NUM, EMAIL, NICKNAME, NAME, PASSWORD, INTRO, AUTH, CONFIRM, SOCIAL FROM USER WHERE NICKNAME=#{nickname}
 	</select>	
 	
-=======
+
 	<update id="addfollow" parameterType="java.lang.String">
 		UPDATE USER SET CONFIRM='Y' WHERE EMAIL=#{email}
 	</update>
->>>>>>> 64061fcca4631267e8ae7fbc203700e7dfb1cb72
+
  </mapper>
