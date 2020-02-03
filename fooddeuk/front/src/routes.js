@@ -1,5 +1,6 @@
 import Login from './views/user/Login.vue'
 import Join from './views/user/Join.vue'
+import ConfirmFindPassword from './views/user/ConfirmFindPassword'
 import FindPassword from './views/user/FindPassword.vue'
 import FindPasswordSendEmail from './views/user/FindPasswordSendEmail.vue'
 import FindPasswordReSendEmail from './views/user/FindPasswordReSendEmail.vue'
@@ -157,7 +158,6 @@ const onlyAuthUser = (to, from, next) =>{
         path : '/user/ModifyPassword',
         name : 'ModifyPassword',
         component : ModifyPassword,
-        beforeEnter : onlyAuthUser,
         props: true
     },
     {
@@ -165,6 +165,12 @@ const onlyAuthUser = (to, from, next) =>{
         name : 'Address',
         component : Address,
         beforeEnter : onlyAuthUser,
+        props: true
+    },
+    {
+        path : '/user/ConfirmFindPassword',
+        name : 'ConfirmFindPassword',
+        component : ConfirmFindPassword,
         props: true
     },
 
