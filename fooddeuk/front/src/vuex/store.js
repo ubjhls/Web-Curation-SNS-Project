@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import router from "../routes.js";
+import http from "../../http-common"
 import axios from "axios";
 
 Vue.use(Vuex);
@@ -43,8 +44,9 @@ export default new Vuex.Store({
          form.append('email', loginObj.email)
          form.append('password',loginObj.password)
          // 로그인 -> 토큰반환
-         axios
-          .post("http://192.168.31.103:8080/account/login", form)
+         let str = "email"
+         http
+          .post("/account/login", form)
           .then(res=>{
             //성공시 token:블라블라(유저 id를 받아옴)
             //토큰을 헤더에 포함시켜서 유저정보를 요청
@@ -66,6 +68,7 @@ export default new Vuex.Store({
           })
           
           .catch(error=>{
+
             alert("이메일과 비밀번호를 확인하세요!")
             console.log(error)
           })
@@ -87,8 +90,8 @@ export default new Vuex.Store({
           if(token!=null){
             // 반환된 토큰을 가지고 유저 정보를 가져와 저장(멤버 정보 반환)
             // 새로고침 -> status날라감 -> 토큰만 가지고 멤버정보를 요청
-                axios
-                  .post("http://192.168.31.103:8080/account/loginToken", form)
+                http
+                  .post("/account/loginToken", form)
                   .then(response=>{
                       let userinfo = {
                           name : response.data.object.name,
