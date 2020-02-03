@@ -54,12 +54,13 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public int updateKey(User user) {
+		
 		return userdao.updateKey(user);
 	}
 
 	@Override
-	public int updatePassword(String email) {
-		return userdao.updatePassword(email);
+	public int updatePassword(User user) {
+		return userdao.updatePassword(user);
 	}
 
 	@Override
@@ -88,13 +89,13 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public int updateNewPassword(User user) {
-		return userdao.updateNewPassword(user);
+	public User getUserByNickname(String nickname) {
+		return userdao.getUserByNickname(nickname);
 	}
 
 	@Override
-	public User getUserByNickname(String nickname) {
-		return userdao.getUserByNickname(nickname);
+	public int getAuth(int num) {
+		return userdao.getAuth(num);
 	}
 
 

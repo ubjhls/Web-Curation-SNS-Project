@@ -40,8 +40,8 @@ public class UserDaoImpl {
 	public int updateKey(User user) {
 		return sqlSession.update(ns+"updateKey", user);
 	}
-	public int updatePassword(String email) {
-		return sqlSession.update(ns+"updatePassword", email);
+	public int updatePassword(User user) {
+		return sqlSession.update(ns+"updatePassword", user);
 	}
 	public String getSocial(String email) {
 		return sqlSession.selectOne(ns+"getSocial", email);
@@ -58,11 +58,11 @@ public class UserDaoImpl {
 	public int updateUser(User user) {
 		return sqlSession.update(ns+"updateUser", user);
 	}
-	public int updateNewPassword(User user) {
-		return sqlSession.update(ns+"updateNewPassword", user);
-	}
 	public User getUserByNickname(String nickname) {
 		return sqlSession.selectOne(ns+"getUserByNickname", nickname);
+	}
+	public int getAuth(int num) {
+		return sqlSession.selectOne(ns+"getAuth", num);
 	}
 	
 }
