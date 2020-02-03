@@ -12,12 +12,12 @@ public interface IUserService {
 	int updateConfirm(User user);
 	String getKey(String email);
 	int updateKey(User user);
-	int updatePassword(String email);
+	int updatePassword(User user);
 	String getSocial(String email);
 	int successJoin(String email);
 	int getNumByEmail(String email);
 	int getNumByNickname(String nickname);
 	int updateUser(User user);
-	int updateNewPassword(User user);
 	User getUserByNickname(String nickname);
+	int getAuth(int num);
 }

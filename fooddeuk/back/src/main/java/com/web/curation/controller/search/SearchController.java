@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,10 +30,10 @@ public class SearchController {
 	@Autowired
 	private ISearchService searchService;
 	
-	@PostMapping("/search/getAllSearch")
+	@GetMapping("/search/all")
 	@ApiOperation(value = "최근 검색")
 	public List<String> getAllSearch(@RequestParam(required = true) String email) throws Exception {
-		System.out.println("-----------------getAllSearch-----------------");
+		System.out.println("-----------------/search/all-----------------");
 		System.out.println("email : " + email);
 		
 		int num = userService.getNumByEmail(email);
@@ -47,10 +48,10 @@ public class SearchController {
 		return result;
 	}
 	
-	@PostMapping("/search/searchNickname")
+	@GetMapping("/search/nickname")
 	@ApiOperation(value = "닉네임 검색")
 	public Object searchNickname(@RequestParam(required = true) String nickname) throws Exception {
-		System.out.println("-----------------searchNickname-----------------");
+		System.out.println("-----------------/search/nickname-----------------");
 		System.out.println("nickname : " + nickname);
 		
 		BasicResponse result = new BasicResponse();
@@ -73,11 +74,11 @@ public class SearchController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@PostMapping("/search/deleteSearch")
+	@DeleteMapping("/search/search")
 	@ApiOperation(value = "검색 삭제")
 	public String deleteSearch(@RequestParam(required = true) String myNick, 
 									@RequestParam(required = true) String otherNick) throws Exception {
-		System.out.println("-----------------deleteSearch-----------------");
+		System.out.println("-----------------/search/search-----------------");
 		System.out.println("myNick : " + myNick);
 		System.out.println("otherNick : " + otherNick);
 		
@@ -90,10 +91,6 @@ public class SearchController {
 		}
 		
 		return "success";
-		
 	}	
-	
-
-	
 	
 }

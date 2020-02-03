@@ -14,10 +14,14 @@ public class FollowDaoImpl {
 	private SqlSession sqlSession;
 	
 	public int countFollower(int num) {
+		if(sqlSession.selectOne(ns+"countFollower", num) == null)
+			return 0;
 		return sqlSession.selectOne(ns+"countFollower", num);
 	}
 	
 	public int countFollowing(int num) {
+		if(sqlSession.selectOne(ns+"countFollowing", num) == null)
+			return 0;
 		return sqlSession.selectOne(ns+"countFollowing", num);
 	}
 	
@@ -31,6 +35,22 @@ public class FollowDaoImpl {
 	
 	public int unFollow(Follow follow) {
 		return sqlSession.delete(ns+"unFollow", follow);
+	}
+	
+	public int followerUp(int num) {
+		return sqlSession.update(ns+"followerUp", num);
+	}
+	
+	public int followerDown(int num) {
+		return sqlSession.update(ns+"followerDown", num);
+	}
+	
+	public int followingUp(int num) {
+		return sqlSession.update(ns+"followingUp", num);
+	}
+	
+	public int followingDown(int num) {
+		return sqlSession.update(ns+"followingDown", num);
 	}
 	
 }

@@ -5,14 +5,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import java.util.Date;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,22 +21,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-
-import com.web.curation.model.Follow;
-
 import com.web.curation.controller.mail.MailUtil;
 import com.web.curation.jwt.JwtService;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
-
-import com.web.curation.service.IFollowService;
 import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
-
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -60,14 +52,11 @@ public class AccountController {
 	@Autowired
 	private JwtService jwtService;
 	
-	@Autowired
-	private IFollowService followService;
-	
 	@PostMapping("/account/login")
 	@ApiOperation(value = "로그인")
 	public Object login(@RequestParam(required = true) String email, @RequestParam(required = true) String password) {
 
-		System.out.println("-----------------login-----------------");
+		System.out.println("-----------------/account/login-----------------");
 		System.out.println("email : " + email);
 		System.out.println("password : " + password);
 
@@ -100,11 +89,11 @@ public class AccountController {
 	}
 
 	@ResponseBody
-	@PostMapping("/account/signUp")
+	@PostMapping("/account/user")
 	@ApiOperation(value = "회원가입")
 	public Object signUp(@Valid @RequestBody SignupRequest request) throws Exception {
 		
-		System.out.println("-----------------signUp-----------------");
+		System.out.println("-----------------/account/user-----------------");
 		String email = request.getEmail();
 		String nickname = request.getNickname();
 		String name = request.getName();
@@ -138,10 +127,10 @@ public class AccountController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@PostMapping("/account/checkNick")
+	@GetMapping("/account/nickname")
 	@ApiOperation(value = "닉네임 중복체크")
 	public Object checkNick(@RequestParam(required = true) String nickname) {
-		System.out.println("-----------------checkNick-----------------");
+		System.out.println("-----------------/account/nickname-----------------");
 		System.out.println("nickname : " + nickname);
 		String temp = userService.checkNick(nickname);
 
@@ -155,10 +144,10 @@ public class AccountController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@PostMapping("/account/checkEmail")
+	@GetMapping("/account/email")
 	@ApiOperation(value = "이메일 중복체크")
 	public Object checkEmail(@RequestParam(required = true) final String email) {
-		System.out.println("-----------------checkEmail-----------------");
+		System.out.println("-----------------/account/email-----------------");
 		System.out.println("email : " + email);
 
 		String temp = userService.checkEmail(email);
@@ -173,25 +162,8 @@ public class AccountController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@PostMapping("/account/createProfile")
-	@ApiOperation(value = "유저 프로필 생성")
-	public String createProfile(@RequestParam(required = true) final String email) {
-		System.out.println("-----------------createProfile-----------------");
-		System.out.println("email : " + email);
-		
-		int num = userService.getNumByEmail(email);
-		System.out.println(num);
-		int isSuccess = profileService.createProfile(num);
-		System.out.println(isSuccess);
-		
-		if(isSuccess != 1) {
-			return "failed";
-		}
-
-		return "success";
-	}	
-	
 	@RequestMapping(value = "account/naverlogin", method = RequestMethod.GET)
+	@ApiOperation(value = "네이버 로그인")
     public RedirectView test2(
             @RequestParam(value = "code") String code,
             @RequestParam(value = "state") String state
@@ -320,7 +292,23 @@ public class AccountController {
 
 	}
 	
+	// 유저 프로필 생성 메소드
+	public String createProfile(@RequestParam(required = true) final String email) {
+		System.out.println("-----------------createProfile-----------------");
+		System.out.println("email : " + email);
+		
+		int num = userService.getNumByEmail(email);
+		System.out.println(num);
+		int isSuccess = profileService.createProfile(num);
+		System.out.println(isSuccess);
+		
+		if(isSuccess != 1) {
+			return "failed";
+		}
 
+		return "success";
+	}	
+	
 	// 토큰 검사 함수(내 정보 토큰)
 	@PostMapping("/account/loginToken")
 	@ApiOperation(value = "로그인 시 토큰 발급")
@@ -341,8 +329,5 @@ public class AccountController {
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-	
-	
-
 
 }

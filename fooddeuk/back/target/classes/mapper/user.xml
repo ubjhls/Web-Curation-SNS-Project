@@ -33,16 +33,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		UPDATE USER SET CONFIRM=#{confirm} WHERE EMAIL=#{email}
 	</update>
 	
-	<select id="getKey" parameterType="java.lang.String">
-		SELECT KEY FROM USER WHERE EMAIL=#{email}
+	<select id="getKey" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT TEMP FROM USER WHERE EMAIL=#{email}
 	</select>
 	
 	<update id="updateKey" parameterType="user">
-		UPDATE USER SET KEY=#{key} WHERE EMAIL=#{email}
+		UPDATE USER SET TEMP=#{temp} WHERE EMAIL=#{email}
 	</update>
 	
-	<update id="updatePassword" parameterType="java.lang.String">
-		UPDATE USER SET PASSWORD=#{password} WHERE PASSWORD=#{password}
+	<update id="updatePassword" parameterType="user">
+		UPDATE USER SET PASSWORD=#{password} WHERE EMAIL=#{email}
 	</update>
 	
 	<select id="getSocial" parameterType="java.lang.String">
@@ -64,18 +64,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateUser" parameterType="user">
 		UPDATE USER SET NICKNAME=#{nickname}, INTRO=#{intro}, AUTH=#{auth} WHERE EMAIL=#{email}
 	</update>
-	
-	<update id="updateNewPassword" parameterType="user">
-		UPDATE USER SET PASSWORD=#{password} WHERE EMAIL=#{email}
-	</update>
 
 	<select id="getUserByNickname" parameterType="java.lang.String" resultType="user">
 		SELECT NUM, EMAIL, NICKNAME, NAME, PASSWORD, INTRO, AUTH, CONFIRM, SOCIAL FROM USER WHERE NICKNAME=#{nickname}
-	</select>	
+	</select>
 	
-
-	<update id="addfollow" parameterType="java.lang.String">
-		UPDATE USER SET CONFIRM='Y' WHERE EMAIL=#{email}
-	</update>
+	<select id="getAuth" parameterType="java.lang.Integer">
+		SELECT AUTH FROM USER WHERE NUM=#{num}
+	</select>
 
  </mapper>

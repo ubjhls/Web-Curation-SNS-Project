@@ -2,6 +2,8 @@ package com.web.curation.controller.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,10 +24,10 @@ public class MailController {
 	@Autowired
 	private IProfileService profileService;
 	
-	@PostMapping("/mail/reSendMailForJoin")
-	@ApiOperation(value = "회원가입 이메일 재전송")	
+	@PostMapping("/mail/resend")
+	@ApiOperation(value = "회원가입 이메일 재 전송")	
 	public String reSendMailForJoin(@RequestParam(required = true) String email) throws Exception {
-		System.out.println("-----------------reSendMailForJoin-----------------");
+		System.out.println("-----------------/mail/resend-----------------");
 		System.out.println("email : " + email);
 		
 		String keyCode = MailUtil.createKey();
@@ -52,11 +54,11 @@ public class MailController {
 		
 	}
 	
-	@PostMapping("/mail/updateConfirm")
+	@PatchMapping("/mail/confirm")
 	@ApiOperation(value = "회원가입 인증")
 	public String updateConfirm(@RequestParam(required = true) String email,
 								@RequestParam(required = true) String key) throws Exception {
-		System.out.println("-----------------updateConfirm-----------------");
+		System.out.println("-----------------/mail/confirm-----------------");
 		System.out.println("email : " + email);
 		System.out.println("key : " + key);
 		
@@ -80,10 +82,10 @@ public class MailController {
 		return "success";
 	}
 	
-	@PostMapping("/mail/checkEmail")
+	@PostMapping("/mail/certification")
 	@ApiOperation(value = "비밀번호 변경 본인 인증 메일 발송")	
 	public String checkEmail(@RequestParam(required = true) String email) throws Exception { 
-		System.out.println("-----------------checkEmail-----------------");
+		System.out.println("-----------------/mail/certification-----------------");
 		System.out.println("email : " + email);
 		
 		if(email == null) {
@@ -110,10 +112,27 @@ public class MailController {
 		return "success";
 	}
 	
-	@PostMapping("mail/sendMailTempPassword")
+	@PostMapping("mail/key")
+	@ApiOperation(value = "본인 인증 키 인증")	
+	public String compareKey(@RequestParam(required = true) String email,
+							@RequestParam(required = true) String key) throws Exception {
+		System.out.println("-----------------mail/key-----------------");
+		System.out.println("email : " + email);
+		System.out.println("key : " + key);
+		
+		String getKey = userService.getKey(email);
+		
+		if(!key.equals(getKey)) {
+			return "failed";
+		}
+		
+		return "success";
+	}
+	
+	@PostMapping("mail/password")
 	@ApiOperation(value = "비밀번호 변경 임시 비밀번호 발송")	
 	public String sendMailFindPassword(@RequestParam(required = true) String email) throws Exception {
-		System.out.println("-----------------sendMailFindPassword-----------------");
+		System.out.println("-----------------mail/password-----------------");
 		System.out.println("email : " + email);
 		
 		if(email == null) {
@@ -121,7 +140,8 @@ public class MailController {
 		}
 		
 		String newPwd = MailUtil.getNewPwd();
-		if(userService.updatePassword(email) != 1) {
+		User user = new User(email, newPwd);
+		if(userService.updatePassword(user) != 1) {
 			return "failed";
 		}
 		

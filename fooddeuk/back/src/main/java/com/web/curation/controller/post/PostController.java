@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.post.Post;
-import com.web.curation.model.user.User;
 import com.web.curation.service.IPostService;
 import com.web.curation.service.IUserService;
 
@@ -28,14 +28,14 @@ public class PostController {
 	@Autowired
 	private IUserService userService;
 	
-	@PostMapping("/post/insertPost")
+	@PostMapping("/post/post")
 	@ApiOperation(value = "게시물 작성")
 	public String insertPost(@RequestParam(required = true) String email,
 							@RequestParam(required = true) String title,
 							@RequestParam(required = true) String content,
 							@RequestParam(required = true) String count_star,
 							@RequestParam(required = true) String address) throws Exception {
-		System.out.println("-----------------insertPost-----------------");
+		System.out.println("-----------------/post/post-----------------");
 		System.out.println("email : " + email);
 		System.out.println("title : " + title);
 		System.out.println("content : " + content);
@@ -54,10 +54,10 @@ public class PostController {
 		return "success";
 	}
 	
-	@PostMapping("/post/getMyPost")
+	@GetMapping("/post/post/{num}")
 	@ApiOperation(value = "게시물 가져오기")
 	public Object getMyPost(@RequestParam(required = true) int num) throws Exception {
-		System.out.println("-----------------getMyPost-----------------");
+		System.out.println("-----------------/post/post/{num}-----------------");
 		System.out.println("num : " + num);
 		
 		BasicResponse result = new BasicResponse();

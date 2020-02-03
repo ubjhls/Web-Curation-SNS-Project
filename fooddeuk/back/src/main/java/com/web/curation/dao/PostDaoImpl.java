@@ -23,5 +23,4 @@ public class PostDaoImpl {
 		return sqlSession.selectList(ns+"getAllPost", num);
 	}
 	
-	
 }
