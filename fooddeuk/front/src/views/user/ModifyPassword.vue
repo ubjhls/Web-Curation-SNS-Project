@@ -64,7 +64,11 @@
                 .has()
                 .letters();
 
-            if(this.$store.state.userinfo!=null) {
+            
+            if(this.$route.params.email!=null) {
+                this.email = this.$route.params.email
+            }
+            else if(this.$store.state.userinfo!=null) {
                 this.email = this.$store.state.userinfo.email;
             }
         },
@@ -113,7 +117,12 @@
                  http.patch("/user/password?email=" + this.email + "&password=" + this.password)
                  .then(Response => {
                      alert("비밀번호가 변경되었습니다.")
-                     this.$router.push({name:"MainPage"})
+                     if(this.$route.params.email!=null) {
+                         this.$router.push({name:"Login"})
+                     }
+                     else{
+                        this.$router.push({name:"MainPage"})
+                     }
                  })
                  .catch(Error => {
           

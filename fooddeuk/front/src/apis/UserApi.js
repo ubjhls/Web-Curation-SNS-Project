@@ -87,7 +87,7 @@ const requestFindPassword = (data,callback,errorCallback) => {
         http.post("/mail/certification", form)  //비밀번호 찾기시 이메일 보내기  이거해야댐!!!!   //추가해야됨 post(/mail/password) {email}
         .then(Response => {
             // console.log("response : ", JSON.stringify(Response, null, 2));
-            if(Response.data.data == "success"){
+            if(Response.data == "success"){
                 callback("success", callback);
             } else {
                 callback("failed", callback);
@@ -97,6 +97,45 @@ const requestFindPassword = (data,callback,errorCallback) => {
             console.log("failed", errorCallback);
             errorCallback();
         })
+}
+const requestSendTempPassword = (data,callback,errorCallback) => {
+    let form = new FormData()
+    form.append('email', data.email)
+    http.post("/mail/password", form)  //비밀번호 찾기시 이메일 보내기  이거해야댐!!!!   //추가해야됨 post(/mail/password) {email}
+    .then(Response => {
+        console.log(Response);
+        if(Response.data == "success"){
+            callback("success", callback);
+        } else {
+            callback("failed", callback);
+        }
+    })
+    .catch(Error => {
+        console.log("failed", errorCallback);
+        errorCallback();
+    })
+}
+
+const requestConfirmFindPassword = (data,callback,errorCallback) => {
+    let form = new FormData()
+    form.append('email', data.email)
+    form.append('key', data.key)
+    http.post("/mail/key", form)  //비밀번호 찾기시 이메일 보내기  이거해야댐!!!!   //추가해야됨 post(/mail/password) {email}
+    .then(Response => {
+        // console.log("response : ", JSON.stringify(Response, null, 2));
+        console.log("비밀번호 인증키 : ")
+        console.log(Response)
+        if(Response.data.data == "success"){
+            // alert("인증키 똑같넹")
+            callback("success", callback);
+        } else {
+            callback("failed", callback);
+        }
+    })
+    .catch(Error => {
+        console.log("failed", errorCallback);
+        errorCallback();
+    })
 }
 
 const requestEmailConfirm = (data,callback,errorCallback) => {
@@ -231,6 +270,8 @@ const UserApi = {
     requestGetAllSearch:(data,callback,errorCallback)=>requestGetAllSearch(data,callback,errorCallback),
     requestDeleteSearch:(data,callback,errorCallback)=>requestDeleteSearch(data,callback,errorCallback),
     requestModifyProfile:(data,callback,errorCallback)=>requestModifyProfile(data,callback,errorCallback),
+    requestConfirmFindPassword:(data,callback,errorCallback)=>requestConfirmFindPassword(data,callback,errorCallback),
+    requestSendTempPassword:(data,callback,errorCallback)=>requestSendTempPassword(data,callback,errorCallback),
 }
 
 export default UserApi

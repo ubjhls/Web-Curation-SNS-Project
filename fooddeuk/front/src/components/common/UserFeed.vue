@@ -125,7 +125,7 @@
                 let myn  = this.$store.state.userinfo.nickName;
                 form.append('mynickname', myn)
                 form.append('nickname',this.nickname)
-                Axios.post("http://192.168.31.103:8080/follow/unFollow", form)
+                http.post("/follow/unFollow?mynickname=" + myn + "&nickname=" + this.nickname)
                 .then(Response => {
                     this.isfollow = 0;
                     // console.log(Response.data)
@@ -138,7 +138,7 @@
             },
             followgo(){
                 let myn  = this.$store.state.userinfo.nickName;
-                http.get("/follow/follow?mynickname=" + myn + "&nickname=" + this.nickname)
+                http.post("/follow/follow?mynickname=" + myn + "&nickname=" + this.nickname)
                 .then(Response => {
                     this.isfollow = 1;
                     // console.log(Response.data)
@@ -183,6 +183,8 @@
                 http.get("/follow/follower?email="+this.email)
                 .then(Response => {
                 this.follower = Response.data;
+                console.log("getFollower")
+                console.log(Response)
                 })
                 .catch(Error => {
                     console.log(Error)
