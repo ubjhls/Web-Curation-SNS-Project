@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="comment">
+
+	<select id="getAllComment" parameterType="comment" resultType="comment">
+		SELECT * FROM COMMENT WHERE NUM=#{num}
+	</select>
+	
+	<insert id="insertComment" parameterType="java.lang.Integer">
+		INSERT INTO COMMENT(NUM, AUTHOR, COMMENT, DATE) 
+		VALUES(#{num}, #{author}, #{comment}, NOW())
+	</insert>
+	
+ </mapper>
