@@ -64,5 +64,8 @@ public class UserDaoImpl {
 	public int getAuth(int num) {
 		return sqlSession.selectOne(ns+"getAuth", num);
 	}
+	public String getNickname(int num) {
+		return sqlSession.selectOne(ns+"getNickname", num);
+	}
 	
 }

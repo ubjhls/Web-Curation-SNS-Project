@@ -29,6 +29,7 @@
     	<typeAlias type="com.web.curation.model.post.Post" alias="post" />
     	<typeAlias type="com.web.curation.model.follow.Follow" alias="follow" />
     	<typeAlias type="com.web.curation.model.comment.Comment" alias="comment" />
+    	<typeAlias type="com.web.curation.model.postlike.Postlike" alias="postlike" />
     </typeAliases>
     <mappers>
        <mapper resource="mapper/user.xml"/>
@@ -37,5 +38,6 @@
        <mapper resource="mapper/post.xml"/>
        <mapper resource="mapper/follow.xml"/>
        <mapper resource="mapper/comment.xml"/>
+       <mapper resource="mapper/postlike.xml"/>
     </mappers>
 </configuration>
