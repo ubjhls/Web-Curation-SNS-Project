@@ -52,6 +52,7 @@
     import UserApi from '../../apis/UserApi'
     import {mapState} from 'vuex';
     import Axios from "axios";
+    import http from '../../../http-common'
 
     export default {
         components : {
@@ -87,7 +88,7 @@
                 let form = new FormData()
                 form.append('myEmail', this.email)
                 form.append('otherEmail', otherEmail)
-                Axios.post("http://192.168.31.103:8080/user/getUserInfo", form)
+                http.get("/user/userinfo?myEmail=" + this.email + '&otherEmail=' + otherEmail)
                 .then(Response => {
 
                 })
@@ -98,7 +99,7 @@
             getUserInfoByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
-                Axios.post("http://192.168.31.103:8080/user/getUserInfoByNickname", form)
+                http.get("/user/userinfo/{nickname}?nickname=" + nick)
                 .then(Response => {
                     this.otherEmail = Response.data.email;
                     this.getUserInfo(this.otherEmail);

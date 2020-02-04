@@ -8,4 +8,8 @@ public interface IFollowService {
 	int checkFollow(Follow follow);
 	int follow(Follow follow);
 	int unFollow(Follow follow);
+	int followerUp(int num);
+	int followerDown(int num);
+	int followingUp(int num);
+	int followingDown(int num);
 }

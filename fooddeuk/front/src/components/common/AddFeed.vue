@@ -95,6 +95,7 @@
 <script>
 import DaumPostcode from 'vuejs-daum-postcode'
 import Axios from "axios";
+import http from "../../../http-common"
 
   export default {  
      name: 'App',
@@ -147,7 +148,7 @@ import Axios from "axios";
                  form.append('address', this.address)
                  form.append('count_star', star)
               
-                 Axios.post("http://192.168.31.103:8080/post/insertPost", form)
+                 http.post("/post/post", form)
                  .then(Response => {
                   //  console.log(Response)
                     if(Response.data=="success"){

@@ -1,17 +1,16 @@
 package com.web.curation.controller.profile;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.post.Post;
 import com.web.curation.model.profile.Profile;
 import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
@@ -28,10 +27,10 @@ public class ProfileController {
 	@Autowired
 	private IUserService userService;
 	
-	@PostMapping("/profile/getMyPlace")
+	@GetMapping("/profile/myplace")
 	@ApiOperation(value = "내 지역 정보 가져오기")
 	public Object getMyPlace(@RequestParam(required = true) String email) throws Exception {
-		System.out.println("-----------------getMyPlace-----------------");
+		System.out.println("-----------------/profile/myplace-----------------");
 		System.out.println("email : " + email);
 
 		int num = userService.getNumByEmail(email);
@@ -45,12 +44,12 @@ public class ProfileController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@PostMapping("/profile/updatePlace")
+	@PatchMapping("/profile/place")
 	@ApiOperation(value = "지역 정보 수정")
 	public String updatePlace(@RequestParam(required = true) String email, 
 							@RequestParam(required = true) String place1,
 							@RequestParam(required = true) String place2) throws Exception {
-		System.out.println("-----------------updatePlace-----------------");
+		System.out.println("-----------------/profile/place-----------------");
 		System.out.println("email : " + email);
 		System.out.println("place1 : " + place1);
 		System.out.println("place2 : " + place2);
@@ -72,10 +71,10 @@ public class ProfileController {
 
 	}
 	
-	@PostMapping("/profile/getProfile")
+	@GetMapping("/profile/profile")
 	@ApiOperation(value = "프로필 가져오기")
 	public Profile getProfile(@RequestParam(required = true) String nickname) throws Exception {
-		System.out.println("-----------------getProfile-----------------");
+		System.out.println("-----------------/profile/profile-----------------");
 		System.out.println("nickname : " + nickname);
 		
 		int num = userService.getNumByNickname(nickname);

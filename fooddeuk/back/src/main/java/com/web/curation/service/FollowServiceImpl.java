@@ -35,4 +35,25 @@ public class FollowServiceImpl implements IFollowService {
 	public int unFollow(Follow follow) {
 		return followdao.unFollow(follow);
 	}
+
+	@Override
+	public int followerUp(int num) {
+		return followdao.followerUp(num);
+	}
+
+	@Override
+	public int followerDown(int num) {
+		return followdao.followerDown(num);
+	}
+
+	@Override
+	public int followingUp(int num) {
+		return followdao.followingUp(num);
+	}
+
+	@Override
+	public int followingDown(int num) {
+		return followdao.followingDown(num);
+	}
+	
 }

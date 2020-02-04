@@ -30,7 +30,7 @@ public class User {
 	private int auth;
 	private String confirm;
 	private int social;
-	private String key;
+	private String temp;
 
 	@Column(insertable = false, updatable = false)
 	private LocalDateTime createDate;
@@ -51,10 +51,10 @@ public class User {
 		this.confirm = confirm;
 	}
 	
-	public User(String email, String key, int temp, int temp2) {
+	public User(String email, String temp, int temp1, int temp2) {
 		super();
 		this.email = email;
-		this.key = key;
+		this.temp = temp;
 	}
 	
 	public User(String email, String nickname, String intro, int auth) {
@@ -96,7 +96,7 @@ public class User {
 	}
 
 	public User(int num, String email, String nickname, String name, String password, String intro, int auth,
-			String confirm, int social, String key, LocalDateTime createDate) {
+			String confirm, int social, String temp, LocalDateTime createDate) {
 		super();
 		this.num = num;
 		this.email = email;
@@ -107,7 +107,7 @@ public class User {
 		this.auth = auth;
 		this.confirm = confirm;
 		this.social = social;
-		this.key = key;
+		this.temp = temp;
 		this.createDate = createDate;
 	}
 
@@ -191,19 +191,19 @@ public class User {
 		this.createDate = createDate;
 	}
 
-	public String getKey() {
-		return key;
+	public String gettemp() {
+		return temp;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void settemp(String temp) {
+		this.temp = temp;
 	}
 
 	@Override
 	public String toString() {
 		return "User [num=" + num + ", email=" + email + ", nickname=" + nickname + ", name=" + name + ", password="
 				+ password + ", intro=" + intro + ", auth=" + auth + ", confirm=" + confirm + ", social=" + social
-				+ ", key=" + key + ", createDate=" + createDate + "]";
+				+ ", temp=" + temp + ", createDate=" + createDate + "]";
 	}
 	
 	

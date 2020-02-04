@@ -80,6 +80,7 @@
     import * as EmailValidator from 'email-validator';
     import UserApi from '../../apis/UserApi'
     import Axios from 'axios'
+    import http from '../../../http-common'
 
     import {mapState} from 'vuex';
 
@@ -141,7 +142,7 @@
             getMyInfo() {
                 let form = new FormData()
                  form.append('email', this.email)
-                 Axios.post("http://192.168.31.103:8080/user/getMyInfo", form)
+                 http.get("/user/myinfo?email=" + this.email)
                  .then(Response => {
                     this.nickName = Response.data.nickname;
                     this.nicknameTemp = this.nickName;

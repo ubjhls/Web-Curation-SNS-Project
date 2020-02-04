@@ -5,11 +5,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="follow">
 
 	<select id="countFollower" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM FOLLOW WHERE FOLLOWING=#{num}
+		SELECT COUNT_FOLLOWER FROM PROFILE WHERE NUM=#{num}
 	</select>
 	
 	<select id="countFollowing" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM FOLLOW WHERE FOLLOWER=#{num}
+		SELECT COUNT_FOLLOWING FROM PROFILE WHERE NUM=#{NUM}
 	</select>
 	
 	<select id="checkFollow" parameterType="follow" resultType="java.lang.Integer">
@@ -24,5 +24,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="unFollow" parameterType="follow">
 		DELETE FROM FOLLOW WHERE FOLLOWER=#{follower} AND FOLLOWING=#{following}
 	</delete>
+	
+	<update id="followerUp" parameterType="java.lang.Integer">
+		UPDATE PROFILE SET COUNT_FOLLOWER=COUNT_FOLLOWER+1 WHERE NUM=#{num} 
+	</update>
+	
+	<update id="followerDown" parameterType="java.lang.Integer">
+		UPDATE PROFILE SET COUNT_FOLLOWER=COUNT_FOLLOWER-1 WHERE NUM=#{num} 
+	</update>
+	
+	<update id="followingUp" parameterType="java.lang.Integer">
+		UPDATE PROFILE SET COUNT_FOLLOWING=COUNT_FOLLOWING+1 WHERE NUM=#{num} 
+	</update>
+	
+	<update id="followingDown" parameterType="java.lang.Integer">
+		UPDATE PROFILE SET COUNT_FOLLOWING=COUNT_FOLLOWING-1 WHERE NUM=#{num} 
+	</update>
 	
  </mapper>

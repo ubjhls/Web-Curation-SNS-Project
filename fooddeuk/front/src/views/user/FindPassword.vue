@@ -98,10 +98,12 @@
                 if (this.isSubmit) {
                     this.isSubmit = false;
                     UserApi.requestFindPassword(this.email, res => {
+                        // alert("성공")
+                        // console.log(res)
                         if (res == 'success') {
                             var router = this.$router;
                             router.push({
-                                name: "FindPasswordSendEmail",
+                                name: "ConfirmFindPassword",
                                 params: {
                                     "nickName": this.nickName,
                                     "email": this.email,
