@@ -75,8 +75,10 @@
                     <p>
                         {{ item.count_comment }} 개의 댓글이 있습니다.
                     </p>
-                     <div v-on="item.num" v-for="cmt in comment" v-bind:key="cmt.id">
-                        {{ cmt.comment }}
+                     <div v-for="cmt in comment" v-bind:key="cmt.id" >
+                        <div v-if="cmt.num == item.num">
+                             {{ cmt.comment }}
+                        </div>
                     </div>
   
                 </div>
@@ -89,8 +91,10 @@
                      <p>
                         {{ item.count_comment }} 개의 댓글이 있습니다.
                     </p>
-                    <div v-on="item.num" v-for="cmt in comment" v-bind:key="cmt.id">
-                        {{cmt.nickname}} : {{ cmt.comment }}
+                    <div v-for="cmt in comment" v-bind:key="cmt.id" >
+                        <div v-if="cmt.num == item.num">
+                             {{ cmt.comment }}
+                        </div>
                     </div>
                 </div>
                 <!-- <div v-if="commenttoggle">
@@ -154,8 +158,13 @@
                 this.commenttoggle = !this.commenttoggle
                 http.get("/comment/comment?num=" + num)
                 .then(response => {
-                    alert(response.data.object.length)
                     this.comment = response.data.object
+                    // for(this.i=0; this.i< this.comment.length; this.i++){
+                    //     if (this.comment[this.i].num==num){
+                    //         alert('asd')
+                    //         this.comments.push(this.comment[this.i].comment)
+                    //     }
+                    // }
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -306,6 +315,7 @@
         },
         data: () => {
             return {
+                i: 0,
                 commenttoggle: false,
                 nick:'',
                 num:0,
@@ -317,6 +327,7 @@
                 following:0,
                 post : [],
                 comment : [],
+                comments: [],
                 commentNum:0,
                 newcomment: "",
                 like:true,
