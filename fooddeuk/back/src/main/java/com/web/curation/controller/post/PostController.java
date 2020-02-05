@@ -33,15 +33,11 @@ public class PostController {
 	
 	@Autowired
 	private IUserService userService;
-	
-<<<<<<< HEAD
 
-
-=======
 	@Autowired
 	private IPostlikeService postlikeService;
 	
->>>>>>> 9227773567b5509ff0b083f248adf90346437647
+
 	@PostMapping("/post/post")
 	@ApiOperation(value = "게시물 작성")
 	public String insertPost(@RequestParam(required = true) String email,
