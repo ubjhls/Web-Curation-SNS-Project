@@ -90,15 +90,18 @@
                     <button @click="toggleadd(item.num)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
                     <button @click="togglecomment(item.num)"><img style="width:26px; margin-left:10px; margin-bottom:5px" src="../../assets/images/comment.png"></button><br>
                     <p>
-                        {{ item.count_like  }} 명이 좋아합니다
+                        {{ item.count_like }} 명이 좋아합니다
                     </p>
-                     <p>
+                     <p>    
                         {{ item.count_comment }} 개의 댓글이 있습니다.
                     </p>
                     <div v-for="cmt in comment" v-bind:key="cmt.id" >
-                        <div v-if="cmt.num == item.num">
+                            <div v-if="cmt.num == item.num">
+                        <div v-if="cmt.iscomment">
                              {{ cmt.comment }}
-                        </div>
+
+                            </div>
+                     </div>
                     </div>
                 </div>
                 <!-- <div v-if="commenttoggle">
@@ -123,6 +126,7 @@
     </div> 
     <div
     style="margin-bottom:70px"></div>
+</div>
 </div>
 </div>
 
@@ -159,21 +163,23 @@
         },
         methods: {
             togglecomment(num) {
-                this.commenttoggle = !this.commenttoggle
+                // this.commenttoggle = !this.commenttoggle
                 http.get("/comment/comment?num=" + num)
                 .then(response => {
                     this.comment = response.data.object
-                    // for(this.i=0; this.i< this.comment.length; this.i++){
-                    //     if (this.comment[this.i].num==num){
-                    //         alert('asd')
-                    //         this.comments.push(this.comment[this.i].comment)
-                    //     }
-                    // }
+                    for(this.i=0; this.i< this.comment.length; this.i++){
+                        if (this.comment[this.i].num==num){
+                            this.comment[this.i].iscomment != this.comment[this.i].iscomment
+                        }
+                    }
+                    this.comment[0].iscomment = true
+                    console.log(this.comment.filter)
                 })
                 .catch(Error => {
                     console.log(Error)
                 })
             },
+
             unfollowgo(){
                 let form = new FormData()
                 let myn  = this.$store.state.userinfo.nickName;
@@ -345,6 +351,7 @@
         },
         data: () => {
             return {
+                asd: true,
                 i: 0,
                 commenttoggle: false,
                 nick:'',
