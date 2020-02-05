@@ -27,8 +27,19 @@ public class Post {
 	private int count_star;
 	private String address;
 	private String image;
+<<<<<<< HEAD
+=======
 	private int islike;
+>>>>>>> 9227773567b5509ff0b083f248adf90346437647
 	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	public Post() {
 		super();
 	}

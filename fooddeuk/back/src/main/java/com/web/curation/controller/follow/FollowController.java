@@ -1,13 +1,19 @@
 package com.web.curation.controller.follow;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.curation.model.Alarm;
 import com.web.curation.model.follow.Follow;
+import com.web.curation.model.user.User;
+import com.web.curation.service.IAlarmService;
 import com.web.curation.service.IFollowService;
 import com.web.curation.service.IUserService;
 
@@ -22,6 +28,9 @@ public class FollowController {
 	
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private IAlarmService alarmService;
 	
 	@GetMapping("/follow/follow")
 	@ApiOperation(value = "팔로우 하고 있는지 유무 확인")
@@ -87,6 +96,14 @@ public class FollowController {
 			return "failed";
 		}
 		
+		Alarm alarm = new Alarm();
+		alarm.setReceiver(nickname);
+		alarm.setSender(mynickname);
+		alarm.setReason(2);
+		
+		//알람 메세지저장
+		alarmService.nonfollowSave(alarm);
+		
 		return "success";
 	}
 	
@@ -115,5 +132,120 @@ public class FollowController {
 		
 		return "success";
 	}
+	
+	@PostMapping("/follow/nonfollow")
+	@ApiOperation(value = "비공개유저에게 팔로우 요청")
+	public String nonfollow(@RequestParam(required = true) String mynickname,
+					@RequestParam(required = true) String nickname) throws Exception {
+		System.out.println("-----------------nonfollow-----------------");
+		System.out.println("myn : " + mynickname);
+		System.out.println("n : " + nickname);
+	
+		Alarm alarm = new Alarm();
+	
+	    alarm.setReceiver(nickname);
+		alarm.setSender(mynickname);
+		
+		//비공개 사용자에게 팔로우 요쳥 = 1;
+		alarm.setReason(1);
+		
+		//전에 요청이 보냈는지 확인(보낸사람, 받는사람, 컨펌이 0, 유형이1인게 없으면 => 보낸적이 없어)
+		int check = alarmService.checkFollowAlarm(alarm);
+		System.out.println(check);
+		
+		if(check == 1) { //보낸적이 없어!
+			
+			//DB에 넣는다.
+			alarmService.nonfollowSave(alarm);
+			return "success";
+		}else {
+			return "failed";
+		}
+	}
+	
+	@GetMapping("/follow/requestlist")
+	@ApiOperation(value = "알람에서 요청 리스트")
+	public List<Alarm> requestlist(@RequestParam(required = true) String mynickname) throws Exception {
+		System.out.println("-----------------requestlist-----------------");
+		System.out.println("mynickname: " + mynickname);
+		List<Alarm> list = alarmService.myalarmList(mynickname);
+	
+		System.out.println(list);
+		
+		return list;
+	}
+	
+	@PostMapping("/follow/followagree")
+	@ApiOperation(value = "팔로우 동의하기")
+	public String followagree(@RequestParam(required = true) String num, @RequestParam(required = true) String mynickname,
+					@RequestParam(required = true) String nickname, @RequestParam(required = true) String agree) throws Exception {
+		System.out.println("-----------------followagree-----------------");
+		System.out.println("mynickname : " + mynickname);
+		System.out.println("nickname : " + nickname);
+		System.out.println("agree : " + agree);
+		System.out.println("num : " + num);
+		
+		if(agree.equals("1")) {
+			int myNum = userService.getNumByNickname(mynickname);
+			int otherNum = userService.getNumByNickname(nickname);
+			
+			Follow follow = new Follow(myNum, otherNum);
+			
+			if(followService.follow(follow) != 1) {
+				return "failed";
+			}
+			if(followService.followerUp(otherNum) != 1) {
+				return "failed";
+			}
+			if(followService.followingUp(myNum) != 1) {
+				return "failed";
+			}
+			
+			//알람저장
+			Alarm alarm2 = new Alarm();
+			alarm2.setReceiver(nickname);
+			alarm2.setSender(mynickname);
+			alarm2.setReason(2);
+			alarmService.nonfollowSave(alarm2);
+		}else {
+			//알람저장
+			System.out.println("거절");
+			Alarm alarm2 = new Alarm();
+			alarm2.setSender(nickname);
+			alarm2.setReceiver(mynickname);
+			alarm2.setReason(3);
+			alarmService.nonfollowSave(alarm2);
+		}
+		
+		alarmService.changeConfirm(Integer.parseInt(num));
+		
+		
+		
+		return "success";
+	}
+	
+	@GetMapping("/follow/alarmlist")
+	@ApiOperation(value = "알람에서 알람 리스트")
+	public List<Alarm> alarmtlist(@RequestParam(required = true) String mynickname) throws Exception {
+		System.out.println("-----------------alarmlist----------------");
+		System.out.println("mynickname: " + mynickname);
+		List<Alarm> list = alarmService.alarmtlist(mynickname);
+	
+		System.out.println(list);
+		
+		return list;
+	}
+	
+	@PatchMapping("/follow/alarmconfirm")
+	@ApiOperation(value = "알람에서 알람 리스트 확인")
+	public String alarmconfirm(@RequestParam(required = true) String num) throws Exception {
+		System.out.println("-----------------alarmlist----------------");
+		System.out.println("num: " + num);
+		
+		alarmService.changeConfirm(Integer.parseInt(num));
+		
+		return "success";
+	}
+	
 	
 }
