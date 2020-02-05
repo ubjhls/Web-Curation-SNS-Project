@@ -5,8 +5,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="post">
 
 	<insert id="insertPost" parameterType="post">
-		INSERT INTO POST(AUTHOR, TITLE, CONTENT, DATE, COUNT_STAR, ADDRESS)
-		VALUES(#{author}, #{title}, #{content}, NOW(), #{count_star}, #{address})
+		INSERT INTO POST(AUTHOR, TITLE, CONTENT, DATE, COUNT_STAR, ADDRESS, image)
+		VALUES(#{author}, #{title}, #{content}, NOW(), #{count_star}, #{address}, #{image})
 	</insert>
 	
 	<select id="getAllPost" parameterType="java.lang.Integer" resultType="post">

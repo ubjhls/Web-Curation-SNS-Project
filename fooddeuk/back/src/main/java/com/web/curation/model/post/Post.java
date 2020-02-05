@@ -27,7 +27,16 @@ public class Post {
 	private int count_comment;
 	private int count_star;
 	private String address;
+	private String image;
 	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	public Post() {
 		super();
 	}

@@ -1,5 +1,8 @@
 package com.web.curation.controller.post;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.post.Post;
@@ -28,24 +32,30 @@ public class PostController {
 	@Autowired
 	private IUserService userService;
 	
+
+
 	@PostMapping("/post/post")
 	@ApiOperation(value = "게시물 작성")
 	public String insertPost(@RequestParam(required = true) String email,
 							@RequestParam(required = true) String title,
 							@RequestParam(required = true) String content,
 							@RequestParam(required = true) String count_star,
-							@RequestParam(required = true) String address) throws Exception {
+							@RequestParam(required = true) String address,
+							@RequestParam(required = true) String image) throws Exception {
 		System.out.println("-----------------/post/post-----------------");
 		System.out.println("email : " + email);
 		System.out.println("title : " + title);
 		System.out.println("content : " + content);
 		System.out.println("count_star : " + count_star);
 		System.out.println("address : " + address);
+		System.out.println("image : " + image);
+		
 
 		int author = userService.getNumByEmail(email);
 		int star = Integer.parseInt(count_star);
 		
 		Post post = new Post(author, title, content, star, address);
+		post.setImage(image);
 		
 		if(postService.insertPost(post) != 1) {
 			return "failed";
