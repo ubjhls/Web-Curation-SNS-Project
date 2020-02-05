@@ -36,7 +36,7 @@
                 <img v-if="menu.isProfile" src="../../assets/images/profileFill.png" style="height:100%;">
             </button>
             <button class="footer_btn" @click="clickAlarm" :disabled="menu.isNavi">
-                <v-chip class="alarmChip" x-small style="background-color:red;color:white;"> {{this.alarm}} </v-chip>
+                <v-chip class="alarmChip" x-small style="background-color:red;color:white;">{{this.alarm}}</v-chip>
                 <img class="alarm_btn" v-if="!menu.isAlarm" src="../../assets/images/alarm.png">
                 <img class="alarm_btn" v-if="menu.isAlarm" src="../../assets/images/alarmFill.png">
             </button>
@@ -61,8 +61,10 @@
     import Vue from 'vue'
 
     import {mapState} from 'vuex';
+    import {fireDB} from '../../main'
 
-    
+    let dbdata = 0;
+
     export default {
         components: {
             NewsFeed,
@@ -73,16 +75,40 @@
             Searchname,
             UserFeed
         },
+        beforeCreate() {
+            dbdata = 0;
+        },
         created() {
             this.component = this;
             if(this.$store.state.userinfo!=null){
+                this.email = this.$store.state.userinfo.email;
                 this.nickname = this.$store.state.userinfo.nickName;
             }
-            
+            this.getAlarmFromFirebase()
         },
         watch: {
+            dbdata : function(v) {
+                this.watchAlarmFromFirebase();
+                this.alarm = dbdata;
+                alert(dbdata)
+            }
         },
         methods: {
+            watchAlarmFromFirebase() {
+                let temp = 0;
+                fireDB.collection('Alarm').doc(this.email).onSnapshot(function(doc) {
+                    temp = doc.data().alarm  + doc.data().request;
+                    dbdata = temp;
+                });
+            },
+            getAlarmFromFirebase() {
+                let temp = 0;
+                let result = fireDB.collection('Alarm').doc(this.email).get().then(function(doc) {
+                    console.log(doc.data())
+                    temp = parseInt(doc.data().alarm)  + parseInt(doc.data().request);
+                    dbdata = temp;
+                });
+            },
             getPropsNick(propsNick) {
                 if(this.$store.state.userinfo!=null){
                 this.nickname = this.$store.state.userinfo.nickName;
@@ -190,7 +216,7 @@
                 },
                 component: this,
                 feeds: 5,
-                alarm: 5,
+                alarm: 0,
                 propsNickname:''
             }
         },

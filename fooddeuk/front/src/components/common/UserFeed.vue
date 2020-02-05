@@ -31,10 +31,10 @@
     </div>
   </div>
   <hr>
-  <div v-if="auth==1" style="margin-top:20px; text-align:center">
+  <div v-if="auth==1 && isfollow==0" style="margin-top:20px; text-align:center">
       비공개 계정입니다.
   </div>
-  <div v-if="auth==0">
+  <div v-if="auth==0 || (auth==1 && isfollow==1)">
   <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
   <div v-for="item in post" v-bind:key="item.num">
     <v-card
@@ -117,7 +117,7 @@
             
         },
         created () {
-            this.feeds = 5;
+            this.feeds = 0;
             this.nickname = this.propsNickname;
             this.getUserByNickname(this.nickname);
             this.followcheck(this.nickname);
@@ -130,7 +130,7 @@
                 let myn  = this.$store.state.userinfo.nickName;
                 form.append('mynickname', myn)
                 form.append('nickname',this.nickname)
-                http.post("/follow/unFollow?mynickname=" + myn + "&nickname=" + this.nickname)
+                http.post("/follow/unFollow", form)
                 .then(Response => {
                     this.isfollow = 0;
                     // console.log(Response.data)
@@ -142,17 +142,43 @@
                 })
             },
             followgo(){
-                let myn  = this.$store.state.userinfo.nickName;
-                http.post("/follow/follow?mynickname=" + myn + "&nickname=" + this.nickname)
-                .then(Response => {
-                    this.isfollow = 1;
-                    // console.log(Response.data)
-                    this.getFollower();
-                    this.getFollowing();
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
+                if(this.auth==0) {
+                    let form = new FormData();
+                    let myn  = this.$store.state.userinfo.nickName;
+                    form.append('mynickname', myn)
+                    form.append('nickname',this.nickname)
+                    http.post("/follow/follow", form)
+                    .then(Response => {
+                        this.isfollow = 1;
+                        // console.log(Response.data)
+                        this.getFollower();
+                        this.getFollowing();
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+                }
+                else if(this.auth==1) {
+                    let form = new FormData();
+                    let myn  = this.$store.state.userinfo.nickName;
+                    form.append('mynickname', myn)
+                    form.append('nickname',this.nickname)
+                    
+                    http.post("/follow/nonfollow", form)
+                    .then(Response => {
+                        console.log(Response)
+                        if(Response.data==='success') {
+                            alert("팔로우가 요청되었습니다.")
+                        }
+                        else if(Response.data==='failed') {
+                            alert("이미 팔로우 신청을 하였습니다.")
+                        }
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+
+                }
             },
             followcheck(nick) {
                 let myn  = this.$store.state.userinfo.nickName;
@@ -215,9 +241,7 @@
                     this.auth = Response.data.auth;
                     this.getFollowing(this.email);
                     this.getFollower(this.email);
-                    if(this.auth==0) {
-                        this.getPostByNum(this.num);
-                    }
+                    this.getPostByNum(this.num);
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -250,6 +274,7 @@
             return {
                 num:0,
                 email:'',
+                myEmail:'',
                 feeds: 0,
                 nickname : '',
                 intro:'',
