@@ -17,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.post.Post;
+import com.web.curation.model.postlike.Postlike;
 import com.web.curation.service.IPostService;
+import com.web.curation.service.IPostlikeService;
 import com.web.curation.service.IUserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -32,8 +34,14 @@ public class PostController {
 	@Autowired
 	private IUserService userService;
 	
+<<<<<<< HEAD
 
 
+=======
+	@Autowired
+	private IPostlikeService postlikeService;
+	
+>>>>>>> 9227773567b5509ff0b083f248adf90346437647
 	@PostMapping("/post/post")
 	@ApiOperation(value = "게시물 작성")
 	public String insertPost(@RequestParam(required = true) String email,
@@ -66,21 +74,33 @@ public class PostController {
 	
 	@GetMapping("/post/post/{num}")
 	@ApiOperation(value = "게시물 가져오기")
-	public Object getMyPost(@RequestParam(required = true) int num) throws Exception {
+	public Object getMyPost(@RequestParam(required = true) int num,
+			@RequestParam(required = true) String email) throws Exception {
 		System.out.println("-----------------/post/post/{num}-----------------");
 		System.out.println("num : " + num);
+		System.out.println("email : " + email);
 		
 		BasicResponse result = new BasicResponse();
 		result.data="success";
 		
 		List<Post> list = postService.getAllPost(num);
-		System.out.println(list);
 		
 		if(list.size() == 0) {
 			result.data = "failed";
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		
+		int myNum = userService.getNumByEmail(email);
+		
+		for (int i = 0; i < list.size(); i++) {
+			Postlike like = new Postlike(list.get(i).getNum(), myNum);
+			if(postlikeService.checkLike(like) != 0) {
+				list.get(i).setIslike(1);
+			}
+		}
+		
+		System.out.println(list);
+		result.status=true;
 		result.object = list;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}

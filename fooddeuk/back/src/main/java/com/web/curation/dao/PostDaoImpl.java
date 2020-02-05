@@ -23,4 +23,23 @@ public class PostDaoImpl {
 		return sqlSession.selectList(ns+"getAllPost", num);
 	}
 	
+	public int likeCountUp(int num) {
+		return sqlSession.update(ns+"likeCountUp", num);
+	}
+	
+	public int likeCountDown(int num) {
+		return sqlSession.update(ns+"likeCountDown", num);
+	}
+	
+	public int commentCountUp(int num) {
+		return sqlSession.update(ns+"commentCountUp", num);
+	}
+	
+	public int commentCountDown(int num) {
+		return sqlSession.update(ns+"commentCountDown", num);
+	}
+	
+	public int getAuthor(int num) {
+		return sqlSession.selectOne(ns+"getAuthor", num);
+	}
 }

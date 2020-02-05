@@ -1,4 +1,3 @@
-// 디비 셋팅 주석 
 package com.web.curation.model.post;
 
 import javax.persistence.Entity;
@@ -28,6 +27,10 @@ public class Post {
 	private int count_star;
 	private String address;
 	private String image;
+<<<<<<< HEAD
+=======
+	private int islike;
+>>>>>>> 9227773567b5509ff0b083f248adf90346437647
 	
 	public String getImage() {
 		return image;
@@ -74,6 +77,8 @@ public class Post {
 		this.count_star = count_star;
 		this.address = address;
 	}
+	
+	
 
 	public int getNum() {
 		return num;
@@ -129,13 +134,24 @@ public class Post {
 	public void setDate(String date) {
 		this.date = date;
 	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
+	public int getIslike() {
+		return islike;
+	}
+	public void setIslike(int islike) {
+		this.islike = islike;
+	}
 
 	@Override
 	public String toString() {
 		return "Post [num=" + num + ", author=" + author + ", title=" + title + ", content=" + content + ", date="
 				+ date + ", count_like=" + count_like + ", count_comment=" + count_comment + ", count_star="
-				+ count_star + ", address=" + address + "]";
+				+ count_star + ", address=" + address + ", image=" + image + ", islike=" + islike + "]";
 	}
-
 	
 }
