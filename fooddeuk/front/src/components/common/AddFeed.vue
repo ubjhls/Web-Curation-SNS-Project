@@ -138,7 +138,6 @@ import http from "../../../http-common"
         },
         submit(){
                 if(this.issubmit){
-
                  let form = new FormData()
                  let star = this.star1+this.star2+this.star3+this.star4+this.star5
                
@@ -147,16 +146,17 @@ import http from "../../../http-common"
                  form.append('content', this.content)
                  form.append('address', this.address)
                  form.append('count_star', star)
+                 form.append('image', null)
               
                  http.post("/post/post", form)
                  .then(Response => {
-                  //  console.log(Response)
+                   console.log(Response)
                     if(Response.data=="success"){
                       this.$emit('child', this.propDrawer)
                     }
                  })
                  .catch(Error => {
-                   
+                    console.log(Error)
                    })
            
                    }

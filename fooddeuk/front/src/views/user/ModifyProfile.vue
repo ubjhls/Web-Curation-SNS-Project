@@ -107,6 +107,7 @@
         },
         watch: {
             nickName: function (v) {
+                this.exist_nickName_confirm = false;
                 this.checkForm();
             },
             isTerm: function (v) {
@@ -123,7 +124,7 @@
             },
             authData : function(v) {
                 this.checkForm();
-            }
+            },
         },methods: { 
             goBack() {
                 var router = this.$router;
@@ -219,10 +220,10 @@
                             isSubmit = false;
                         }
                     )
-
-                if(this.introTemp==this.intro)
-                    isSubmit = false;
-
+                console.log(this.exist_nickName_confirm)
+                if(this.exist_nickName_confirm=='b') {
+                    isSubmit = true;
+                }
                 this.isSubmit = isSubmit;
             },
             submit() {
