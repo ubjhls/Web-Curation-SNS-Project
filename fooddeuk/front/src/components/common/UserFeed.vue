@@ -125,6 +125,7 @@
     style="margin-bottom:70px"></div>
 </div>
 </div>
+</div>
 
 </template>
 
@@ -137,6 +138,7 @@
     import Axios from 'axios'
     import http from '../../../http-common'
     import NavigationBar from '../../components/common/NavigationBar'
+    import {fireDB} from '../../main'
     
 
     export default {
@@ -146,7 +148,10 @@
             
         },
         created () {
-            this.nick = this.$store.state.userinfo.nickName
+            if(this.$store.state.userinfo!=null) {
+                this.myEmail = this.$store.state.userinfo.email
+                this.nick = this.$store.state.userinfo.nickName
+            }
             this.feeds = 5;
             this.nickname = this.propsNickname;
             this.getUserByNickname(this.nickname);
@@ -158,6 +163,44 @@
             ...mapState(['userinfo']),
         },
         methods: {
+            setAlarm(alarm) {
+                this.userAlarmCount = alarm;
+            },
+            updateAlarmToFirebase() {
+                console.log(this.email + ":" + this.userAlarmCount)
+                fireDB.collection('Alarm').doc(this.email)
+                .set({
+                    count : this.userAlarmCount + 1
+                })
+            },
+            getAlarmFromFirebase() {
+                let whoami = this;
+                let count = 0;
+                fireDB.collection('Alarm').doc(this.email).get().then(function(doc) {
+                if(doc.data()==undefined) {
+                    count = 0;
+                } else {
+                    count = doc.data().count;
+                }
+                whoami.setAlarm(count);
+                }).catch(function(error) {
+                    console.log(error)
+                })
+            },
+            watchAlarmFromFirebase() {
+                let whoami = this;
+                let count=0;
+                fireDB.collection('Alarm').doc(this.email).onSnapshot( {
+                    includeMetadataChanges: true    
+                },function(doc) {
+                    if(doc.data()==undefined) {
+                        count = 0;
+                    } else {
+                        count = doc.data().count;
+                    }
+                    whoami.setAlarm(count);
+                })
+            },
             togglecomment(num) {
                 this.commenttoggle = !this.commenttoggle
                 http.get("/comment/comment?num=" + num)
@@ -169,6 +212,7 @@
                     //         this.comments.push(this.comment[this.i].comment)
                     //     }
                     // }
+                    
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -202,6 +246,9 @@
                         // console.log(Response.data)
                         this.getFollower();
                         this.getFollowing();
+                        this.updateAlarmToFirebase();
+
+
                     })
                     .catch(Error => {
                         console.log(Error)
@@ -217,6 +264,7 @@
                     .then(Response => {
                         console.log(Response)
                         if(Response.data==='success') {
+                            this.updateAlarmToFirebase();
                             alert("팔로우가 요청되었습니다.")
                         }
                         else if(Response.data==='failed') {
@@ -291,6 +339,7 @@
                     this.getFollowing(this.email);
                     this.getFollower(this.email);
                     this.getPostByNum(this.num);
+                    this.getAlarmFromFirebase();
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -364,6 +413,7 @@
                 like:true,
                 isfollow:0,
                 auth:1,
+                userAlarmCount: 0,
             }
         }
 

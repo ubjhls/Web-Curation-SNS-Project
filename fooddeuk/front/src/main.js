@@ -6,7 +6,8 @@ import axios from 'axios'
 import vuetify from './plugins/vuetify';
 import moment from "moment"
 import VueMomentJS from "vue-momentjs"
-// import firebase from 'firebase'
+
+
 const firebase = require('firebase/app');
 require('firebase/firestore');
 
