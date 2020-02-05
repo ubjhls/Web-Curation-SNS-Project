@@ -98,5 +98,10 @@ public class UserServiceImpl implements IUserService {
 		return userdao.getAuth(num);
 	}
 
+	@Override
+	public String getNickname(int num) {
+		return userdao.getNickname(num);
+	}
+
 
 }

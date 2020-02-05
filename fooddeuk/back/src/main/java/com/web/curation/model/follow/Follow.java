@@ -1,4 +1,3 @@
-// 디비 셋팅 주석 
 package com.web.curation.model.follow;
 
 import javax.persistence.Entity;

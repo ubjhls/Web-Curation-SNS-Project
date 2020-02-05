@@ -1,4 +1,3 @@
-// 디비 셋팅 주석 
 package com.web.curation.model.comment;
 
 import javax.persistence.Entity;
@@ -22,6 +21,7 @@ public class Comment {
 	private int author;
 	private String comment;
 	private String date; // DB에서 now()로 대체
+	private String nickname;
 	
 	public Comment() {
 		super();
@@ -60,19 +60,23 @@ public class Comment {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	
 	public String getDate() {
 		return date;
 	}
-
 	public void setDate(String date) {
 		this.date = date;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	@Override
 	public String toString() {
-		return "Comment [num=" + num + ", author=" + author + ", comment=" + comment + ", date=" + date + "]";
+		return "Comment [num=" + num + ", author=" + author + ", comment=" + comment + ", date=" + date + ", nickname="
+				+ nickname + "]";
 	}
 
 	

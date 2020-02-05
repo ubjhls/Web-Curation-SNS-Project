@@ -31,6 +31,10 @@
     </div>
   </div>
   <hr>
+  <div v-if="auth==1 && isfollow==0" style="margin-top:20px; text-align:center">
+      비공개 계정입니다.
+  </div>
+  <div v-if="auth==0 || (auth==1 && isfollow==1)">
   <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
   <div v-for="item in post" v-bind:key="item.num">
     <v-card
@@ -125,7 +129,6 @@
 </template>
 
 <script>
-    import NavigationBar from '../../components/common/NavigationBar'
     import '../../assets/css/style.scss'
     import '../../assets/css/user.scss'
     import '../../assets/css/profile.scss'
@@ -133,6 +136,7 @@
     import UserApi from '../../apis/UserApi'
     import Axios from 'axios'
     import http from '../../../http-common'
+    import NavigationBar from '../../components/common/NavigationBar'
     
 
     export default {
@@ -175,7 +179,7 @@
                 let myn  = this.$store.state.userinfo.nickName;
                 form.append('mynickname', myn)
                 form.append('nickname',this.nickname)
-                http.post("/follow/unFollow?mynickname=" + myn + "&nickname=" + this.nickname)
+                http.post("/follow/unFollow", form)
                 .then(Response => {
                     this.isfollow = 0;
                     // console.log(Response.data)
@@ -187,17 +191,43 @@
                 })
             },
             followgo(){
-                let myn  = this.$store.state.userinfo.nickName;
-                http.post("/follow/follow?mynickname=" + myn + "&nickname=" + this.nickname)
-                .then(Response => {
-                    this.isfollow = 1;
-                    // console.log(Response.data)
-                    this.getFollower();
-                    this.getFollowing();
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
+                if(this.auth==0) {
+                    let form = new FormData();
+                    let myn  = this.$store.state.userinfo.nickName;
+                    form.append('mynickname', myn)
+                    form.append('nickname',this.nickname)
+                    http.post("/follow/follow", form)
+                    .then(Response => {
+                        this.isfollow = 1;
+                        // console.log(Response.data)
+                        this.getFollower();
+                        this.getFollowing();
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+                }
+                else if(this.auth==1) {
+                    let form = new FormData();
+                    let myn  = this.$store.state.userinfo.nickName;
+                    form.append('mynickname', myn)
+                    form.append('nickname',this.nickname)
+                    
+                    http.post("/follow/nonfollow", form)
+                    .then(Response => {
+                        console.log(Response)
+                        if(Response.data==='success') {
+                            alert("팔로우가 요청되었습니다.")
+                        }
+                        else if(Response.data==='failed') {
+                            alert("이미 팔로우 신청을 하였습니다.")
+                        }
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+
+                }
             },
             followcheck(nick) {
                 let myn  = this.$store.state.userinfo.nickName;
@@ -233,8 +263,6 @@
                 http.get("/follow/follower?email="+this.email)
                 .then(Response => {
                 this.follower = Response.data;
-                console.log("getFollower")
-                console.log(Response)
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -255,12 +283,14 @@
                 form.append('nickname', nick)
                 http.get("/user/userinfo/{nickname}?nickname="+nick)
                 .then(Response => {
+                    console.log(Response)
                     this.num = Response.data.num;
                     this.intro = Response.data.intro;
                     this.email = Response.data.email;
-                    this.getPostByNum(this.num);
+                    this.auth = Response.data.auth;
                     this.getFollowing(this.email);
                     this.getFollower(this.email);
+                    this.getPostByNum(this.num);
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -320,6 +350,7 @@
                 nick:'',
                 num:0,
                 email:'',
+                myEmail:'',
                 feeds: 0,
                 nickname : '',
                 intro:'',
@@ -332,6 +363,7 @@
                 newcomment: "",
                 like:true,
                 isfollow:0,
+                auth:1,
             }
         }
 

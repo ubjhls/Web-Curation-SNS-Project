@@ -20,4 +20,5 @@ public interface IUserService {
 	int updateUser(User user);
 	User getUserByNickname(String nickname);
 	int getAuth(int num);
+	String getNickname(int num);
 }

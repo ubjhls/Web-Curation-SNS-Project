@@ -23,4 +23,6 @@ public class CommentDaoImpl {
 		return sqlSession.insert(ns+"insertComment", num);
 	}
 	
+
+	
 }
