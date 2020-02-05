@@ -439,6 +439,8 @@
                 isfollow:0,
                 auth:1,
                 userAlarmCount: 0,
+                todolist:[],
+                state:[],
             }
         }
 
