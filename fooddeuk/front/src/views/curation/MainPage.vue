@@ -95,18 +95,14 @@
         },
         methods: {
             watchAlarmFromFirebase() {
-                let temp = 0;
                 fireDB.collection('Alarm').doc(this.email).onSnapshot(function(doc) {
-                    temp = doc.data().alarm  + doc.data().request;
-                    dbdata = temp;
+                    dbdata = doc.data().alarm  + doc.data().request;
                 });
             },
             getAlarmFromFirebase() {
-                let temp = 0;
                 let result = fireDB.collection('Alarm').doc(this.email).get().then(function(doc) {
                     console.log(doc.data())
-                    temp = parseInt(doc.data().alarm)  + parseInt(doc.data().request);
-                    dbdata = temp;
+                    dbdata = parseInt(doc.data().alarm)  + parseInt(doc.data().request);
                 });
             },
             getPropsNick(propsNick) {
