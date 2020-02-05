@@ -66,14 +66,42 @@
         </v-card-text>
         <hr>
         <v-spacer></v-spacer>
-                <div style="width:100%;">
-                    <button @click="toggle"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
-                    <button @click="getComment(item.num)"><img style="width:26px; margin-left:10px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
+                <div style="width:100%" v-if="item.islike===1">
+                    <button @click="toggledelete(item.num)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
+                    <button @click="togglecomment(item.num)"><img style="width:26px; margin-left:10px; margin-bottom:5px" src="../../assets/images/comment.png"></button><br>
+
+                    <p v-if="item.count_like === 1">
+                        {{nick}} 님이 좋아합니다
+                    </p>
+                    <p v-else>
+                    {{nick}}님 외  {{ item.count_like - 1 }} 명이 좋아합니다
+                    </p>
+                    <p>
+                        {{ item.count_comment }} 개의 댓글이 있습니다.
+                    </p>
+                     <div v-for="cmt in comment" v-bind:key="cmt.id" >
+                        <div v-if="cmt.num == item.num">
+                             {{ cmt.comment }}
+                        </div>
+                    </div>
+  
                 </div>
-                <div style="margin-left:10px; margin-bottom:5px">
-                    {{ item.count_like }} 명이 좋아합니다
+                <div style="width:100%;" v-else>
+                    <button @click="toggleadd(item.num)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
+                    <button @click="togglecomment(item.num)"><img style="width:26px; margin-left:10px; margin-bottom:5px" src="../../assets/images/comment.png"></button><br>
+                    <p>
+                        {{ item.count_like  }} 명이 좋아합니다
+                    </p>
+                     <p>
+                        {{ item.count_comment }} 개의 댓글이 있습니다.
+                    </p>
+                    <div v-for="cmt in comment" v-bind:key="cmt.id" >
+                        <div v-if="cmt.num == item.num">
+                             {{ cmt.comment }}
+                        </div>
+                    </div>
                 </div>
-                <div v-if="commentNum==item.num">
+                <!-- <div v-if="commenttoggle">
                     <ul>
                         <li v-for="item in comment" :key="item">
                             <h5 style=" margin-left:15px;"> 닉네임</h5> <h5 style="margin-left:25px">{{ item.comment }}</h5>
@@ -90,11 +118,11 @@
                             <button style="height:30px" class="check-button" @click="addcomment">댓글달기</button>
                         </div>
                     </div>
-                </div>
+                </div> -->
     </v-card>  
-    </div>
-  </div> 
-
+    </div> 
+    <div
+    style="margin-bottom:70px"></div>
 </div>
 </div>
 
@@ -104,6 +132,7 @@
     import '../../assets/css/style.scss'
     import '../../assets/css/user.scss'
     import '../../assets/css/profile.scss'
+    import {mapState} from 'vuex';
     import UserApi from '../../apis/UserApi'
     import Axios from 'axios'
     import http from '../../../http-common'
@@ -117,14 +146,34 @@
             
         },
         created () {
-            this.feeds = 0;
+            this.nick = this.$store.state.userinfo.nickName
+            this.feeds = 5;
             this.nickname = this.propsNickname;
             this.getUserByNickname(this.nickname);
             this.followcheck(this.nickname);
         },
         watch: {
         },
+        computed : {
+            ...mapState(['userinfo']),
+        },
         methods: {
+            togglecomment(num) {
+                this.commenttoggle = !this.commenttoggle
+                http.get("/comment/comment?num=" + num)
+                .then(response => {
+                    this.comment = response.data.object
+                    // for(this.i=0; this.i< this.comment.length; this.i++){
+                    //     if (this.comment[this.i].num==num){
+                    //         alert('asd')
+                    //         this.comments.push(this.comment[this.i].comment)
+                    //     }
+                    // }
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+            },
             unfollowgo(){
                 let form = new FormData()
                 let myn  = this.$store.state.userinfo.nickName;
@@ -250,8 +299,10 @@
             getPostByNum(num) {
                 let form = new FormData()
                 form.append('num', num)
-                http.get("/post/post/{num}?num="+num)
+
+                http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
+                   
                     this.post = Response.data.object; 
                     // console.log(this.post)
                 })
@@ -259,8 +310,30 @@
                     console.log(Error)
                 })
             },
-            toggle () {
+            toggleadd(num) {
                 this.like = !this.like
+                let form = new FormData()
+                form.append('postnum', num)
+                form.append('email', this.$store.state.userinfo.email)
+                http.post('/postlike/like',form)
+                .then(response => {
+                  
+                    console.log(response.data.object);
+                    this.post = response.data.object; 
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+            },
+
+            toggledelete(num) {
+                http.delete("/postlike/unlike?postnum="+num + '&email=' + this.$store.state.userinfo.email)
+                .then(response => {
+                    this.post = response.data.object
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
             },
             addcomment: function () {
                 this.comment.push({
@@ -272,6 +345,9 @@
         },
         data: () => {
             return {
+                i: 0,
+                commenttoggle: false,
+                nick:'',
                 num:0,
                 email:'',
                 myEmail:'',
@@ -282,6 +358,7 @@
                 following:0,
                 post : [],
                 comment : [],
+                comments: [],
                 commentNum:0,
                 newcomment: "",
                 like:true,

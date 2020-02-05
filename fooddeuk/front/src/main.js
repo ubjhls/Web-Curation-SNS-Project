@@ -4,11 +4,15 @@ import router from './routes'
 import store from './vuex/store'
 import axios from 'axios'
 import vuetify from './plugins/vuetify';
+import moment from "moment"
+import VueMomentJS from "vue-momentjs"
 // import firebase from 'firebase'
 const firebase = require('firebase/app');
 require('firebase/firestore');
 
 
+
+Vue.use(VueMomentJS, moment)
 Vue.prototype.$Axios = axios;
 Vue.config.productionTip = false
 

@@ -244,6 +244,7 @@ import http from "../../../http-common"
     },
     data () {
       return {
+       date: '',
        subject: '',
        content: '',
        open:false,
