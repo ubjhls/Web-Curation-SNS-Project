@@ -22,11 +22,17 @@ public class Comment {
 	private String comment;
 	private String date; // DB에서 now()로 대체
 	private String nickname;
+	private boolean iscomment;
 	
 	public Comment() {
 		super();
 	}
 	
+	public Comment(int num, int author) {
+		super();
+		this.num = num;
+		this.author = author;
+	}
 	public Comment(int num, int author, String comment) {
 		super();
 		this.num = num;
@@ -72,11 +78,17 @@ public class Comment {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
+	public boolean isIscomment() {
+		return iscomment;
+	}
+	public void setIscomment(boolean iscomment) {
+		this.iscomment = iscomment;
+	}
 
 	@Override
 	public String toString() {
 		return "Comment [num=" + num + ", author=" + author + ", comment=" + comment + ", date=" + date + ", nickname="
-				+ nickname + "]";
+				+ nickname + ", iscomment=" + iscomment + "]";
 	}
 
 	

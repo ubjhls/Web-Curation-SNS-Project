@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.curation.dao.AlarmDaoImpl;
-import com.web.curation.model.Alarm;
+import com.web.curation.model.alarm.Alarm;
 
 @Service
 public class AlarmService implements IAlarmService {

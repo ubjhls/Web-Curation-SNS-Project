@@ -49,4 +49,19 @@ public class PostServiceImpl implements IPostService {
 		return postdao.getAuthor(num);
 	}
 
+	@Override
+	public List<Post> getMyPost(int num) {
+		return postdao.getMyPost(num);
+	}
+
+	@Override
+	public List<Post> getMyLikePost(int num) {
+		return postdao.getMyLikePost(num);
+	}
+
+	@Override
+	public List<Post> getMyCurationPost(int num) {
+		return postdao.getMyCurationPost(num);
+	}
+
 }
