@@ -2,7 +2,7 @@
     <div>
         <header class="headMenu" style="text-align:center">
             <div style="height:40px; margin-top:px; text-align:center">
-            <img src="../../assets/images/fooddeuk_logo.png" style="height:60px; margin-left:38px">
+            <img src="../../assets/images/fooddeuk_logo.png" style="height:60px;">
             <button style="float:right;" @click="searchName" :disabled="menu.isNavi">
                 <img src="../../assets/images/search.png" style="height:30px; margin-right:15px; margin-top:15px">
             </button>
@@ -36,7 +36,7 @@
                 <img v-if="menu.isProfile" src="../../assets/images/profileFill.png" style="height:100%;">
             </button>
             <button class="footer_btn" @click="clickAlarm" :disabled="menu.isNavi">
-                <v-chip class="alarmChip" x-small style="background-color:red;color:white;">{{this.alarm}}</v-chip>
+                <v-chip class="alarmChip" x-small style="background-color:red;color:white;" v-if="alarm!=0">{{this.alarm}}</v-chip>
                 <img class="alarm_btn" v-if="!menu.isAlarm" src="../../assets/images/alarm.png">
                 <img class="alarm_btn" v-if="menu.isAlarm" src="../../assets/images/alarmFill.png">
             </button>
@@ -63,8 +63,6 @@
     import {mapState} from 'vuex';
     import {fireDB} from '../../main'
 
-    let dbdata = 0;
-
     export default {
         components: {
             NewsFeed,
@@ -75,35 +73,33 @@
             Searchname,
             UserFeed
         },
-        beforeCreate() {
-            dbdata = 0;
-        },
         created() {
             this.component = this;
             if(this.$store.state.userinfo!=null){
                 this.email = this.$store.state.userinfo.email;
                 this.nickname = this.$store.state.userinfo.nickName;
             }
-            this.getAlarmFromFirebase()
+            this.watchAlarmFromFirebase();
         },
         watch: {
-            dbdata : function(v) {
-                this.watchAlarmFromFirebase();
-                this.alarm = dbdata;
-                alert(dbdata)
-            }
         },
         methods: {
-            watchAlarmFromFirebase() {
-                fireDB.collection('Alarm').doc(this.email).onSnapshot(function(doc) {
-                    dbdata = doc.data().alarm  + doc.data().request;
-                });
+            setAlarm(alarm) {
+                this.alarm = alarm;
             },
-            getAlarmFromFirebase() {
-                let result = fireDB.collection('Alarm').doc(this.email).get().then(function(doc) {
-                    console.log(doc.data())
-                    dbdata = parseInt(doc.data().alarm)  + parseInt(doc.data().request);
-                });
+            watchAlarmFromFirebase() {
+                let whoami = this;
+                let count=0;
+                fireDB.collection('Alarm').doc(this.email).onSnapshot( {
+                    includeMetadataChanges: true    
+                },function(doc) {
+                    if(doc.data()==undefined) {
+                        count = 0;
+                    } else {
+                        count = doc.data().count;
+                    }
+                    whoami.setAlarm(count);
+                })
             },
             getPropsNick(propsNick) {
                 if(this.$store.state.userinfo!=null){

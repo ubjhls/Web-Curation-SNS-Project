@@ -29,7 +29,11 @@
     	<typeAlias type="com.web.curation.model.post.Post" alias="post" />
     	<typeAlias type="com.web.curation.model.follow.Follow" alias="follow" />
     	<typeAlias type="com.web.curation.model.comment.Comment" alias="comment" />
+<<<<<<< HEAD
     	<typeAlias type="com.web.curation.model.alarm.Alarm" alias="alarm" />
+=======
+    	<typeAlias type="com.web.curation.model.Alarm" alias="alarm" />
+>>>>>>> 4979aee40a58de98c10e888085c5a93e28e7e01e
     	<typeAlias type="com.web.curation.model.postlike.Postlike" alias="postlike" />
     </typeAliases>
     <mappers>

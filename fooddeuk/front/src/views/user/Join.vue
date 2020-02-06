@@ -164,6 +164,7 @@
             },
             exist_email: function (v) {
                 this.checkForm();
+                this.checkEmail();
             }
         },methods: {
             goBack() {
@@ -210,8 +211,13 @@
                         this.exist_email_confirm = 'a';
                     }
                     else {
-                        this.exist_email = '사용가능한 이메일입니다.';
-                        this.exist_email_confirm = 'b';
+                        if (this.error.email=='이메일 형식이 아닙니다.'){
+                            this.exist_email = ''
+                        }
+                        else{
+                            this.exist_email = '사용가능한 이메일입니다.';
+                            this.exist_email_confirm = 'b';
+                        }
                     }
                 },error=>{  
                     var router = this.$router;

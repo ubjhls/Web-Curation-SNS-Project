@@ -27,7 +27,13 @@ public class Post {
 	private int count_star;
 	private String address;
 	private String image;
+<<<<<<< HEAD
 	private int islike;
+=======
+
+	private int islike;
+
+>>>>>>> 4979aee40a58de98c10e888085c5a93e28e7e01e
 
 	public Post() {
 		super();
