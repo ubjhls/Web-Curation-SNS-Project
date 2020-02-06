@@ -23,4 +23,36 @@ public class PostDaoImpl {
 		return sqlSession.selectList(ns+"getAllPost", num);
 	}
 	
+	public int likeCountUp(int num) {
+		return sqlSession.update(ns+"likeCountUp", num);
+	}
+	
+	public int likeCountDown(int num) {
+		return sqlSession.update(ns+"likeCountDown", num);
+	}
+	
+	public int commentCountUp(int num) {
+		return sqlSession.update(ns+"commentCountUp", num);
+	}
+	
+	public int commentCountDown(int num) {
+		return sqlSession.update(ns+"commentCountDown", num);
+	}
+	
+	public int getAuthor(int num) {
+		return sqlSession.selectOne(ns+"getAuthor", num);
+	}
+	
+	public List<Post> getMyPost(int num) { // 내가 작성한 피드
+		return sqlSession.selectList(ns+"getMyPost", num);
+	}
+	
+	public List<Post> getMyLikePost(int num) { // 내가 좋아한 피드
+		return sqlSession.selectList(ns+"getMyLikePost", num);
+	}
+	
+	public List<Post> getMyCurationPost(int num) { // 내 큐레이션 피드
+		return sqlSession.selectList(ns+"getMyCurationPost", num);
+	}
+	
 }

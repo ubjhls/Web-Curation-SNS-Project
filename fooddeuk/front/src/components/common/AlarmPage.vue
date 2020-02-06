@@ -27,14 +27,17 @@
     import UserApi from '../../apis/UserApi'
     import Alarm from './Alarm'
     import Request from './Request'
-
-    
-
+    import {mapState} from 'vuex';
 
     export default {
         components : {
           Alarm,
           Request
+        },
+        methods : {
+          test() {
+            alert("test")
+          }
         },
         data : () => {
             return {
@@ -43,6 +46,8 @@
                 items: ['알림', '요청'],
             }
         },
-        
+        computed : {
+          ...mapState(['userinfo']),
+        }
     }
 </script>

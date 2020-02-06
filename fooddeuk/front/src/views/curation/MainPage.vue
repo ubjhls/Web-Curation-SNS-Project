@@ -36,7 +36,7 @@
                 <img v-if="menu.isProfile" src="../../assets/images/profileFill.png" style="height:100%;">
             </button>
             <button class="footer_btn" @click="clickAlarm" :disabled="menu.isNavi">
-                <v-chip class="alarmChip" x-small style="background-color:red;color:white;"> {{this.alarm}} </v-chip>
+                <v-chip class="alarmChip" x-small style="background-color:red;color:white;" v-if="alarm!=0">{{this.alarm}}</v-chip>
                 <img class="alarm_btn" v-if="!menu.isAlarm" src="../../assets/images/alarm.png">
                 <img class="alarm_btn" v-if="menu.isAlarm" src="../../assets/images/alarmFill.png">
             </button>
@@ -61,8 +61,8 @@
     import Vue from 'vue'
 
     import {mapState} from 'vuex';
+    import {fireDB} from '../../main'
 
-    
     export default {
         components: {
             NewsFeed,
@@ -76,13 +76,31 @@
         created() {
             this.component = this;
             if(this.$store.state.userinfo!=null){
+                this.email = this.$store.state.userinfo.email;
                 this.nickname = this.$store.state.userinfo.nickName;
             }
-            
+            this.watchAlarmFromFirebase();
         },
         watch: {
         },
         methods: {
+            setAlarm(alarm) {
+                this.alarm = alarm;
+            },
+            watchAlarmFromFirebase() {
+                let whoami = this;
+                let count=0;
+                fireDB.collection('Alarm').doc(this.email).onSnapshot( {
+                    includeMetadataChanges: true    
+                },function(doc) {
+                    if(doc.data()==undefined) {
+                        count = 0;
+                    } else {
+                        count = doc.data().count;
+                    }
+                    whoami.setAlarm(count);
+                })
+            },
             getPropsNick(propsNick) {
                 if(this.$store.state.userinfo!=null){
                 this.nickname = this.$store.state.userinfo.nickName;
@@ -190,7 +208,7 @@
                 },
                 component: this,
                 feeds: 5,
-                alarm: 5,
+                alarm: 0,
                 propsNickname:''
             }
         },

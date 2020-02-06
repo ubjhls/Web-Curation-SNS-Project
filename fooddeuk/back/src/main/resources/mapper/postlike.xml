@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="postlike">
+
+	<insert id="like" parameterType="postlike">
+		INSERT INTO POSTLIKE(POSTNUM, LIKER, DATE)
+		VALUES(#{postnum}, #{liker}, NOW());
+	</insert>
+	
+	<delete id="unlike" parameterType="postlike">
+		DELETE FROM POSTLIKE WHERE POSTNUM=#{postnum} AND LIKER=#{liker}
+	</delete>
+	
+	<select id="checkLike" parameterType="postlike" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM POSTLIKE WHERE POSTNUM=#{postnum} AND LIKER=#{liker}
+	</select>
+	
+ </mapper>

@@ -13,4 +13,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT * FROM POST WHERE AUTHOR=#{num} ORDER BY DATE DESC
 	</select>
 	
+	<update id="likeCountUp" parameterType="java.lang.Integer">
+		UPDATE POST SET COUNT_LIKE = COUNT_LIKE+1 WHERE NUM=#{num}
+	</update>
+	
+	<update id="likeCountDown" parameterType="java.lang.Integer">
+		UPDATE POST SET COUNT_LIKE = COUNT_LIKE-1 WHERE NUM=#{num}
+	</update>
+	
+	<update id="commentCountUp" parameterType="java.lang.Integer">
+		UPDATE POST SET COUNT_COMMENT=COUNT_COMMENT+1 WHERE NUM=#{num}
+	</update>
+	
+	<update id="commentCountDown" parameterType="java.lang.Integer">
+		UPDATE POST SET COUNT_COMMENT=COUNT_COMMENT-1 WHERE NUM=#{num}
+	</update>
+	
+	<select id="getAuthor" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT AUTHOR FROM POST WHERE NUM=#{num}
+	</select>
+	
+	<select id="getMyPost" parameterType="java.lang.Integer" resultType="post">
+		SELECT * FROM POST WHERE AUTHOR=#{num} AND TYPE='일반' ORDER BY DATE DESC
+	</select>
+	
+	<select id="getMyLikePost" parameterType="java.lang.Integer" resultType="post">
+		SELECT * FROM POST
+		WHERE NUM IN (SELECT POSTNUM FROM POSTLIKE WHERE LIKER=#{num})
+		AND (AUTHOR IN (SELECT NUM FROM USER WHERE AUTH=0)
+		OR AUTHOR IN (SELECT FOLLOWING FROM FOLLOW WHERE FOLLOWER=#{num}));
+	</select>
+	
+<!-- 	<select id="getMyCurationPost" parameterType="java.lang.Integer" resultType="post"> -->
+<!-- 		SELECT * FROM POST WHERE  -->
+<!-- 	</select> -->
+	
+	
  </mapper>

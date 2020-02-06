@@ -2,9 +2,11 @@
   <v-card
     class="mx-auto"
   >
-
-    <v-list three-line>
-      <template v-for="(item, index) in items">
+    <div v-if="items.length==0">
+      요청이 없습니다.
+    </div>
+    <v-list v-if="items.length!=0" three-line>
+      <template  v-for="(item, index) in items">
         <v-subheader
           v-if="item.header"
           :key="item.header"
@@ -26,9 +28,10 @@
           </v-list-item-avatar>
 
           <v-list-item-content style="margin-left:20px;">
-            <v-list-item-title>(상대방)님이 팔로우 신청을 했습니다.</v-list-item-title>
-            <v-btn small dark style="margin-right:20px; background-color:#a4c2f4ff; color:#ffffff">승인</v-btn>
-            <v-btn small dark style="background-color:#e06666ff; color:#ffffff">거절</v-btn>
+            <v-list-item-title>"{{item.sender}}"님이 팔로우 신청을 했습니다.</v-list-item-title>
+            <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle>
+            <v-btn small dark style="margin-right:20px; background-color:#a4c2f4ff; color:#ffffff" @click="accept(item.num, item.sender)">승인</v-btn>
+            <v-btn small dark style="background-color:#e06666ff; color:#ffffff" @click="deny(item.num, item.sender)">거절</v-btn>
           </v-list-item-content>
         </v-list-item>
       </template>
@@ -37,40 +40,115 @@
 </template>
 
 <script>
+  import {mapState} from 'vuex';
+  import http from '../../../http-common'
+  import Vue from 'vue'
+  import moment from 'moment'
+  import VueMomentJS from 'vue-momentjs'
+  import { fireDB } from '../../main';
+
+  Vue.use(VueMomentJS, moment)
+
+
   export default {
-        data: () => ({
-        items: [
-            { header: 'Today' },
-            {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-            title: 'Brunch this weekend?',
-            subtitle: "<span class='text--primary'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
-            },
-            { divider: true, inset: true },
-            {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-            title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-            subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.",
-            },
-            { divider: true, inset: true },
-            {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-            title: 'Oui oui',
-            subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?",
-            },
-            { divider: true, inset: true },
-            {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-            title: 'Birthday gift',
-            subtitle: "<span class='text--primary'>Trevor Hansen</span> &mdash; Have any ideas about what we should get Heidi for her birthday?",
-            },
-            { divider: true, inset: true },
-            {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-            title: 'Recipe to try',
-            subtitle: "<span class='text--primary'>Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
-            },
-        ],
+    created()  {
+      moment.locale('ko');
+      if(this.$store.state.userinfo!=null) {
+        this.email = this.$store.state.userinfo.email;
+        this.nickname = this.$store.state.userinfo.nickName;
+      }
+      // this.getAlarms();
+      this.watchAlarmFromFirebase();
+    },
+    mounted() {
+    },
+    methods : {
+      setAlarm(alarm) {
+        this.alarmCount = alarm;
+      },
+      upAlarmToFirebase() {
+        fireDB.collection('Alarm').doc(this.email)
+        .set({
+          count : this.alarmCount + 1
+        })
+      },
+      downAlarmToFirebase() {
+        fireDB.collection('Alarm').doc(this.email)
+        .set({
+          count : this.alarmCount - 1
+        })
+      },
+      watchAlarmFromFirebase() {
+          let whoami = this;
+          let count=0;
+          fireDB.collection('Alarm').doc(this.email).onSnapshot( {
+              includeMetadataChanges: true    
+          },function(doc) {
+              if(doc.data()==undefined) {
+                  count = 0;
+              } else {
+                  count = doc.data().count;
+              }
+              whoami.setAlarm(count);
+              whoami.getAlarms();
+          })
+      },
+      getTime(time) {
+        return moment(time).fromNow();
+      },
+      getAlarms() {
+        http.get("/follow/requestlist?mynickname=" + this.nickname)
+        .then(Response => {
+          this.items = Response.data
+          // console.log(Response.data)
+        })
+        .catch(Error => {
+            console.log(Error)
+        })
+      },
+      accept(num, otherNickname) {
+        let form = new FormData();
+          
+        form.append('num', num)
+        form.append('nickname', this.nickname)
+        form.append('mynickname', otherNickname)
+        form.append('agree', '1')
+        http.post("/follow/followagree", form)
+        .then(Response => {
+          this.isfollow = 1;
+          // console.log(Response.data)
+          this.getAlarms();
+        })
+        .catch(Error => {
+            console.log(Error)
+        })
+      },
+      deny(num, otherNickname) {
+        let form = new FormData();
+          
+        form.append('num', num)
+        form.append('nickname', this.nickname)
+        form.append('mynickname', otherNickname)
+        form.append('agree', '0')
+        http.post("/follow/followagree", form)
+        .then(Response => {
+          // console.log(Response.data)
+          this.getAlarms();
+          this.downAlarmToFirebase();
+        })
+        .catch(Error => {
+            console.log(Error)
+        })
+      }
+    },
+    data: () => ({
+      email : '',
+      nickname:'',
+      items: [],
+      alarmCount : 0,
     }),
+    computed : {
+        ...mapState(['userinfo']),
+    }
   }
 </script>

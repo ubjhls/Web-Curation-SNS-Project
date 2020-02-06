@@ -166,13 +166,13 @@ import http from "../../../http-common"
                  console.log(form)
                  http.post("/post/post", form)
                  .then(Response => {
-                  //  console.log(Response)
+                   console.log(Response)
                     if(Response.data=="success"){
                       this.$emit('child', this.propDrawer)
                     }
                  })
                  .catch(Error => {
-                   
+                    console.log(Error)
                    })
                  })
                  .catch(Error => {
@@ -266,6 +266,7 @@ import http from "../../../http-common"
     },
     data () {
       return {
+       date: '',
        subject: '',
        content: '',
        open:false,

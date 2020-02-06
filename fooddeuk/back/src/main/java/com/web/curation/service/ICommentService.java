@@ -6,5 +6,6 @@ import com.web.curation.model.comment.Comment;
 
 public interface ICommentService {
 	List<Comment> getAllComment(int num);
-	int insertComment(int num);
+	int insertComment(Comment comment);
+	int deleteComment(Comment comment);
 }

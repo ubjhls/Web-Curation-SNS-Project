@@ -26,9 +26,11 @@
             <v-img :src="item.avatar"></v-img>
           </v-list-item-avatar>
 
-          <v-list-item-content>
-            <v-list-item-title v-html="item.title"></v-list-item-title>
-            <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+          <v-list-item-content @click="confirmAlarm(item.num)">
+            <v-list-item-title v-if="item.reason==2">"{{item.sender}}"님이 회원님을 팔로우했습니다.</v-list-item-title>
+            <v-list-item-title v-if="item.reason==3">"{{item.sender}}"님이 팔로우신청을 거절했습니다.</v-list-item-title>
+            <v-list-item-title v-if="item.reason==4">"{{item.sender}}"님이 회원님의 피드에 좋아요를 눌렀습니다.</v-list-item-title>
+            <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </template>
@@ -37,42 +39,101 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
+  import {mapState} from 'vuex';
+  import http from '../../../http-common'
+  import Vue from 'vue'
+  import moment from 'moment'
+  import VueMomentJS from 'vue-momentjs'
+  import {fireDB} from '../../main'
+
+  Vue.use(VueMomentJS, moment)
+
+  // this.getAlarmFromFirebase();
+
 
   export default {
-        data: () => ({
-        items: [
-            { header: 'Today' },
-            {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-            title: 'Brunch this weekend?',
-            subtitle: "<span class='text--primary'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
-            },
-            { divider: true, inset: true },
-            {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-            title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-            subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.",
-            },
-            { divider: true, inset: true },
-            {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-            title: 'Oui oui',
-            subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?",
-            },
-            { divider: true, inset: true },
-            {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-            title: 'Birthday gift',
-            subtitle: "<span class='text--primary'>Trevor Hansen</span> &mdash; Have any ideas about what we should get Heidi for her birthday?",
-            },
-            { divider: true, inset: true },
-            {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-            title: 'Recipe to try',
-            subtitle: "<span class='text--primary'>Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
-            },
-        ],
+    created() {
+      moment.locale('ko');
+      if(this.$store.state.userinfo!=null) {
+        this.email = this.$store.state.userinfo.email;
+        this.nickname = this.$store.state.userinfo.nickName;
+      }
+      // this.getAlarms();
+      this.watchAlarmFromFirebase();
+    },
+    watch: {
+    },
+    methods : {
+      setAlarm(alarm) {
+        this.alarmCount = alarm;
+      },
+      updateAlarmToFirebase() {
+        fireDB.collection('Alarm').doc(this.email)
+        .set({
+          count : this.alarmCount - 1
+        })
+      },
+      watchAlarmFromFirebase() {
+        let whoami = this;
+        let count=0;
+        fireDB.collection('Alarm').doc(this.email).onSnapshot( {
+            includeMetadataChanges: true    
+        },function(doc) {
+            if(doc.data()==undefined) {
+                count = 0;
+            } else {
+                count = doc.data().count;
+            }
+            whoami.setAlarm(count);
+            whoami.getAlarms();
+        })
+      },
+      confirmAlarm(num) {
+        http.patch("/follow/alarmconfirm?num=" + num)
+        .then(Response => {
+          this.items = Response.data
+          console.log(Response.data)
+          this.getAlarms()
+          this.updateAlarmToFirebase();
+        })
+        .catch(Error => {
+            console.log(Error)
+        })
+      },
+      getTime(time) {
+        return moment(time).fromNow();
+      },
+      getAlarms() {
+        http.get("/follow/alarmlist?mynickname=" + this.nickname)
+        .then(Response => {
+          this.items = Response.data
+          console.log(Response.data)
+        })
+        .catch(Error => {
+            console.log(Error)
+        })
+      },
+      accept(num, otherNickname) {
+        let form = new FormData();
+          
+        form.append('nickname', this.nickname)
+        form.append('mynickname', otherNickname)
+        http.post("/follow/followagree", form)
+        .then(Response => {
+          this.isfollow = 1;
+          console.log(Response.data)
+          this.getAlarms();
+        })
+        .catch(Error => {
+            console.log(Error)
+        })
+      },
+    },
+    data: () => ({
+      email : '',
+      nickname: '',
+      items: [],
+      alarmCount: 0,
     }),
     computed : {
         ...mapState(['userinfo']),
