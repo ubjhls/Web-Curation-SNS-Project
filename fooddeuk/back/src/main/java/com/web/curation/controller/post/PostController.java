@@ -42,24 +42,15 @@ public class PostController {
 							@RequestParam(required = true) String content,
 							@RequestParam(required = true) String count_star,
 							@RequestParam(required = true) String address,
-<<<<<<< HEAD
-							@RequestParam(required= true) String image) throws Exception {
-=======
 							@RequestParam(required = true) String image) throws Exception {
->>>>>>> 1d67a7f82a7095d4f5e96de96616a130251eabb4
 		System.out.println("-----------------/post/post-----------------");
 		System.out.println("email : " + email);
 		System.out.println("title : " + title);
 		System.out.println("content : " + content);
 		System.out.println("count_star : " + count_star);
 		System.out.println("address : " + address);
-<<<<<<< HEAD
-		System.out.println("image: "  + image);
-=======
 		System.out.println("image : " + image);
 		
-
->>>>>>> 1d67a7f82a7095d4f5e96de96616a130251eabb4
 		int author = userService.getNumByEmail(email);
 		int star = Integer.parseInt(count_star);
 		
