@@ -45,23 +45,54 @@
   import Vue from 'vue'
   import moment from 'moment'
   import VueMomentJS from 'vue-momentjs'
+  import { fireDB } from '../../main';
 
   Vue.use(VueMomentJS, moment)
 
 
   export default {
-
     created()  {
       moment.locale('ko');
       if(this.$store.state.userinfo!=null) {
         this.email = this.$store.state.userinfo.email;
         this.nickname = this.$store.state.userinfo.nickName;
       }
-      this.getAlarms();
+      // this.getAlarms();
+      this.watchAlarmFromFirebase();
     },
     mounted() {
     },
     methods : {
+      setAlarm(alarm) {
+        this.alarmCount = alarm;
+      },
+      upAlarmToFirebase() {
+        fireDB.collection('Alarm').doc(this.email)
+        .set({
+          count : this.alarmCount + 1
+        })
+      },
+      downAlarmToFirebase() {
+        fireDB.collection('Alarm').doc(this.email)
+        .set({
+          count : this.alarmCount - 1
+        })
+      },
+      watchAlarmFromFirebase() {
+          let whoami = this;
+          let count=0;
+          fireDB.collection('Alarm').doc(this.email).onSnapshot( {
+              includeMetadataChanges: true    
+          },function(doc) {
+              if(doc.data()==undefined) {
+                  count = 0;
+              } else {
+                  count = doc.data().count;
+              }
+              whoami.setAlarm(count);
+              whoami.getAlarms();
+          })
+      },
       getTime(time) {
         return moment(time).fromNow();
       },
@@ -69,7 +100,7 @@
         http.get("/follow/requestlist?mynickname=" + this.nickname)
         .then(Response => {
           this.items = Response.data
-          console.log(Response.data)
+          // console.log(Response.data)
         })
         .catch(Error => {
             console.log(Error)
@@ -85,7 +116,7 @@
         http.post("/follow/followagree", form)
         .then(Response => {
           this.isfollow = 1;
-          console.log(Response.data)
+          // console.log(Response.data)
           this.getAlarms();
         })
         .catch(Error => {
@@ -101,8 +132,9 @@
         form.append('agree', '0')
         http.post("/follow/followagree", form)
         .then(Response => {
-          console.log(Response.data)
+          // console.log(Response.data)
           this.getAlarms();
+          this.downAlarmToFirebase();
         })
         .catch(Error => {
             console.log(Error)
@@ -113,6 +145,7 @@
       email : '',
       nickname:'',
       items: [],
+      alarmCount : 0,
     }),
     computed : {
         ...mapState(['userinfo']),
