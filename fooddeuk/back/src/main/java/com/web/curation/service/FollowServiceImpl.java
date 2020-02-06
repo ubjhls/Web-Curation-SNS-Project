@@ -1,5 +1,7 @@
 package com.web.curation.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,5 +57,15 @@ public class FollowServiceImpl implements IFollowService {
 	public int followingDown(int num) {
 		return followdao.followingDown(num);
 	}
+
+	@Override
+	public List<Follow> getFollower(int num) {
+		return followdao.getFollower(num);
+	}
+	@Override
+	public List<Follow> getFollowing(int num) {
+		return followdao.getFollowing(num);
+	}
+	
 	
 }

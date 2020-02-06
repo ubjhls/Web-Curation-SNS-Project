@@ -3,6 +3,8 @@ package com.web.curation.controller.follow;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -10,6 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.curation.model.BasicResponse;
+import com.web.curation.model.follow.Follow;
+import com.web.curation.model.post.Post;
 import com.web.curation.model.alarm.Alarm;
 import com.web.curation.model.follow.Follow;
 import com.web.curation.model.user.User;
@@ -131,6 +136,42 @@ public class FollowController {
 		}
 		
 		return "success";
+	}
+	@GetMapping("/follow/getFollower/{num}")
+	@ApiOperation(value = "나를 팔로우 하는 사람들 가져오기")
+	public Object getFollower(@RequestParam(required = true) int num) throws Exception {
+		System.out.println("-----------------getFollower-----------------");
+		System.out.println("num : " + num);
+		BasicResponse result = new BasicResponse();
+		result.data="success";
+		
+		List<Follow> list = followService.getFollower(num);
+		
+		if(list.size() == 0) {
+			result.data = "failed";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		result.object = list;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	@GetMapping("/follow/getFollowing/{num}")
+	@ApiOperation(value = "나를 팔로잉 하는 사람들 가져오기")
+	public Object getFollowing(@RequestParam(required = true) int num) throws Exception {
+		System.out.println("-----------------getFollowing-----------------");
+		System.out.println("num : " + num);
+		BasicResponse result = new BasicResponse();
+		result.data="success";
+		
+		List<Follow> list = followService.getFollowing(num);
+		
+		if(list.size() == 0) {
+			result.data = "failed";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		result.object = list;
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping("/follow/nonfollow")

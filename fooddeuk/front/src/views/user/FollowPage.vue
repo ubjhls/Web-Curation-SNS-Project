@@ -22,21 +22,20 @@
         v-for="item in items"
         :key="item.title"
       >
-        <v-list-item-avatar>
-          <v-img :src="item.avatar"></v-img>
-        </v-list-item-avatar>
 
         <v-list-item-content>
-          닉네임:<v-list-item-title v-text="item.title"></v-list-item-title>
+          {{item.nickname}}
+          <v-list-item-subtitle v-text="item.email"></v-list-item-subtitle>
         </v-list-item-content>
 
-        <v-list-item-content>
-          이메일:<v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
-        </v-list-item-content>
-
-        <div>
-        <v-btn small color="primary" @click="follow">팔로우</v-btn>
-      </div>
+        <div class="profile-card-ctr" v-if="isfollow==0">
+          
+            <button class="profile-card__button button--orange" @click="followgo()">Follow</button>
+        </div>
+        <div class="profile-card-ctr" v-if="isfollow==1">
+          
+            <button class="profile-card__button button--gray" @click="unfollowgo()">UnFollow</button>
+        </div>
       </v-list-item>
     </v-list>
 
@@ -75,41 +74,81 @@
 
     import '../../assets/css/style.scss'
     import '../../assets/css/user.scss'
-import UserApi from '../../apis/UserApi';
+    import UserApi from '../../apis/UserApi'
+    import http from '../../../http-common'
+
 
     export default {
         components: {},
-        created() {},
+        created() {
+          this.nickname = this.$store.state.userinfo.nickName;
+          this.getUserByNickname(this.nickname);
+        },
         watch: {},
         methods: {
             goNewsFeeds() {
                 var router = this.$router;
-
                 router.push({
                     name: "MainPage"
                 });
             },
-            follow(){
-              console.log(this.items)
-              let {nickName} = this;
-              let data = {
-                nickName
-              }
-              UserApi.requestFollow(data, res =>{
-                console.log(res)
+            getFollower(num){
+              http.get("follow/getFollower/{num}?num="+ num)
+              .then(Response => {
+                console.log(Response)
+                this.items = Response.data.object;
               })
-            }
+            },
+            getUserByNickname(nick) {
+                let form = new FormData()
+                form.append('nickname', nick)
+                http.get("/user/userinfo/{nickname}?nickname=" + nick)
+                .then(Response => {
+                    console.log(Response)
+                    this.num = Response.data.num;
+                    this.getFollower(this.num);
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+            },
+            followgo(){
+                let myn  = this.$store.state.userinfo.nickName;
+                http.post("/follow/follow?mynickname=" + myn + "&nickname=" + this.nickname)
+                .then(Response => {
+                    this.isfollow = 1;
+                    // console.log(Response.data)
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+            },
+            unfollowgo(){
+                let form = new FormData()
+                let myn  = this.$store.state.userinfo.nickName;
+                form.append('mynickname', myn)
+                form.append('nickname',this.nickname)
+                http.post("/follow/unFollow?mynickname=" + myn + "&nickname=" + this.nickname)
+                .then(Response => {
+                    this.isfollow = 0;
+                    // console.log(Response.data)
+                    this.getFollower();
+                    this.getFollowing();
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+            },
+            
         },
     data: () => ({
-      items: [
-        { active: true, title: 'Jason Oner', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg' },
-        { active: true, title: 'Ranee Carlson', avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
-        { title: 'Cindy Baker', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' },
-        { title: 'Ali Connors', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
-      ],
-      items2: [
-        { title: 'Travis Howard', avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg' },
-      ],
+      email:'',
+      intro:'',
+      num:0,
+      nickname:'',
+      items: [],
+      items2: [],
+      isfollow:0,
     }),
     }
 </script>
