@@ -14,13 +14,13 @@
       </div>
 
       <div style="text-align:center; padding-top:20px">
-        <div style="float:left; width:50%">팔로워</div>
-        <div>팔로잉</div>
+        <div style="float:left; width:50%" @click="goFollow">팔로워</div>
+        <div @click="goFollowing">팔로잉</div>
       </div>
 
       <div style="text-align:center; padding-top:10px; padding-bottom:20px">
-        <div style="float:left; width:50%">{{this.follower}}</div>
-        <div>{{this.following}}</div>
+        <div style="float:left; width:50%" @click="goFollow">{{this.follower}}</div>
+        <div @click="goFollowing">{{this.following}}</div>
       </div>
        <v-divider style="margin-left:10%; width:80%"></v-divider>
 
@@ -148,6 +148,18 @@ import http from '../../../http-common'
         .catch(Error => {
             console.log(Error)
         })
+      },
+      goFollow(){
+        this.$router.push(
+          {name:"FollowPage"}
+        )
+        
+
+      },
+      goFollowing(){
+        this.$router.push(
+          {name:"FollowingPage"}
+        )
       }
     },
     computed : {

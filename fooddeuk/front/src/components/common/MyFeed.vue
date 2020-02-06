@@ -54,6 +54,8 @@
           </v-col>
           <br>
         <v-card-text>
+        <img v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+        <br>
         {{item.content}}
         <br><br><hr><br>
         주소 : {{item.address}}
@@ -179,10 +181,7 @@
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                     this.post = Response.data.object; 
-                    // const time = new Date()
-                    // var moment = require('moment')
-                    // this.day = moment(time.getTime()).add(-this.a, "m").format("mm분전")
-                    // console.log(this.post)
+                    console.log(this.post)
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -231,6 +230,7 @@
                 feeds: 0,
                 nickname : '',
                 intro:'',
+                image:'',
                 follower:0,
                 following:0,
                 post : [],
