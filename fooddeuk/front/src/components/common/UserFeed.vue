@@ -40,7 +40,7 @@
     <v-card
         max-width="100%"
         class="mx-auto"
-        style="margin-bottom:15px"
+        style="margin-bottom:100px"
     >
         <v-list-item>
         <v-list-item-avatar><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
@@ -68,8 +68,8 @@
         <v-spacer></v-spacer>
                 <div style="width:100%" v-if="item.islike===1">
                     <button @click="toggledelete(item.num)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
-                    <button @click="commentview(item.num, index)"><img style="width:26px; margin-left:10px; margin-bottom:5px" src="../../assets/images/comment.png"></button><br>
-
+                    <button @click="commentview(item.num, index)"><img style="width:26px; margin-left:100px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
+                    <button><img style="width:26px; margin-left:100px; margin-bottom:5px" src="../../assets/images/share.png"></button>
                     <p v-if="item.count_like === 1">
                         {{nick}} 님이 좋아합니다
                     </p>
@@ -82,47 +82,48 @@
                   <div v-for="cmt in todolist" v-bind:key="cmt.date" >
                         <div v-if="cmt[0].num==item.num">
                              <div v-for="cmts in cmt" v-bind:key="cmts.date" >
-                                 {{cmts.comment}}
-                             </div>
+                                <h5 style="float:left; margin-left:5px; margin-right:20px"> {{ cmts.nickname }}</h5> &nbsp; <h5 style="margin-left:25px">{{ cmts.comment }}</h5>
+                             </div>                
                         </div>
                   </div>
+                  
+                      <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                                <button style="height:30px;" class="check-button" @click="addcomment(item.num,index)">댓글달기</button>
+                            </div>
+                            <div style="margin-left:5px; width:60%;">
+                                <v-text-field style="color:blue; width:100%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
+                                </v-text-field>
+                            </div>
+                  
   
                 </div>
                 <div style="width:100%;" v-else>
                     <button @click="toggleadd(item.num)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
-                    <button @click="commentview(item.num, index)"><img style="width:26px; margin-left:10px; margin-bottom:5px" src="../../assets/images/comment.png"></button><br>
+                    <button @click="commentview(item.num, index)"><img style="width:26px; margin-left:100px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
+                    <button><img style="width:26px; margin-left:100px; margin-bottom:5px" src="../../assets/images/share.png"></button>
                     <p>
-                        {{ item.count_like  }} 명이 좋아합니다
+                        {{ item.count_like }} 명이 좋아합니다
                     </p>
-                     <p>
+                     <p>    
                         {{ item.count_comment }} 개의 댓글이 있습니다.
                     </p>
-                      <div v-for="cmt in todolist" v-bind:key="cmt.date" >
+                     <div v-for="cmt in todolist" v-bind:key="cmt.date" >
                         <div v-if="cmt[0].num==item.num">
                              <div v-for="cmts in cmt" v-bind:key="cmts.date" >
-                                 {{cmts.comment}}
-                             </div>
+                                <h5 style="float:left; margin-left:5px; margin-right:20px"> {{ cmts.nickname }}</h5> &nbsp; <h5 style="margin-left:25px">{{ cmts.comment }}</h5>
+                             </div>                
                         </div>
                   </div>
+                  <div v-if="commenttoggle[index]==true">
+                      <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                                <button style="height:30px;" class="check-button" @click="addcomment(item.num,index)">댓글달기</button>
+                            </div>
+                            <div style="margin-left:5px; width:60%;">
+                                <v-text-field style="color:blue; width:100%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
+                                </v-text-field>
+                            </div>
+                  </div>
                 </div>
-                <!-- <div v-if="commenttoggle">
-                    <ul>
-                        <li v-for="item in comment" :key="item">
-                            <h5 style=" margin-left:15px;"> 닉네임</h5> <h5 style="margin-left:25px">{{ item.comment }}</h5>
-                            <br>
-                        </li>
-                    </ul>
-                    <div>
-                        <div style="margin-left:5px; width:60%;">
-                            <v-text-field style="color:blue; width:70%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
-                            </v-text-field>
-                            
-                        </div>
-                        <div style="width:30%;">
-                            <button style="height:30px" class="check-button" @click="addcomment">댓글달기</button>
-                        </div>
-                    </div>
-                </div> -->
     </v-card>  
     </div> 
     <div
@@ -167,6 +168,21 @@
             ...mapState(['userinfo']),
         },
         methods: {
+            addcomment(num,index) {
+                let form = new FormData()
+                form.append('comment', this.newcomment)
+                form.append('email', this.$store.state.userinfo.email)
+                form.append('num', num)
+                http.post("/comment/comment", form)
+                .then(response => {
+                    console.log('response')
+                    /////////////////////////////댓글 재등록
+                    this.todolist[0].push({"nickname" : this.$store.state.userinfo.nickName,
+                    "comment" : this.newcomment})
+                    console.log(this.todolist)
+                    this.newcomment=''
+                })
+            },
             setAlarm(alarm) {
                 this.userAlarmCount = alarm;
             },
@@ -221,7 +237,10 @@
                 .catch(Error => {
                     console.log(Error)
                 })
+                alert("댓글이 등록되었습니다.")
+               
             },
+            
             unfollowgo(){
                 let form = new FormData()
                 let myn  = this.$store.state.userinfo.nickName;
@@ -332,7 +351,6 @@
                     this.intro = Response.data.intro;
                     this.email = Response.data.email;
                     this.auth = Response.data.auth;
-
                     this.getFollowing(this.email);
                     this.getFollower(this.email);
                     this.getPostByNum(this.num);
@@ -352,7 +370,7 @@
                     this.post = Response.data.object; 
                     for (let index = 0; index < this.post.length; index++) {
                         this.state.push(false);
-                        
+                        this.commenttoggle.push(false)
                     }
                    console.log(this.state)
                 })
@@ -387,13 +405,23 @@
             },
             commentview(num,index){
                
+                if(this.commenttoggle[index]==false){
+                    this.commenttoggle[index] = true;
+                }else{
+                    this.commenttoggle[index] = false;
+                }
+
+  
+
                 if(this.state[index]==false){
                     http.get('/comment/comment?num='+num)
                 .then(response => {
-                    
+                    if(response.data.object!=null){
                     this.todolist.push(response.data.object)
                     console.log(this.todolist)
                     this.state[index] = true;
+                    }
+                
                     
                 })
                 .catch(Error => {
@@ -419,8 +447,6 @@
         },
         data: () => {
             return {
-                i: 0,
-                commenttoggle: false,
                 nick:'',
                 num:0,
                 email:'',
@@ -431,8 +457,6 @@
                 follower:0,
                 following:0,
                 post : [],
-                comment : [],
-                comments: [],
                 commentNum:'',
                 newcomment: "",
                 like:true,
@@ -441,8 +465,19 @@
                 userAlarmCount: 0,
                 todolist:[],
                 state:[],
+                commenttoggle:[],
+           
+
             }
         }
 
     }
 </script>
+<style>
+p {
+
+    margin-left:5px;
+    color: gray;
+    font-size:12px;
+}
+</style>
