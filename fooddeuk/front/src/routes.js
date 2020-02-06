@@ -18,6 +18,9 @@ import FollowingPage from './views/user/FollowingPage.vue'
 import EmailConfirm from './views/user/EmailConfirm.vue'
 import Address from './views/curation/Address.vue'
 import ModifyPassword from './views/user/ModifyPassword.vue'
+import curationFeed from './views/user/curationFeed.vue'
+import scrapFeed from './views/user/scrapFeed.vue'
+import likeFeed from './views/user/likeFeed.vue'
 
 
 import Vue from 'vue';
@@ -171,6 +174,27 @@ const onlyAuthUser = (to, from, next) =>{
         path : '/user/ConfirmFindPassword',
         name : 'ConfirmFindPassword',
         component : ConfirmFindPassword,
+        props: true
+    },
+    {
+        path : '/user/curationFeed',
+        name : 'curationFedd',
+        component : curationFeed,
+        beforeEnter : onlyAuthUser,
+        props: true
+    },
+    {
+        path : '/user/likeFeed',
+        name : 'likeFeed',
+        component : likeFeed,
+        beforeEnter : onlyAuthUser,
+        props: true
+    },
+    {
+        path : '/user/scrapFeed',
+        name : 'scrapFeed',
+        component : scrapFeed,
+        beforeEnter : onlyAuthUser,
         props: true
     },
 

@@ -81,19 +81,22 @@
                     </p>
                   <div v-for="cmt in todolist" v-bind:key="cmt.date" >
                         <div v-if="cmt[0].num==item.num">
-                             <div v-for="cmts in cmt" v-bind:key="cmts.date" >
-                                <h5 style="float:left; margin-left:5px; margin-right:20px"> {{ cmts.nickname }}</h5> &nbsp; <h5 style="margin-left:25px">{{ cmts.comment }}</h5>
+                             <div style="margin-top:2px" v-for="cmts in cmt" v-bind:key="cmts.date" >
+                                <h5 style="float:left; margin-left:5px; margin-right:20px;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                <h5 style="float:left; margin-left:25px">{{ cmts.comment }}</h5>
+                                <button style="float: right; margin-right:20px" @click="deletecomment(num,cmts)">X</button><br>
                              </div>                
                         </div>
                   </div>
                   
-                      <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
-                                <button style="height:30px;" class="check-button" @click="addcomment(item.num,index)">댓글달기</button>
-                            </div>
-                            <div style="margin-left:5px; width:60%;">
-                                <v-text-field style="color:blue; width:100%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
-                                </v-text-field>
-                            </div>
+                  
+                        <div style="width:30%; float:right; margin-right:5px; margin-top:17px; height:">
+                            <button style="height:30px;" class="check-button" @click="addcomment(item.num,index)">댓글달기</button>
+                        </div>
+                        <div style="margin-left:5px; width:60%;">
+                            <v-text-field style="color:blue; width:100%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
+                            </v-text-field>
+                        </div>
                   
   
                 </div>
@@ -109,19 +112,21 @@
                     </p>
                      <div v-for="cmt in todolist" v-bind:key="cmt.date" >
                         <div v-if="cmt[0].num==item.num">
-                             <div v-for="cmts in cmt" v-bind:key="cmts.date" >
-                                <h5 style="float:left; margin-left:5px; margin-right:20px"> {{ cmts.nickname }}</h5> &nbsp; <h5 style="margin-left:25px">{{ cmts.comment }}</h5>
+                             <div style="margin-top:2px" v-for="cmts in cmt" v-bind:key="cmts.date" >
+                                <h5 style="float:left; margin-left:5px; margin-right:20px;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                <h5 style="float:left; margin-left:25px">{{ cmts.comment }}</h5>
+                                <button style="float: right; margin-right:20px" @click="deletecomment(num,cmts)">X</button><br>
                              </div>                
                         </div>
                   </div>
                   <div v-if="commenttoggle[index]==true">
-                      <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                        <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
                                 <button style="height:30px;" class="check-button" @click="addcomment(item.num,index)">댓글달기</button>
-                            </div>
-                            <div style="margin-left:5px; width:60%;">
-                                <v-text-field style="color:blue; width:100%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
-                                </v-text-field>
-                            </div>
+                        </div>
+                        <div style="margin-left:5px; width:60%;">
+                            <v-text-field style="color:blue; width:100%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
+                            </v-text-field>
+                        </div>
                   </div>
                 </div>
     </v-card>  
@@ -167,7 +172,18 @@
         computed : {
             ...mapState(['userinfo']),
         },
-        methods: {
+        methods:{
+            deletecomment(num,cmt) {
+                console.log(cmt.nickname)
+                http.delete("/comment/comment?num=" + cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
+                .then(response => {
+
+                })
+                .catch(Error =>{
+
+                })
+            },
+
             addcomment(num,index) {
                 let form = new FormData()
                 form.append('comment', this.newcomment)
