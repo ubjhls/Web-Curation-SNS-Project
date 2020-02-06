@@ -1,5 +1,7 @@
 package com.web.curation.service;
 
+import java.util.List;
+
 import com.web.curation.model.follow.Follow;
 
 public interface IFollowService {
@@ -12,4 +14,6 @@ public interface IFollowService {
 	int followerDown(int num);
 	int followingUp(int num);
 	int followingDown(int num);
+	List<Follow> getFollower(int num);
+	List<Follow> getFollowing(int num);
 }

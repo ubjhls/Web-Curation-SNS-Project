@@ -1,7 +1,9 @@
 <template>
+<v-app>
+
   <v-form>
     
-    <v-text-field style="margin-top: 50px; margin-left:20px; margin-right:20px"
+    <v-text-field style="margin-top: 40px; margin-left:20px; margin-right:20px"
       v-model="subject"
       label="제목"
       value=""
@@ -53,7 +55,7 @@
             
           </v-col>
         
-    <v-textarea style="margin-top: 20px; margin-left:20px; margin-right:20px"
+    <v-textarea style="margin-top: 10px; margin-left:20px; margin-right:20px"
       v-model="content"
       label="내용"
       id="content"
@@ -63,6 +65,7 @@
       single-line
     ></v-textarea>
 
+<div style="margin-bottom: 90px">
     <v-text-field style="font-size:13px; margin-top: 10px; margin-left:20px; margin-right:5px; width:70%; float:left" disabled="disabled"
       v-model="address"
       label="주소"
@@ -71,7 +74,6 @@
       full-width
       hide-details
     ></v-text-field>
-
     <div style="width:20%; float:left; margin-top:40px">
         <button style="height:30px" class="check-button" @click="addressgo()">주소검색</button>
     </div>
@@ -80,15 +82,24 @@
       :on-complete=handleAddress
     />
    </div>
-   
-     <div style="margin-left:30%; margin-top:130px">
+</div>
+    <v-file-input
+      input-type="file"
+      @change="processFile($event)"
+      label="File input"
+      filled
+      prepend-icon="mdi-camera"
+      height="px"
+      ref="file"
+    ></v-file-input>
+     <div style="margin-left:30%; margin-top:0px">
         <button class="btn btn--ok" v-on:click="submit" :disabled="!issubmit" :class="{disabled : !issubmit}">
             작성하기
         </button>
     </div>
-    
   </v-form>
-  
+</v-app>
+
 </template>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
@@ -115,14 +126,15 @@ import http from "../../../http-common"
           if(this.subject.length < 1){
             this.check.subject = '제목 1자이상'
           }
-          else
+          else{
             this.check.subject = false
-
+          }
           if(this.content.length < 1){
             this.check.content = '1자이상'
           }
-          else
+          else{
             this.check.content = false;
+          }
         
           let issubmit = true;
 
@@ -138,16 +150,20 @@ import http from "../../../http-common"
         },
         submit(){
                 if(this.issubmit){
-
-                 let form = new FormData()
-                 let star = this.star1+this.star2+this.star3+this.star4+this.star5
-               
+                  let form = new FormData()
+                  let formdata = new FormData()
+                  formdata.append('image',this.image)
+                  Axios.post('https://api.imgur.com/3/image',formdata, {headers:{Authorization: 'Client-ID d15c5b033075c6e'}})
+                 .then(Response => {
+                   form.append('image', Response.data.data.link)
+                     let star = this.star1+this.star2+this.star3+this.star4+this.star5
+                //  console.log(this)               
                  form.append('email', this.$store.state.userinfo.email)
                  form.append('title', this.subject)
                  form.append('content', this.content)
                  form.append('address', this.address)
                  form.append('count_star', star)
-              
+                 console.log(form)
                  http.post("/post/post", form)
                  .then(Response => {
                   //  console.log(Response)
@@ -158,6 +174,13 @@ import http from "../../../http-common"
                  .catch(Error => {
                    
                    })
+                 })
+                 .catch(Error => {
+                   
+                   })
+                  
+                 
+               
            
                    }
         },
@@ -167,7 +190,6 @@ import http from "../../../http-common"
           }else{
             this.open = false
           }
-          
         },
         handleAddress(data){
            let fullAddress = data.address
@@ -184,13 +206,12 @@ import http from "../../../http-common"
          
           this.address = fullAddress
           this.open = false;
-          console.log(fullAddress) // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+          // console.log(fullAddress) // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
         },
         star1go(){
           if(this.star1==0){
             this.star1=1
           }else{
-            this.star1=0
              this.star2=0
             this.star3=0
             this.star4=0
@@ -202,7 +223,6 @@ import http from "../../../http-common"
             this.star1=1
             this.star2=1
           }else{
-            this.star2=0
             this.star3=0
             this.star4=0
              this.star5=0
@@ -214,7 +234,6 @@ import http from "../../../http-common"
             this.star2=1
             this.star3=1
           }else{
-            this.star3=0
             this.star4=0
              this.star5=0
           }
@@ -226,7 +245,6 @@ import http from "../../../http-common"
             this.star3=1
             this.star4=1
           }else{
-            this.star4=0
              this.star5=0
           }
         },
@@ -237,9 +255,13 @@ import http from "../../../http-common"
             this.star3=1
             this.star4=1
             this.star5=1
-          }else{
-            this.star5=0
           }
+        },
+        processFile(event){
+          console.log(event)
+          // alert(this.$refs.photoimage.files)
+          this.image = event
+    
         }
     },
     data () {
@@ -248,6 +270,7 @@ import http from "../../../http-common"
        content: '',
        open:false,
        address:'',
+       image:'',
        star1:0,
        star2:0,
        star3:0,

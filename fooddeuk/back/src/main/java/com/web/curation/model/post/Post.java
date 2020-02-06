@@ -27,7 +27,17 @@ public class Post {
 	private int count_comment;
 	private int count_star;
 	private String address;
+	private String image;
 	
+	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	public Post() {
 		super();
 	}
@@ -125,8 +135,10 @@ public class Post {
 	public String toString() {
 		return "Post [num=" + num + ", author=" + author + ", title=" + title + ", content=" + content + ", date="
 				+ date + ", count_like=" + count_like + ", count_comment=" + count_comment + ", count_star="
-				+ count_star + ", address=" + address + "]";
+				+ count_star + ", address=" + address + ", image=" + image + "]";
 	}
+
+	
 
 	
 }
