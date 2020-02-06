@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.curation.model.Alarm;
+import com.web.curation.model.alarm.Alarm;
 import com.web.curation.model.follow.Follow;
 import com.web.curation.model.user.User;
 import com.web.curation.service.IAlarmService;

@@ -8,9 +8,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT * FROM COMMENT WHERE NUM=#{num}
 	</select>
 	
-	<insert id="insertComment" parameterType="java.lang.Integer">
+	<insert id="insertComment" parameterType="comment">
 		INSERT INTO COMMENT(NUM, AUTHOR, COMMENT, DATE) 
 		VALUES(#{num}, #{author}, #{comment}, NOW())
 	</insert>
+	
+	<delete id="deleteComment" parameterType="comment">
+		DELETE FROM COMMENT WHERE NUM=#{num} AND AUTHOR={AUTHOR} AND DATE={date}
+	</delete>
 	
  </mapper>

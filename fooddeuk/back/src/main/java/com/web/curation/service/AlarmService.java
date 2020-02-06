@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.curation.dao.AlarmDaoImpl;
-import com.web.curation.model.Alarm;
+import com.web.curation.model.alarm.Alarm;
 
 @Service
 public class AlarmService implements IAlarmService {
@@ -16,37 +16,28 @@ public class AlarmService implements IAlarmService {
 	
 	@Override
 	public void nonfollowSave(Alarm alarm) {
-		
 		alarmdao.nonfollowSave(alarm);
-
 	}
 
 	@Override
 	public int checkFollowAlarm(Alarm alarm) {
-	
 		return alarmdao.checkFollowAlarm(alarm);
 	}
 
 	@Override
 	public List<Alarm> myalarmList(String num) {
-		
 		return alarmdao.myalarmList(num);
-		
 	}
 
 	@Override
 	public void changeConfirm(int num) {
 		alarmdao.changeConfirm(num);
-		
 	}
 
 	@Override
 	public List<Alarm> alarmtlist(String mynickname) {
-		
 		return alarmdao.alarmtlist(mynickname);
 	}
-
-
 	
 
 }

@@ -12,4 +12,7 @@ public interface IPostService {
 	int commentCountUp(int num);
 	int commentCountDown(int num);
 	int getAuthor(int num);
+	List<Post> getMyPost(int num);
+	List<Post> getMyLikePost(int num);
+	List<Post> getMyCurationPost(int num);
 }

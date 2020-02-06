@@ -27,9 +27,7 @@ public class Post {
 	private int count_star;
 	private String address;
 	private String image;
-
 	private int islike;
-
 
 	public Post() {
 		super();

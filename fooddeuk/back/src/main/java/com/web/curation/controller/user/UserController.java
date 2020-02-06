@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.curation.dao.UserDaoImpl;
 import com.web.curation.model.search.Search;
 import com.web.curation.model.user.User;
 import com.web.curation.service.ISearchService;

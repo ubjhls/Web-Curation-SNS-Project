@@ -10,19 +10,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	
 	<select id="checkFollowAlarm"  parameterType="alarm" resultType="alarm">
-		select * from alarm where receiver=#{receiver} and sender=#{sender} and confirm=0 and reason=1
+		SELECT * FROM ALARM WHERE RECEIVER=#{receiver} AND SENDER=#{sender} AND CONFIRM=0 AND REASON=1
 	</select>
 	
 	<select id="myalarmList"  parameterType="java.lang.String" resultType="alarm">
-		select * from alarm where receiver=#{num} and confirm=0 and reason=1 order by date desc
+		SELECT * FROM ALARM WHERE RECEIVER=#{num} AND CONFIRM=0 AND REASON=1 ORDER BY DATE DESC
 	</select>
 	
 	<update id="changeConfirm" parameterType="java.lang.Integer">
-		UPDATE alarm SET confirm=1 where num=#{num}
+		UPDATE ALARM SET CONFIRM=1 WHERE NUM=#{num}
 	</update>
 	
 	<select id="alarmtlist"  parameterType="java.lang.String" resultType="alarm">
-		select * from alarm where receiver=#{mynickname} and confirm=0 and reason!=1 order by date desc
+		SELECT * FROM ALARM WHERE RECEIVER=#{mynickname} AND CONFIRM=0 AND REASON!=1 ORDER BY DATE DESC
 	</select>
 	
  </mapper>
