@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.curation.dao.PostDaoImpl;
+import com.web.curation.model.curation.Curation;
 import com.web.curation.model.post.Post;
 
 @Service
@@ -60,8 +61,25 @@ public class PostServiceImpl implements IPostService {
 	}
 
 	@Override
-	public List<Post> getMyCurationPost(int num) {
-		return postdao.getMyCurationPost(num);
+	public List<Post> getMyCurationPost(Curation curation) {
+		return postdao.getMyCurationPost(curation);
 	}
+
+	@Override
+	public List<Post> getAllUserPost(int num) {
+		return postdao.getAllUserPost(num);
+	}
+
+	@Override
+	public Post getPost(Post post) {
+		return postdao.getPost(post);
+	}
+
+	@Override
+	public int scrapPost(Post post) {
+		return postdao.scrapPost(post);
+	}
+	
+	
 
 }

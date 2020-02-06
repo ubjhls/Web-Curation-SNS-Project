@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.web.curation.model.curation.Curation;
 import com.web.curation.model.post.Post;
 
 @Repository
@@ -51,8 +52,20 @@ public class PostDaoImpl {
 		return sqlSession.selectList(ns+"getMyLikePost", num);
 	}
 	
-	public List<Post> getMyCurationPost(int num) { // 내 큐레이션 피드
-		return sqlSession.selectList(ns+"getMyCurationPost", num);
+	public List<Post> getMyCurationPost(Curation curation) { // 내 큐레이션 피드
+		return sqlSession.selectList(ns+"getMyCurationPost", curation);
+	}
+	
+	public List<Post> getAllUserPost(int num) { // 공개된 사용자 모든 피드 불러오기
+		return sqlSession.selectList(ns+"getAllUserPost", num);
+	}
+	
+	public Post getPost(Post post) {
+		return sqlSession.selectOne(ns+"getPost", post);
+	}
+	
+	public int scrapPost(Post post) {
+		return sqlSession.insert(ns+"scrapPost", post);
 	}
 	
 }

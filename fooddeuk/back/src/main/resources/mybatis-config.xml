@@ -31,6 +31,7 @@
     	<typeAlias type="com.web.curation.model.comment.Comment" alias="comment" />
     	<typeAlias type="com.web.curation.model.alarm.Alarm" alias="alarm" />
     	<typeAlias type="com.web.curation.model.postlike.Postlike" alias="postlike" />
+    	<typeAlias type="com.web.curation.model.curation.Curation" alias="curation" />
     </typeAliases>
     <mappers>
        <mapper resource="mapper/user.xml"/>

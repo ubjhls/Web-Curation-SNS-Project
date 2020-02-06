@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	
 	<delete id="deleteComment" parameterType="comment">
-		DELETE FROM COMMENT WHERE NUM=#{num} AND AUTHOR={AUTHOR} AND DATE={date}
+		DELETE FROM COMMENT WHERE NUM=#{num} AND AUTHOR=#{author} AND DATE=#{date}
 	</delete>
 	
  </mapper>
