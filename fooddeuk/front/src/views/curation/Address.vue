@@ -10,11 +10,11 @@
         </div>
   <v-container fluid>
     <v-row align="center">
-      <v-col style="margin-top:250px; width:100%; text-align:center" cols="6">
-        <v-subheader style="margin-left:30px; font-size:30px">지역</v-subheader>
+      <v-col style="margin-top:130px; width:100%; text-align:center" cols="6">
+        <v-subheader style="margin-left:45px; font-size:20px">지역</v-subheader>
       </v-col>
-      <v-col style="margin-top:250px" cols="6">
-        <v-subheader style="margin-left:30px; font-size:30px">동네</v-subheader>
+      <v-col style="margin-top:130px" cols="6">
+        <v-subheader style="margin-left:45px; font-size:20px">동네</v-subheader>
       </v-col>
       <v-col cols="6">
         <v-select 
@@ -28,23 +28,24 @@
 
       </v-col>
       <v-col cols="6">
-        <v-select v-if="select.state ==='서울특별시'" v-model="selectt" :items="location[0]" label="전체"></v-select>
-        <v-select v-if="select.state ==='부산광역시'" v-model="selectt" :items="location[1]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='대구광역시'" v-model="selectt" :items="location[2]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='인천광역시'" v-model="selectt" :items="location[3]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='광주광역시'" v-model="selectt" :items="location[4]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='대전광역시'" v-model="selectt" :items="location[5]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='울산광역시'" v-model="selectt" :items="location[6]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='강원도'" v-model="selectt" :items="location[7]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='경기도'" v-model="selectt" :items="location[8]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='경상남도'" v-model="selectt" :items="location[9]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='경상북도'" v-model="selectt" :items="location[10]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='전라남도'" v-model="selectt" :items="location[11]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='전라북도'" v-model="selectt" :items="location[12]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='제주도'" v-model="selectt" :items="location[13]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='충청남도'" v-model="selectt" :items="location[14]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='충청북도'" v-model="selectt" :items="location[15]" item-text="state" label="전체"></v-select>
-        <v-select v-if="select.state ==='전체'" v-model="selectt" :items="location[16]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='서울'" v-model="selectt" :items="location[0]" label="전체"></v-select>
+        <v-select v-if="select.state ==='부산'" v-model="selectt" :items="location[1]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='대구'" v-model="selectt" :items="location[2]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='인천'" v-model="selectt" :items="location[3]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='광주'" v-model="selectt" :items="location[4]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='대전'" v-model="selectt" :items="location[5]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='울산'" v-model="selectt" :items="location[6]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='강원'" v-model="selectt" :items="location[7]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='경기'" v-model="selectt" :items="location[8]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='경남'" v-model="selectt" :items="location[9]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='경북'" v-model="selectt" :items="location[10]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='전남'" v-model="selectt" :items="location[11]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='전북'" v-model="selectt" :items="location[12]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='제주특별자치도'" v-model="selectt" :items="location[13]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='충남'" v-model="selectt" :items="location[14]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='충북'" v-model="selectt" :items="location[15]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='세종특별자치시'" v-model="selectt" :items="location[16]" item-text="state" label="전체"></v-select>
+        <v-select v-if="select.state ==='전체'" v-model="selectt" :items="location[17]" item-text="state" label="전체"></v-select>
       </v-col>
       
       <v-col style="text-align:center; margin-top:70px" cols="6">
@@ -116,29 +117,30 @@ import '../../assets/css/address.scss'
         ['전체','서귀포시','제주시','남제주군','북제주군'],
         ['전체','공주시','논산시','보령시','서산시','아산시','천안시','금산군','당진군','부여군','서천군','연기군','예산군','청양군','태안군','홍성군'],
         ['전체','제천시','청주시 상당구','청주시 흥덕구','충주시','괴산군','단양군','보은군','영동군','옥천군','음성군','진천군','청원군'],
+        ['전체','반곡동','소담동','보람동','대평동','가람동','한솔동','나성동','새롬동','다정동','어진동','종촌동','고운동','아름동','도담동','조치원읍','연기면','연동면','부강면','금남면','장군면','연서면','전의면','전동명','소정면'],
         ['전체']
         ],
 
         select: { state:'전체'},
         items: [
           { state: '전체'},
-          { state: '서울특별시'},
-          { state: '부산광역시'},
-          { state: '대구광역시'},
-          { state: '인천광역시'},
-          { state: '광주광역시'},
-          { state: '대전광역시'},
-          { state: '울산광역시'},
-          { state: '강원도'},
-          { state: '경기도'},
-          { state: '경상남도'},
-          { state: '경상북도'},
-          { state: '전라남도'},
-          { state: '전라북도'},
-          { state: '제주도'},
-          { state: '충청남도'},
-          { state: '충청북도'},
-          { state: '충청북도'},
+          { state: '서울'},
+          { state: '부산'},
+          { state: '대구'},
+          { state: '인천'},
+          { state: '광주'},
+          { state: '대전'},
+          { state: '울산'},
+          { state: '강원'},
+          { state: '경기'},
+          { state: '경남'},
+          { state: '경북'},
+          { state: '전남'},
+          { state: '전북'},
+          { state: '제주특별자치도'},
+          { state: '충남'},
+          { state: '충북'},
+          { state: '세종특별자치시'},
           { state: '전체'},
         ],
         

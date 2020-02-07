@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "animate.css": "^3.7.2",
     "axios": "^0.19.1",
     "babel-eslint": "^10.0.3",
     "babel-preset-env": "^1.7.0",

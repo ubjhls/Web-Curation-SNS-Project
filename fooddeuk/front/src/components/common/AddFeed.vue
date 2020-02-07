@@ -1,8 +1,5 @@
 <template>
-<v-app>
-
-  <v-form>
-    
+<div>
     <v-text-field style="margin-top: 40px; margin-left:20px; margin-right:20px"
       v-model="subject"
       label="제목"
@@ -83,7 +80,7 @@
     />
    </div>
 </div>
-    <v-file-input
+    <v-file-input style="width:80%; margin-left:15px"
       input-type="file"
       @change="processFile($event)"
       label="File input"
@@ -97,8 +94,7 @@
             작성하기
         </button>
     </div>
-  </v-form>
-</v-app>
+</div>
 
 </template>
 
@@ -109,7 +105,7 @@ import Axios from "axios";
 import http from "../../../http-common"
 
   export default {  
-     name: 'App',
+    name: 'App',
     components: {
       DaumPostcode
     },

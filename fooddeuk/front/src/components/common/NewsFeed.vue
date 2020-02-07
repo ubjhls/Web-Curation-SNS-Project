@@ -29,11 +29,11 @@
                 <hr>
                 <v-spacer></v-spacer>
                 <div style="width:100%;" v-if="like">
-                    <button @click="toggle"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
+                    <button class="animated rubberBand" @click="toggle"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
                     <button @click="togglecomment"><img style="width:26px; margin-left:10px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                 </div>
                 <div style="width:100%" v-else>
-                    <button @click="toggle"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
+                    <button @click="toggle"><img class="animated rubberBand" style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
                     <button @click="togglecomment"><img style="width:26px; margin-left:10px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
   
                 </div>
