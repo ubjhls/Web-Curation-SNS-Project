@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -218,5 +219,33 @@ public class PostController {
 		return "success";
 	}
 	
+	@DeleteMapping("/post/post")
+	@ApiOperation(value = "게시물 삭제하기")
+	public Object deletePost(@RequestParam(required = true) int post,
+							@RequestParam(required = true) int num) throws Exception {
+		
+		System.out.println("-----------------/post/post-----------------");
+		System.out.println("post : " + post);
+		System.out.println("num : " + num);
+		
+		BasicResponse result = new BasicResponse();
+		
+		if(postService.deletePost(num) == 0) {
+			result.data = "failed";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		List<Post> list = postService.getAllPost(num);
+		
+		if(list.size() == 0) {
+			result.data = "nothing";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		     
+		result.status=true;
+		result.object = list;
+		System.out.println(list);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 	
 }

@@ -79,7 +79,10 @@ public class PostServiceImpl implements IPostService {
 	public int scrapPost(Post post) {
 		return postdao.scrapPost(post);
 	}
-	
-	
+
+	@Override
+	public int deletePost(int num) {
+		return postdao.deletePost(num);
+	}
 
 }

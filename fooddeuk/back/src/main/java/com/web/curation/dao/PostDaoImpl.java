@@ -68,4 +68,8 @@ public class PostDaoImpl {
 		return sqlSession.insert(ns+"scrapPost", post);
 	}
 	
+	public int deletePost(int num) {
+		return sqlSession.delete(ns+"deletePost", num);
+	}
+	
 }

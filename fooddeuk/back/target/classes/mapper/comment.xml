@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="comment">
 
 	<select id="getAllComment" parameterType="comment" resultType="comment">
-		SELECT * FROM COMMENT WHERE NUM=#{num}
+		SELECT * FROM COMMENT WHERE NUM=#{num} ORDER BY DATE
 	</select>
 	
 	<insert id="insertComment" parameterType="comment">

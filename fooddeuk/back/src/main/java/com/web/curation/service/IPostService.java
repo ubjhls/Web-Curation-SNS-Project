@@ -19,4 +19,5 @@ public interface IPostService {
 	List<Post> getAllUserPost(int num);
 	Post getPost(Post post);
 	int scrapPost(Post post);
+	int deletePost(int num);
 }
