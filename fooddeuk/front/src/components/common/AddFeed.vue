@@ -163,7 +163,6 @@ import http from "../../../http-common"
                  form.append('content', this.content)
                  form.append('address', this.address)
                  form.append('count_star', star)
-                 console.log(form)
                  http.post("/post/post", form)
                  .then(Response => {
                    console.log(Response)
