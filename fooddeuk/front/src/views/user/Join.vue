@@ -53,6 +53,9 @@
                 <div class="error-textt" v-else-if="exist_nickName_confirm ==='b'"> 
                     {{ exist_nickName }}
                 </div>
+                <div class="error-textt" v-else-if="error.nickName ==='이메일 형식이 아닙니다.'"> 
+                    {{ exist_nickName }}
+                </div>
                 <br>
            
             <div>

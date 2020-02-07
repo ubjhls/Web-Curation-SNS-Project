@@ -75,20 +75,6 @@
 </template>
 
 <script>
-    import InputComponent from '../components/common/Input'
-    import TextareaComponent from '../components/common/Textarea'
-    import LargeButton from '../components/common/ButtonLarge'
-    import SmallButton from '../components/common/ButtonSmall'
-    import HalfButton from '../components/common/ButtonHalf'
-    import SelectComponent from '../components/common/Select'
-    import CheckboxComponent from '../components/common/Checkbox'
-    import SwitchComponent from '../components/common/Switch'
-    import HeaderComponent from '../components/common/Header'
-    import TabComponent from '../components/common/Tab'
-    import KeywordDelComponent from '../components/common/KeywordDel'
-    import KeywordAddComponent from '../components/common/KeywordAdd'
-    import CurationComponent from '../components/common/Curation'
-    import ToastComponent from '../components/common/Toast'
     import NavigationBar from '../components/common/NavigationBar'
     import NewsFeed from '../components/common/NewsFeed'
     import '../assets/css/components.scss'
@@ -96,20 +82,6 @@
     export default {
         name: "components",
         components: {
-            InputComponent,
-            TextareaComponent,
-            LargeButton,
-            SmallButton,
-            HalfButton,
-            SelectComponent,
-            CheckboxComponent,
-            SwitchComponent,
-            HeaderComponent,
-            TabComponent,
-            KeywordDelComponent,
-            KeywordAddComponent,
-            CurationComponent,
-            ToastComponent,
         },
         data: () => {
             return {

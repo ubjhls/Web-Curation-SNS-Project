@@ -46,10 +46,10 @@
                         <v-list-item-avatar><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title class="headline">{{item.title}}</v-list-item-title>
-                        <v-list-item-subtitle>{{nickname}}   </v-list-item-subtitle>
+                        <v-list-item-subtitle style="width:50px">{{nickname}} <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
+                        <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->
                         </v-list-item-content>
                         </v-list-item>
-                        <div style="margin-left:16px">{{item.date}}</div>
                             <v-col cols="12" sm="3">
                                 <div v-for="star in item.count_star" :key="star.num">
                                     <v-icon style="color:red; float : left">mdi-star</v-icon>
@@ -68,11 +68,24 @@
                         <v-spacer></v-spacer>
 
                     <div style="width:100%">
-                        <button v-if="like[index]===true" @click="toggledelete(item.num, index)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
-                        <button v-if="like[index]===false" @click="toggleadd(item.num, index)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
-                        <button @click="commentview(item.num, index)"><img style="width:26px; margin-left:100px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
-                        <button><img style="width:26px; margin-left:100px; margin-bottom:5px" src="../../assets/images/share.png"></button>
-                        
+                    <div style="margin-bottom:10px; margin-top:10px; padding-left:5px">
+                        <div style="width:33%; float:left;">
+
+                        <button class="animated rubberBand" v-if="like[index]===true" @click="toggledelete(item.num, index)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
+                        <button v-if="like[index]===false" @click="toggleadd(item.num, index)"><img class="animated rubberBand" style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
+                        </div>
+                        <div style="width:33%; float:left; text-align:center; margin-top:3px">
+
+                        <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
+                        </div>
+                        <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
+                        <button><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
+
+                        </div>
+                        <br>
+                    </div>
+                    <br>
+                  
                         <div v-if="like[index]===true">
                             <p v-if="likelist[index] === 1">
                                 {{nick}}님<span>이 좋아합니다.</span>
@@ -95,14 +108,21 @@
                         <div v-if="coment[index]===true">
                             <div v-for="cmt in todolist" v-bind:key="cmt.date" >
                                 <div v-if="cmt[0].num==item.num">
-                                    <div v-for="cmts in cmt" v-bind:key="cmts.date" >
-                                        <h5 style="float:left; margin-left:5px; margin-right:20px"> {{ cmts.nickname }}</h5> &nbsp; <h5 style="margin-left:25px">{{ cmts.comment }} <span v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">x</span></h5>
+                                    <div style="margin-bottom:5px" v-for="cmts in cmt" v-bind:key="cmts.date" >
+                                        <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                        <h5 style="float:left; ">{{ cmts.comment }} 
+                                        </h5>
+                                        <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                        <br>
                                     </div>                
                                 </div>
                             </div>
                   
                             <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
-                                <button style="height:30px;" class="check-button" @click="addcomment(item.num,index)">댓글달기</button>
+                                <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
+                                :disabled="!isSubmit"
+                                :class="{disabled : !isSubmit}"
+                                >댓글달기</button>
                             </div>
                             <div style="margin-left:5px; width:60%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
@@ -120,6 +140,9 @@
 
 
 <script>
+    import Vue from 'vue'
+    import moment from 'moment'
+    import VueMomentJS from 'vue-momentjs'
     import '../../assets/css/style.scss'
     import '../../assets/css/user.scss'
     import '../../assets/css/profile.scss'
@@ -156,10 +179,34 @@
             //검색한 사용자와 팔로잉 체크
             this.followcheck(this.nickname);
         },
+        watch : {
+            newcomment: function(v) {
+                this.checkForm();
+            }
+        },
         computed : {
             ...mapState(['userinfo']),
         },
         methods: {
+            checkForm() {
+                if (this.newcomment.length < 1)
+                    this.error.newcomment = '1자이상'
+                else
+                    this.error.newcomment = false
+                
+                let isSubmit = true
+                Object
+                .values(this.error)
+                .map(v => {
+                    if (v) 
+                        isSubmit = false;
+                    }
+                )
+                this.isSubmit = isSubmit;
+            },
+            getTime(time) {
+                return moment(time).fromNow();
+            },
              getUserByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
@@ -385,8 +432,8 @@
                     //댓글 수 갱신하기
                     this.refresh();
 
-                    alert("댓글을 작성완료했습니다.")
                 })
+
             },
             refresh(){ //댓글 수 갱신하기
 
@@ -410,7 +457,7 @@
      
                     this.commentview(num, index);
                     this.commentview(num, index);
-                    alert("삭제가 완료되었습니다.")
+                
 
                     this.refresh();
                     
@@ -477,14 +524,14 @@
                 alert("댓글이 등록되었습니다.")
                
             }
-            
-            
-            
-            
            
         },
         data: () => {
             return {
+                isSubmit: false,
+                error:{
+                    comment:false
+                },
                 nick:'',
                 nickname : '',
                 num:0,

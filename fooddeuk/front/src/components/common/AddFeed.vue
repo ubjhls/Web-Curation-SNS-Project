@@ -80,7 +80,7 @@
     />
    </div>
 </div>
-    <v-file-input
+    <v-file-input style="width:80%; margin-left:15px"
       input-type="file"
       @change="processFile($event)"
       label="File input"
@@ -104,7 +104,7 @@ import Axios from "axios";
 import http from "../../../http-common"
 
   export default {  
-     name: 'App',
+    name: 'App',
     components: {
       DaumPostcode
     },
