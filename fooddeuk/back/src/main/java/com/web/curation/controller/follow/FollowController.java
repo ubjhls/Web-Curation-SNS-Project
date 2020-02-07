@@ -1,5 +1,6 @@
 package com.web.curation.controller.follow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,7 +146,12 @@ public class FollowController {
 		BasicResponse result = new BasicResponse();
 		result.data="success";
 		
-		List<Follow> list = followService.getFollower(num);
+		List<User> list = followService.getFollower(num);
+		List<Integer> isFollow = new ArrayList<Integer>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			isFollow.add(followService.checkFollow(new Follow(num, list.get(i).getNum())));
+		}
 		
 		if(list.size() == 0) {
 			result.data = "failed";
@@ -153,6 +159,7 @@ public class FollowController {
 		}
 		
 		result.object = list;
+		result.object2 = isFollow;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	@GetMapping("/follow/getFollowing/{num}")
@@ -163,14 +170,20 @@ public class FollowController {
 		BasicResponse result = new BasicResponse();
 		result.data="success";
 		
-		List<Follow> list = followService.getFollowing(num);
+		List<User> list = followService.getFollowing(num);
+		List<Integer> isFollowing = new ArrayList<Integer>();
 		
+		for (int i = 0; i < list.size(); i++) {
+			isFollowing.add(followService.checkFollow(new Follow(num, list.get(i).getNum())));
+			
+		}
 		if(list.size() == 0) {
 			result.data = "failed";
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		
 		result.object = list;
+		result.object2 = isFollowing;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
