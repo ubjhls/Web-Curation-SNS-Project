@@ -54,7 +54,7 @@
           </v-col>
           <br>
         <v-card-text>
-        <img v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+        <img v-if="item.image!=null && item.image!='null'" v-bind:src="item.image" style="width:100%; heigh:auto; ">
         <br>
         {{item.content}}
         <br><br><hr><br>
@@ -163,7 +163,6 @@
                 form.append('nickname', nick)
                 http.get("/user/userinfo/{nickname}?nickname=" + nick)
                 .then(Response => {
-                    console.log(Response)
                     this.num = Response.data.num;
                     this.intro = Response.data.intro;
                     this.email = Response.data.email;
@@ -181,7 +180,6 @@
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                     this.post = Response.data.object; 
-                    console.log(this.post)
                 })
                 .catch(Error => {
                     console.log(Error)

@@ -142,7 +142,7 @@ const requestEmailConfirm = (data,callback,errorCallback) => {
     let form = new FormData()
     form.append('email', data.email)
     form.append('key', data.key)
-    http.patch("/mail/confirm?email="+data.email + "&key=" + data.key)
+    http.patch("/mail/confirm", form)
     .then(Response => {
         // console.log(Response)
         if(Response.data == "success"){
@@ -238,11 +238,11 @@ const requestDeleteSearch= (data,callback,errorCallback) => {
 
 const requestModifyProfile = (data,callback,errorCallback) => {
     let form = new FormData()
-    // form.append('nickname', data.nickName)
-    // form.append('intro', data.intro)
-    // form.append('auth', data.authData)
-    // form.append('email', data.email)
-    http.patch("/user/user?auth="+data.authData + "&email="+data.email + "&intro="+data.intro+"&nickname=" +data.nickName)
+    form.append('nickname', data.nickName)
+    form.append('intro', data.intro)
+    form.append('auth', data.authData)
+    form.append('email', data.email)
+    http.patch("/user/user?auth", form)
     .then(Response => {
         // console.log("response : ", JSON.stringify(Response, null, 2));
         // console.log(Response.data)

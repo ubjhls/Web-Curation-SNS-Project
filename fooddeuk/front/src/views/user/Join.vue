@@ -140,6 +140,7 @@
         watch: {
             nickName: function (v) {
                 this.checkForm();
+                this.exist_nickName = ''
             },
             email: function (v) {
                 this.checkForm();
@@ -232,7 +233,6 @@
             },
 
             checkForm() {
-
                 if(this.nickName.length > 15)
                     this.error.nickName = "닉네임은 2 ~ 15자 이내로 작성해주세요";
                 else if(this.nickName.length < 2)
