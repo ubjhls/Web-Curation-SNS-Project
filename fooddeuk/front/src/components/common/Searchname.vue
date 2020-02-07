@@ -3,7 +3,7 @@
     <div class="container">
     <div action="" class="search">
         <div class="field" style="float:left; width:80%">
-            <input v-model="NewName" type="text" class="input-search">
+            <input v-model="NewName" type="text" class="input-search" @keyup.enter="AddName">
             <label for="input-search">닉네임 검색</label>
         </div>
             <div style="width:20%; float:left">
