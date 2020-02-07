@@ -170,4 +170,6 @@ public class Post {
 				+ count_star + ", address=" + address + ", image=" + image + ", islike=" + islike + "]";
 	}
 	
+
+	
 }

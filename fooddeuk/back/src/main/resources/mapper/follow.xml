@@ -40,5 +40,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="followingDown" parameterType="java.lang.Integer">
 		UPDATE PROFILE SET COUNT_FOLLOWING=COUNT_FOLLOWING-1 WHERE NUM=#{num} 
 	</update>
+	<select id="getFollower" parameterType="java.lang.Integer" resultType="user">
+		select * from user where num in (select follower from follow where `following`=#{num});
+	</select>
+	<select id="getFollowing" parameterType="java.lang.Integer" resultType="user">
+		select * from user where num in (select following from follow where `follower`=#{num});
+	</select>
+	
 	
  </mapper>

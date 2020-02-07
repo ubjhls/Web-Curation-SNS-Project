@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="post">
 
 	<insert id="insertPost" parameterType="post">
-		INSERT INTO POST(AUTHOR, TITLE, CONTENT, DATE, COUNT_STAR, ADDRESS, image)
+		INSERT INTO POST(AUTHOR, TITLE, CONTENT, DATE, COUNT_STAR, ADDRESS, IMAGE)
 		VALUES(#{author}, #{title}, #{content}, NOW(), #{count_star}, #{address}, #{image})
 	</insert>
 	
