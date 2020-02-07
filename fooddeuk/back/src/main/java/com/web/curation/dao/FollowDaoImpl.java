@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.web.curation.model.follow.Follow;
+import com.web.curation.model.user.User;
 
 @Repository
 public class FollowDaoImpl {
@@ -55,10 +56,10 @@ public class FollowDaoImpl {
 		return sqlSession.update(ns+"followingDown", num);
 	}
 
-	public List<Follow> getFollower(int num) {
+	public List<User> getFollower(int num) {
 		return sqlSession.selectList(ns+"getFollower", num);
 	}
-	public List<Follow> getFollowing(int num) {
+	public List<User> getFollowing(int num) {
 		return sqlSession.selectList(ns+"getFollowing", num);
 	}
 	
