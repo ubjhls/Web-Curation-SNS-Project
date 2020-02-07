@@ -146,32 +146,16 @@ import http from "../../../http-common"
         submit(){
           if(this.issubmit){
             let form = new FormData()
-            let formdata = new FormData()
             form.append('email', this.$store.state.userinfo.email)
             form.append('title', this.subject)
             form.append('content', this.content)
             form.append('address', this.address)
             let star = this.star1+this.star2+this.star3+this.star4+this.star5
             form.append('count_star', star)
-            formdata.append('image',this.image)
-
-            console.log(this.image)
-
-            if(this.image!=null) {
-              Axios.post('https://api.imgur.com/3/image',formdata, {headers:{Authorization: 'Client-ID d15c5b033075c6e'}})
-              .then(Response => {
-                  form.append('image', Response.data.data.link)
-                  //  console.log(this)               
-                  console.log(form)
-                })
-              .catch(Error => {
-
-              })
-            }
-
+            form.append('image', this.imageResult)
+            
             http.post("/post/post", form)
             .then(Response => {
-              console.log(Response)
               if(Response.data=="success"){
                 this.$emit('child', this.propDrawer)
               }
@@ -258,7 +242,18 @@ import http from "../../../http-common"
           console.log(event)
           // alert(this.$refs.photoimage.files)
           this.image = event
-    
+
+          let formdata = new FormData()
+          formdata.append('image',this.image)
+
+          Axios.post('https://api.imgur.com/3/image',formdata, {headers:{Authorization: 'Client-ID d15c5b033075c6e'}})
+          .then(Response => {
+              this.imageResult = Response.data.data.link;
+              alert("갔다옴")
+            })
+          .catch(Error => {
+
+          })
         }
     },
     data () {
@@ -269,6 +264,7 @@ import http from "../../../http-common"
        open:false,
        address:'',
        image:null,
+       imageResult:null,
        star1:0,
        star2:0,
        star3:0,

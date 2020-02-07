@@ -7,6 +7,7 @@
                         <div class="profile-card__name">{{nickname}}</div>
                         <div class="profile-card__txt">{{intro}}</div>
 
+
                         <div class="profile-card-inf">
                             <div class="profile-card-inf__item">
                                 <div class="profile-card-inf__title">{{follower}}</div>
@@ -52,6 +53,11 @@
                             <br>
                             <v-card-text>
                                 {{item.content}}
+                                <br>
+                                <img v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+        <br>
+
+                        
                             <br><br><hr><br>
                             주소 : {{item.address}} 
                             </v-card-text>
@@ -59,11 +65,24 @@
                         <v-spacer></v-spacer>
 
                     <div style="width:100%">
+                    <div style="margin-bottom:10px; margin-top:10px; padding-left:5px">
+                        <div style="width:33%; float:left;">
+
                         <button class="animated rubberBand" v-if="like[index]===true" @click="toggledelete(item.num, index)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
                         <button v-if="like[index]===false" @click="toggleadd(item.num, index)"><img class="animated rubberBand" style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
-                        <button @click="commentview(item.num, index)"><img style="width:26px; margin-left:100px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
-                        <button><img style="width:26px; margin-left:100px; margin-bottom:5px" src="../../assets/images/share.png"></button>
-                        
+                        </div>
+                        <div style="width:33%; float:left; text-align:center; margin-top:3px">
+
+                        <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
+                        </div>
+                        <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
+                        <button><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
+
+                        </div>
+                        <br>
+                    </div>
+                    <br>
+                  
                         <div v-if="like[index]===true">
                             <p v-if="likelist[index] === 1">
                                 {{nick}}님<span>이 좋아합니다.</span>
@@ -195,7 +214,7 @@
                     this.intro = Response.data.intro;
                     this.email = Response.data.email;
                     this.auth = Response.data.auth;
-                
+                    
                     //팔로잉 내역 불러오기
                     this.getFollowing(this.email);
                     //팔로워 내역 불러오기
@@ -222,12 +241,7 @@
                 let form = new FormData()
                 http.get("/follow/following?email="+this.email)
                 .then(Response => {
-                    this.num = Response.data.num;
-                    this.intro = Response.data.intro;
-                    this.email = Response.data.email;
-                    this.getPostByNum(this.num);
-                    this.getFollower(this.email);
-                    this.getFollowing(this.email);
+                this.following = Response.data;
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -241,7 +255,7 @@
                 .then(Response => {
                    
                     this.post = Response.data.object; 
-                    
+                    console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
                         if(this.post[index].islike==1){

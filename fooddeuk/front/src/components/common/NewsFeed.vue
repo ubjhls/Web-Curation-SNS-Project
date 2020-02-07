@@ -73,6 +73,7 @@
     import '../../assets/css/style.scss'
     import '../../assets/css/user.scss'
     import UserApi from '../../apis/UserApi'
+    import http from '../../../http-common'
 
     export default {
         components: {
@@ -81,6 +82,17 @@
 
         },
         methods: {
+            
+            // getNewFeed() {
+            // http.get("/post/mycurationpost?num=" + this.$store.state.userinfo.num)
+            // .then(response => {
+                
+            // })
+            // .catch(Error =>{
+
+            // })
+            // },
+
             toggle () {
                 this.like = !this.like
             },
