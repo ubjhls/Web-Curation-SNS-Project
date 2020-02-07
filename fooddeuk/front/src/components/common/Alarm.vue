@@ -2,8 +2,10 @@
   <v-card
     class="mx-auto"
   >
-
-    <v-list three-line>
+    <div v-if="items.length==0">
+      알림이 없습니다.
+    </div>
+    <v-list v-if="items.length!=0" three-line>
       <template v-for="(item, index) in items">
         <v-subheader
           v-if="item.header"
@@ -45,6 +47,7 @@
   import moment from 'moment'
   import VueMomentJS from 'vue-momentjs'
   import {fireDB} from '../../main'
+  import EventBus from '../../EventBus'
 
   Vue.use(VueMomentJS, moment)
 
@@ -61,9 +64,20 @@
       // this.getAlarms();
       this.watchAlarmFromFirebase();
     },
+    mounted : function() {
+      this.emitAlarm();
+    },
     watch: {
     },
     methods : {
+      
+      emitAlarm() {
+        let whoami = this;
+        EventBus.$on('emitAlarm', function() {
+          // alert("emitAlarm 감지")
+          whoami.getAlarms();
+        })
+      },
       setAlarm(alarm) {
         this.alarmCount = alarm;
       },
@@ -92,7 +106,7 @@
         http.patch("/follow/alarmconfirm?num=" + num)
         .then(Response => {
           this.items = Response.data
-          console.log(Response.data)
+          // console.log(Response.data)
           this.getAlarms()
           this.updateAlarmToFirebase();
         })
@@ -107,7 +121,7 @@
         http.get("/follow/alarmlist?mynickname=" + this.nickname)
         .then(Response => {
           this.items = Response.data
-          console.log(Response.data)
+          // console.log(Response.data)
         })
         .catch(Error => {
             console.log(Error)
@@ -121,7 +135,7 @@
         http.post("/follow/followagree", form)
         .then(Response => {
           this.isfollow = 1;
-          console.log(Response.data)
+          // console.log(Response.data)
           this.getAlarms();
         })
         .catch(Error => {

@@ -21,6 +21,7 @@ import ModifyPassword from './views/user/ModifyPassword.vue'
 import curationFeed from './views/user/curationFeed.vue'
 import scrapFeed from './views/user/scrapFeed.vue'
 import likeFeed from './views/user/likeFeed.vue'
+import Statistics from './views/user/Statistics.vue'
 
 
 import Vue from 'vue';
@@ -139,11 +140,13 @@ const onlyAuthUser = (to, from, next) =>{
         path : '/user/FollowPage',
         name : 'FollowPage',
         component : FollowPage,
+        beforeEnter : onlyAuthUser,
     },
     {
         path : '/user/FollowingPage',
         name : 'FollowingPage',
         component : FollowingPage,
+        beforeEnter : onlyAuthUser,
     },
     {
         path : '/user/ModifyProfile',
@@ -195,7 +198,13 @@ const onlyAuthUser = (to, from, next) =>{
         name : 'scrapFeed',
         component : scrapFeed,
         beforeEnter : onlyAuthUser,
-        props: true
+        props: true,
+    },
+    {
+        path : '/user/Statistics',
+        name : 'Statistics',
+        component : Statistics,
+        beforeEnter : onlyAuthUser,
     },
 
 ];

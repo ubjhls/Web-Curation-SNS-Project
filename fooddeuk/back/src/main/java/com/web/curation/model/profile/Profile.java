@@ -25,6 +25,8 @@ public class Profile {
 	private int count_following;
 	private String place;
 	private String picture;
+	private String placeFirst;
+	private String placeSecond;
 	
 	public Profile() {
 		super();
@@ -109,6 +111,18 @@ public class Profile {
 
 	public void setPicture(String picture) {
 		this.picture = picture;
+	}
+	public String getPlaceFirst() {
+		return placeFirst;
+	}
+	public void setPlaceFirst(String placeFirst) {
+		this.placeFirst = placeFirst;
+	}
+	public String getPlaceSecond() {
+		return placeSecond;
+	}
+	public void setPlaceSecond(String placeSecond) {
+		this.placeSecond = placeSecond;
 	}
 
 	@Override

@@ -27,24 +27,27 @@ public class Post {
 	private int count_star;
 	private String address;
 	private String image;
-<<<<<<< HEAD
-	
-	
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
-=======
+	private String type;
+	private int scrap_author;
 	private int islike;
->>>>>>> 1d67a7f82a7095d4f5e96de96616a130251eabb4
 
 	public Post() {
 		super();
 	}
 	
+	public Post(int num, String address) {
+		super();
+		this.num = num;
+		this.address = address;
+	}
+	
+	public Post(int num, int author, String date) {
+		super();
+		this.num = num;
+		this.author = author;
+		this.date = date;
+	}
+
 	public Post(int author, String title, String content, int count_star, String address) {
 		super();
 		this.author = author;
@@ -147,16 +150,24 @@ public class Post {
 	public void setIslike(int islike) {
 		this.islike = islike;
 	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public int getScrap_author() {
+		return scrap_author;
+	}
+	public void setScrap_author(int scrap_author) {
+		this.scrap_author = scrap_author;
+	}
 
 	@Override
 	public String toString() {
 		return "Post [num=" + num + ", author=" + author + ", title=" + title + ", content=" + content + ", date="
 				+ date + ", count_like=" + count_like + ", count_comment=" + count_comment + ", count_star="
-<<<<<<< HEAD
-				+ count_star + ", address=" + address + ", image=" + image + "]";
-=======
 				+ count_star + ", address=" + address + ", image=" + image + ", islike=" + islike + "]";
->>>>>>> 1d67a7f82a7095d4f5e96de96616a130251eabb4
 	}
 	
 

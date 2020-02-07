@@ -46,6 +46,7 @@
   import moment from 'moment'
   import VueMomentJS from 'vue-momentjs'
   import { fireDB } from '../../main';
+  import EventBus from '../../EventBus'
 
   Vue.use(VueMomentJS, moment)
 
@@ -60,9 +61,17 @@
       // this.getAlarms();
       this.watchAlarmFromFirebase();
     },
-    mounted() {
+    mounted : function() {
+      this.emitRequest();
     },
     methods : {
+      emitRequest() {
+        let whoami = this;
+        EventBus.$on('emitRequest', function() {
+          // alert("emitRequest 감지")
+          whoami.getAlarms();
+        })
+      },
       setAlarm(alarm) {
         this.alarmCount = alarm;
       },

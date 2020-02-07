@@ -222,7 +222,12 @@
                 let form = new FormData()
                 http.get("/follow/following?email="+this.email)
                 .then(Response => {
-                this.following = Response.data;
+                    this.num = Response.data.num;
+                    this.intro = Response.data.intro;
+                    this.email = Response.data.email;
+                    this.getPostByNum(this.num);
+                    this.getFollower(this.email);
+                    this.getFollowing(this.email);
                 })
                 .catch(Error => {
                     console.log(Error)

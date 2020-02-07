@@ -1,9 +1,10 @@
 <template>
     <div class="contents_center" style="margin-top:65px; margin-bottom:65px">
-    <v-tabs v-model="tab" grow slider-color="#F7A937">
+    <v-tabs v-model="tab" grow slider-color="#F7A937" >
         <v-tab
         v-for="item in items"
         :key="item"
+        @click="sendEmit(tab)"
       >
         {{ item }}
       </v-tab>
@@ -28,16 +29,33 @@
     import Alarm from './Alarm'
     import Request from './Request'
     import {mapState} from 'vuex';
+    import EventBus from '../../EventBus'
 
     export default {
         components : {
           Alarm,
           Request
         },
+        watch : {
+
+        },
         methods : {
-          test() {
-            alert("test")
-          }
+          sendEmit(tab) {
+            if(tab==1) {
+              this.emitAlarm();
+            }
+            else if(tab==0) {
+              this.emitRequest();
+            }
+          },
+          emitAlarm() {
+            // alert("emitAlarm 전송")
+            EventBus.$emit('emitAlarm')
+          },
+          emitRequest() {
+            // alert("emitRequest 전송")
+            EventBus.$emit('emitRequest')
+          },
         },
         data : () => {
             return {
