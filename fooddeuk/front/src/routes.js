@@ -18,6 +18,7 @@ import FollowingPage from './views/user/FollowingPage.vue'
 import EmailConfirm from './views/user/EmailConfirm.vue'
 import Address from './views/curation/Address.vue'
 import ModifyPassword from './views/user/ModifyPassword.vue'
+import Statistics from './views/user/Statistics.vue'
 
 
 import Vue from 'vue';
@@ -136,11 +137,13 @@ const onlyAuthUser = (to, from, next) =>{
         path : '/user/FollowPage',
         name : 'FollowPage',
         component : FollowPage,
+        beforeEnter : onlyAuthUser,
     },
     {
         path : '/user/FollowingPage',
         name : 'FollowingPage',
         component : FollowingPage,
+        beforeEnter : onlyAuthUser,
     },
     {
         path : '/user/ModifyProfile',
@@ -172,6 +175,12 @@ const onlyAuthUser = (to, from, next) =>{
         name : 'ConfirmFindPassword',
         component : ConfirmFindPassword,
         props: true
+    },
+    {
+        path : '/user/Statistics',
+        name : 'Statistics',
+        component : Statistics,
+        beforeEnter : onlyAuthUser,
     },
 
 ];

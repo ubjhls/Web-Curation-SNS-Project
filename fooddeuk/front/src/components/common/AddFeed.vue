@@ -1,8 +1,5 @@
 <template>
-<v-app>
-
-  <v-form>
-    
+<div>
     <v-text-field style="margin-top: 40px; margin-left:20px; margin-right:20px"
       v-model="subject"
       label="제목"
@@ -97,9 +94,7 @@
             작성하기
         </button>
     </div>
-  </v-form>
-</v-app>
-
+</div>
 </template>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
@@ -149,39 +144,42 @@ import http from "../../../http-common"
 
         },
         submit(){
-                if(this.issubmit){
-                  let form = new FormData()
-                  let formdata = new FormData()
-                  formdata.append('image',this.image)
-                  Axios.post('https://api.imgur.com/3/image',formdata, {headers:{Authorization: 'Client-ID d15c5b033075c6e'}})
-                 .then(Response => {
-                   form.append('image', Response.data.data.link)
-                     let star = this.star1+this.star2+this.star3+this.star4+this.star5
-                //  console.log(this)               
-                 form.append('email', this.$store.state.userinfo.email)
-                 form.append('title', this.subject)
-                 form.append('content', this.content)
-                 form.append('address', this.address)
-                 form.append('count_star', star)
-                 http.post("/post/post", form)
-                 .then(Response => {
-                   console.log(Response)
-                    if(Response.data=="success"){
-                      this.$emit('child', this.propDrawer)
-                    }
-                 })
-                 .catch(Error => {
-                    console.log(Error)
-                   })
-                 })
-                 .catch(Error => {
-                   
-                   })
-                  
-                 
-               
-           
-                   }
+          if(this.issubmit){
+            let form = new FormData()
+            let formdata = new FormData()
+            form.append('email', this.$store.state.userinfo.email)
+            form.append('title', this.subject)
+            form.append('content', this.content)
+            form.append('address', this.address)
+            let star = this.star1+this.star2+this.star3+this.star4+this.star5
+            form.append('count_star', star)
+            formdata.append('image',this.image)
+
+            console.log(this.image)
+
+            if(this.image!=null) {
+              Axios.post('https://api.imgur.com/3/image',formdata, {headers:{Authorization: 'Client-ID d15c5b033075c6e'}})
+              .then(Response => {
+                  form.append('image', Response.data.data.link)
+                  //  console.log(this)               
+                  console.log(form)
+                })
+              .catch(Error => {
+
+              })
+            }
+
+            http.post("/post/post", form)
+            .then(Response => {
+              console.log(Response)
+              if(Response.data=="success"){
+                this.$emit('child', this.propDrawer)
+              }
+            })
+            .catch(Error => {
+              console.log(Error)
+            })
+          }
         },
         addressgo(){
           if(this.open==false){
@@ -270,7 +268,7 @@ import http from "../../../http-common"
        content: '',
        open:false,
        address:'',
-       image:'',
+       image:null,
        star1:0,
        star2:0,
        star3:0,
