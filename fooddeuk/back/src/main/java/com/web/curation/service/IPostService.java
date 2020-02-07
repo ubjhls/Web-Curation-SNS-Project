@@ -2,6 +2,7 @@ package com.web.curation.service;
 
 import java.util.List;
 
+import com.web.curation.model.curation.Curation;
 import com.web.curation.model.post.Post;
 
 public interface IPostService {
@@ -14,5 +15,9 @@ public interface IPostService {
 	int getAuthor(int num);
 	List<Post> getMyPost(int num);
 	List<Post> getMyLikePost(int num);
-	List<Post> getMyCurationPost(int num);
+	List<Post> getMyCurationPost(Curation curation);
+	List<Post> getAllUserPost(int num);
+	Post getPost(Post post);
+	int scrapPost(Post post);
+	int deletePost(int num);
 }
