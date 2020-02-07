@@ -27,12 +27,27 @@ public class Post {
 	private int count_star;
 	private String address;
 	private String image;
+	private String type;
+	private int scrap_author;
 	private int islike;
 
 	public Post() {
 		super();
 	}
 	
+	public Post(int num, String address) {
+		super();
+		this.num = num;
+		this.address = address;
+	}
+	
+	public Post(int num, int author, String date) {
+		super();
+		this.num = num;
+		this.author = author;
+		this.date = date;
+	}
+
 	public Post(int author, String title, String content, int count_star, String address) {
 		super();
 		this.author = author;
@@ -134,6 +149,18 @@ public class Post {
 	}
 	public void setIslike(int islike) {
 		this.islike = islike;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public int getScrap_author() {
+		return scrap_author;
+	}
+	public void setScrap_author(int scrap_author) {
+		this.scrap_author = scrap_author;
 	}
 
 	@Override

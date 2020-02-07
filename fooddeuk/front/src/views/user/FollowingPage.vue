@@ -20,7 +20,7 @@
       <v-subheader>팔로잉 리스트</v-subheader>
 
      <v-list-item
-        v-for="item in items"
+        v-for="(item, index) in items"
         :key="item.title"
       >
 
@@ -29,12 +29,12 @@
           <v-list-item-subtitle v-text="item.email"></v-list-item-subtitle>
         </v-list-item-content>
 
-        <div class="profile-card-ctr" v-if="isfollow==0">  
-            <button class="profile-card__button button--orange" @click="followgo()">Follow</button>
+        <div class="profile-card-ctr" v-if="isfollow[index]==0">  
+            <button class="profile-card__button button--orange" @click="followgo(index)">Follow</button>
         </div>
-        <div class="profile-card-ctr" v-if="isfollow==1">
+        <div class="profile-card-ctr" v-if="isfollow[index]==1">
           
-            <button class="profile-card__button button--gray" @click="unfollowgo()">UnFollow</button>
+            <button class="profile-card__button button--gray" @click="unfollowgo(index)">UnFollow</button>
         </div>
       </v-list-item>
     </v-list>
@@ -76,6 +76,8 @@
               .then(Response => {
                 console.log(Response)
                 this.items = Response.data.object;
+                this.isfollow = Response.data.object2;
+
               })
             },
             getUserByNickname(nick) {
@@ -83,7 +85,6 @@
                 form.append('nickname', nick)
                 http.get("/user/userinfo/{nickname}?nickname=" + nick)
                 .then(Response => {
-                    console.log(Response)
                     this.num = Response.data.num;
                     this.getFollowing(this.num);
                 })
@@ -91,28 +92,55 @@
                     console.log(Error)
                 })
             },
-            followgo(){
-                let myn  = this.$store.state.userinfo.nickName;
-                http.post("/follow/follow?mynickname=" + myn + "&nickname=" + this.nickname)
-                .then(Response => {
-                    this.isfollow = 1;
-                    // console.log(Response.data)
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
+            followgo(index){
+                if(this.items[index].auth==0) {
+                    let form = new FormData();
+                    let myn  = this.$store.state.userinfo.nickName;
+                    form.append('mynickname', myn)
+                    form.append('nickname',this.items[index].nickname)
+                    http.post("/follow/follow", form)
+                    .then(Response => {
+                        this.$set(this.isfollow,index,1)
+                        this.updateAlarmToFirebase(this.items[index].email, index);
+                        // console.log(Response.data)
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+                }
+                else if(this.items[index].auth==1) {
+                    let form = new FormData();
+                    let myn  = this.$store.state.userinfo.nickName;
+                    form.append('mynickname', myn)
+                    form.append('nickname',this.items[index].nickname)
+                    
+                    http.post("/follow/nonfollow", form)
+                    .then(Response => {
+                        console.log(Response)
+                        this.updateAlarmToFirebase(this.items[index].email, index);
+                        if(Response.data==='success') {
+                            alert("팔로우가 요청되었습니다.")
+                        }
+                        else if(Response.data==='failed') {
+                            alert("이미 팔로우 신청을 하였습니다.")
+                        }
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+
+                }
             },
-            unfollowgo(){
+            unfollowgo(index){
                 let form = new FormData()
                 let myn  = this.$store.state.userinfo.nickName;
                 form.append('mynickname', myn)
-                form.append('nickname',this.nickname)
-                http.post("/follow/unFollow?mynickname=" + myn + "&nickname=" + this.nickname)
+                form.append('nickname',this.items[index].nickname)
+                http.post("/follow/unFollow", form)
                 .then(Response => {
-                    this.isfollow = 0;
+                  this.$set(this.isfollow,index,0)
+                    console.log(this.isfollow)
                     // console.log(Response.data)
-                    this.getFollower();
-                    this.getFollowing();
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -121,11 +149,11 @@
         },
         data: () => ({
       items: [],
+      isfollow:[],
       email:'',
       intro:'',
       num:0,
       nickname:'',
-      isfollow:1,
     
     }),
     }

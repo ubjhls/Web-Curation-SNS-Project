@@ -7,16 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.model.BasicResponse;
+import com.web.curation.model.curation.Curation;
 import com.web.curation.model.post.Post;
 import com.web.curation.model.postlike.Postlike;
 import com.web.curation.service.IPostService;
 import com.web.curation.service.IPostlikeService;
+import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -33,16 +36,18 @@ public class PostController {
 	
 	@Autowired
 	private IPostlikeService postlikeService;
-
 	
+	@Autowired
+	private IProfileService profileService;
+
 	@PostMapping("/post/post")
 	@ApiOperation(value = "게시물 작성")
 	public String insertPost(@RequestParam(required = true) String email,
 							@RequestParam(required = true) String title,
 							@RequestParam(required = true) String content,
 							@RequestParam(required = true) String count_star,
-							@RequestParam(required = true) String address,
-							@RequestParam(required = true) String image) throws Exception {
+							@RequestParam(required = false) String address,
+							@RequestParam(required = false) String image) throws Exception {
 		System.out.println("-----------------/post/post-----------------");
 		System.out.println("email : " + email);
 		System.out.println("title : " + title);
@@ -53,7 +58,6 @@ public class PostController {
 		
 		int author = userService.getNumByEmail(email);
 		int star = Integer.parseInt(count_star);
-		
 		Post post = new Post(author, title, content, star, address);
 		post.setImage(image);
 		
@@ -132,7 +136,7 @@ public class PostController {
 		List<Post> list = postService.getMyLikePost(num);
 		
 		if(list.size() == 0) {
-			result.data = "failed";
+			result.data = "nothing";
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		     
@@ -151,18 +155,96 @@ public class PostController {
 		BasicResponse result = new BasicResponse();
 		result.data="success";
 		
-		List<Post> list = postService.getMyLikePost(num);
+		String temp = profileService.getMyPlace(num);
+		String[] placeArr = temp.split("/");
+		String place = placeArr[0] + " " + placeArr[1];
+		System.out.println(place);
+		
+		List<Post> list = null;
+		
+		if(placeArr[0].equals("없음")) {
+			result.data = "empty";
+			return new ResponseEntity<>(result , HttpStatus.OK);
+		} else if(placeArr[0].equals("전체")) {
+			// 모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
+			list = postService.getAllUserPost(num);
+			System.out.println("모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
+		} else {
+			if(placeArr[1].equals("전체")) {
+				// 그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
+				Curation curation = new Curation(num, placeArr[0]);
+				list = postService.getMyCurationPost(curation);
+				System.out.println("그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
+			} else {
+				// 그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))
+				Curation curation = new Curation(num, place);
+				list = postService.getMyCurationPost(curation);
+				System.out.println("그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))");
+			}
+		}
 		
 		if(list.size() == 0) {
-			result.data = "failed";
+			result.data = "nothing";
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		     
-		System.out.println(list);
 		result.status=true;
 		result.object = list;
+		System.out.println(list);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@PostMapping("/post/scrap")
+	@ApiOperation(value = "게시물 스크랩하기")
+	public String scrapPost(@RequestParam(required = true) int num,
+							@RequestParam(required = true) int postnum,
+							@RequestParam(required = true) int author,
+							@RequestParam(required = true) String date) throws Exception {
+		System.out.println("-----------------/post/scrap-----------------");
+		System.out.println("num : " + num);
+		System.out.println("postnum : " + postnum);
+		System.out.println("author : " + author);
+		System.out.println("date : " + date);
+		
+		Post temp = new Post(postnum, author, date);
+		Post scrapPost = postService.getPost(temp); // 해당 포스트를 찾음
+		scrapPost.setScrap_author(author);
+		scrapPost.setAuthor(num);
+		
+		if(postService.scrapPost(scrapPost) == 0) {
+			return "failed";
+		}
+		
+		return "success";
+	}
+	
+	@DeleteMapping("/post/post")
+	@ApiOperation(value = "게시물 삭제하기")
+	public Object deletePost(@RequestParam(required = true) int post,
+							@RequestParam(required = true) int num) throws Exception {
+		
+		System.out.println("-----------------/post/post-----------------");
+		System.out.println("post : " + post);
+		System.out.println("num : " + num);
+		
+		BasicResponse result = new BasicResponse();
+		
+		if(postService.deletePost(num) == 0) {
+			result.data = "failed";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		List<Post> list = postService.getAllPost(num);
+		
+		if(list.size() == 0) {
+			result.data = "nothing";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		     
+		result.status=true;
+		result.object = list;
+		System.out.println(list);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 	
 }
