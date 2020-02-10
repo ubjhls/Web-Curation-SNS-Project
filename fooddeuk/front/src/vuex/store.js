@@ -91,6 +91,7 @@ export default new Vuex.Store({
                   .post("/account/loginToken", form)
                   .then(response=>{
                       let userinfo = {
+                          num : response.data.object.num,
                           name : response.data.object.name,
                           email : response.data.object.email,
                           nickName : response.data.object.nickname,
