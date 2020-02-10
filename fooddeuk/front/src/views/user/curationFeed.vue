@@ -234,7 +234,6 @@
                 })
             },
             commentview(num,index){ //댓글 버튼 누를 때
-            this.todolist = [];
             //댓글 불러오기
             if(this.coment[index]==false){
                     http.get('/comment/comment?num='+num)
