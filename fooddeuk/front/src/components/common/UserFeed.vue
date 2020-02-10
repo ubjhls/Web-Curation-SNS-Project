@@ -61,6 +61,8 @@
                             <br>
                             <v-card-text>
                                 {{item.content}}
+                                <img v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+                            <br>
                             <br><br><hr><br>
                             주소 : {{item.address}} 
                             </v-card-text>

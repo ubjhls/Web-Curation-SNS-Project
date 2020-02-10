@@ -141,7 +141,7 @@ import '../../assets/css/address.scss'
           { state: '충남'},
           { state: '충북'},
           { state: '세종특별자치시'},
-          { state: '전체'},
+          { state: '없음'},
         ],
         
       }
@@ -165,8 +165,8 @@ import '../../assets/css/address.scss'
             router.push({name:"MainPage"})
           })
           .catch(Error => {
-
-                 })
+            
+          })
       }
     }
   }
