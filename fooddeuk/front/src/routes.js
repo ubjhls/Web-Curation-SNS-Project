@@ -181,7 +181,7 @@ const onlyAuthUser = (to, from, next) =>{
     },
     {
         path : '/user/curationFeed',
-        name : 'curationFedd',
+        name : 'curationFeed',
         component : curationFeed,
         beforeEnter : onlyAuthUser,
         props: true
