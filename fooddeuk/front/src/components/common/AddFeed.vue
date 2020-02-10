@@ -30,7 +30,7 @@
               <v-icon>mdi-star</v-icon>
             </v-btn>
 
-            <v-btn v-else text icon @cli-ck="star3go()">
+            <v-btn v-else text icon @click="star3go()">
               <v-icon>mdi-star</v-icon>
             </v-btn>
 
