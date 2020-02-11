@@ -22,6 +22,7 @@ import curationFeed from './views/user/curationFeed.vue'
 import scrapFeed from './views/user/scrapFeed.vue'
 import likeFeed from './views/user/likeFeed.vue'
 import Statistics from './views/user/Statistics.vue'
+import UpdateFeed from './views/user/UpdateFeed.vue'
 
 
 import Vue from 'vue';
@@ -93,6 +94,12 @@ const onlyAuthUser = (to, from, next) =>{
         path : '/user/ReSendEmail',
         name : 'ReSendEmail',
         component : ReSendEmail,
+        props: true
+    },
+    {
+        path : '/user/UpdateFeed',
+        name : 'UpdateFeed',
+        component : UpdateFeed,
         props: true
     },
     {

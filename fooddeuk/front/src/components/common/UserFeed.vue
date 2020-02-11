@@ -45,7 +45,11 @@
                     <v-list-item>
                         <v-list-item-avatar><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title class="headline">{{item.title}}</v-list-item-title>
+                        <v-list-item-title class="headline">{{item.title}}
+                        <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
+                        <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                        </v-list-item-title>
+
                         <v-list-item-subtitle style="width:50px">{{nickname}} <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
                         <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->
                         </v-list-item-content>
@@ -104,19 +108,17 @@
                         </div>
 
                         <p>
-                            {{ item.count_comment }} 개의 댓글이 있습니다.
+                            {{ commentcount[index] }} 개의 댓글이 있습니다.
                         </p>
 
                         <div v-if="coment[index]===true">
-                            <div v-for="cmt in todolist" v-bind:key="cmt.date" >
-                                <div v-if="cmt[0].num==item.num">
-                                    <div style="margin-bottom:5px" v-for="cmts in cmt" v-bind:key="cmts.date" >
-                                        <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                        <h5 style="float:left; ">{{ cmts.comment }} 
-                                        </h5>
-                                        <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
-                                        <br>
-                                    </div>                
+                            <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
+                                <div style="margin-bottom:5px" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <h5 style="float:left; ">{{ cmts.comment }} 
+                                    </h5>
+                                    <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>                 
                                 </div>
                             </div>
                   
@@ -260,9 +262,10 @@
                 .then(Response => {
                    
                     this.post = Response.data.object; 
-                    
+          
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
+                     
                         if(this.post[index].islike==1){
                             this.like.push(true)
                         }else{
@@ -270,9 +273,11 @@
                         }
                         this.likelist.push(this.post[index].count_like);
                         this.coment.push(false)
-                        
+
+                        this.todolist.push([])
+                        this.commentcount.push(this.post[index].count_comment)
                     }
-                   
+
             
                 })
                 .catch(Error => {
@@ -390,29 +395,40 @@
                 })
             },
             commentview(num,index){ //댓글 버튼 누를 때
-            this.todolist = [];
+           
             //댓글 불러오기
             if(this.coment[index]==false){
                     http.get('/comment/comment?num='+num)
                 .then(response => {
+                    
                     if(response.data.object!=null){
-                        this.todolist.push(response.data.object)
+                        this.todolist[index].push(response.data.object)
                     } 
+                    
+                   
                 })
                 .catch(Error => {
                     console.log(Error)
                 })
 
-            //댓글 숨기기
-            }else if(this.coment[index]==true){
-                    for (let index = 0; index < this.todolist.length; index++) {
-                        if(this.todolist[index][0].num==num){
-                            this.$delete(this.todolist,index);
-                        }   
-                    }
+            // //댓글 숨기기
+             }
+            else if(this.coment[index]==true){
+                 
+                    this.$delete(this.todolist[index],0);
                 }
-
                 this.$set(this.coment,index,!this.coment[index])
+
+                //댓글 수 갱신
+                    http.get("/comment/count?num="+num)
+                    .then(Response => {
+                        
+                        this.$set(this.commentcount,index,Response.data)
+                        
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
             }
             ,
             addcomment(num,index) {
@@ -424,48 +440,75 @@
                 http.post("/comment/comment", form)
                 .then(response => {
                    
-                    //댓글 재등록
-                    this.commentview(num, index);
-                    this.commentview(num, index);
-                   
+                    //댓글 등록
+                    this.$delete(this.todolist[index],0);
+                    this.todolist[index].push(response.data.object)
+
+                    //댓글 수 갱신
+                    http.get("/comment/count?num="+num)
+                    .then(Response => {
+                    
+                        this.$set(this.commentcount,index,Response.data)
+       
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+
                     //댓글 초기화
                     this.newcomment=''
-
-                    //댓글 수 갱신하기
-                    this.refresh();
-
                 })
 
-            },
-            refresh(){ //댓글 수 갱신하기
-
-                http.get("/post/post/{num}?num="+this.num + '&email=' + this.$store.state.userinfo.email)
-                .then(Response => {
-                   
-                    this.post = Response.data.object; 
-    
-            
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
             },
             removeComent(num, cmt, index){
                 
                 http.delete("/comment/comment?num=" + cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
                 .then(response => {
+                    //댓글 삭제(갱신까지)
+                    this.$delete(this.todolist[index],0);
+                    this.todolist[index].push(response.data.object)
 
-                    //삭제 완료시 댓글창, 댓글수 바로 갱신
-     
-                    this.commentview(num, index);
-                    this.commentview(num, index);
-                
-
-                    this.refresh();
+                    //댓글 수 갱신
+                    http.get("/comment/count?num="+num)
+                    .then(Response => {
+                        
+                        this.$set(this.commentcount,index,Response.data)
+                        
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+                })
+                .catch(Error =>{
+                })
+            },
+            
+            removeFeed(num){
+                console.log(num)
+                 http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
+                .then(response => {
+                    alert('게시물이 삭제되었습니다.')
+                    console.log(response.data)
+                    this.post = response.data.object
                     
                 })
                 .catch(Error =>{
                 })
+            },
+            updateFeed(num, title, content, count_star, address, image){
+                var router = this.$router
+                console.log(image)
+                 router.push({
+                    name: "UpdateFeed",
+                    params: {
+                        "num": num,
+                        "title": title,
+                        "content": content,
+                        "address": address,
+                        "count_star": count_star,
+                        "image": image
+                    }
+                });
             },
 
             //밑은 알람 메소드
@@ -554,7 +597,9 @@
                 userAlarmCount: 0,
                 likelist:[],
                 mynum:0,
-                
+                commentcount:[],
+
+               
             }
         }
     }
