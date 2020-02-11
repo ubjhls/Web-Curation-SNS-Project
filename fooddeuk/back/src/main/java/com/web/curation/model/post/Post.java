@@ -29,6 +29,8 @@ public class Post {
 	private String image;
 	private String type;
 	private int scrap_author;
+	private String nickname;
+	private int mynum;
 	private int islike;
 
 	public Post() {
@@ -162,14 +164,26 @@ public class Post {
 	public void setScrap_author(int scrap_author) {
 		this.scrap_author = scrap_author;
 	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public int getMynum() {
+		return mynum;
+	}
+	public void setMynum(int mynum) {
+		this.mynum = mynum;
+	}
 
 	@Override
 	public String toString() {
 		return "Post [num=" + num + ", author=" + author + ", title=" + title + ", content=" + content + ", date="
 				+ date + ", count_like=" + count_like + ", count_comment=" + count_comment + ", count_star="
-				+ count_star + ", address=" + address + ", image=" + image + ", islike=" + islike + "]";
+				+ count_star + ", address=" + address + ", image=" + image + ", type=" + type + ", scrap_author="
+				+ scrap_author + ", nickname=" + nickname + ", mynum=" + mynum + ", islike=" + islike + "]";
 	}
 	
-
 	
 }

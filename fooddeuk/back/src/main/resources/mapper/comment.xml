@@ -17,4 +17,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DELETE FROM COMMENT WHERE NUM=#{num} AND AUTHOR=#{author} AND DATE=#{date}
 	</delete>
 	
+	<select id="getCommentCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT_COMMENT FROM POST WHERE NUM=#{num}
+	</select>
+	
  </mapper>

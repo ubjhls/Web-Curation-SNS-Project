@@ -8,4 +8,5 @@ public interface ICommentService {
 	List<Comment> getAllComment(int num);
 	int insertComment(Comment comment);
 	int deleteComment(Comment comment);
+	int getCommentCount(int num);
 }

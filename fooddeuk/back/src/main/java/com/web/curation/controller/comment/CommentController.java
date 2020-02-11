@@ -132,4 +132,13 @@ public class CommentController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@GetMapping("/comment/count")
+	@ApiOperation(value = "댓글 개수 가져오기")
+	public int getCommentCount(@RequestParam(required = true) int num) throws Exception {
+		System.out.println("-----------------/comment/count-----------------");
+		System.out.println("num : " + num);
+		
+		return commentService.getCommentCount(num);
+	}
+	
 }

@@ -27,5 +27,8 @@ public class CommentDaoImpl {
 		return sqlSession.delete(ns+"deleteComment", comment);
 	}
 
+	public int getCommentCount(int num) {
+		return sqlSession.selectOne(ns+"getCommentCount", num);
+	}
 	
 }
