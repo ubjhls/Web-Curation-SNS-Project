@@ -91,7 +91,7 @@
     ></v-file-input>
      <div style="margin-left:30%; margin-top:0px">
         <button class="btn btn--ok" v-on:click="submit" :disabled="!issubmit" :class="{disabled : !issubmit}">
-            작성하기
+            수정하기
         </button>
     </div>
 </div>
@@ -109,7 +109,31 @@ import http from "../../../http-common"
       DaumPostcode
     },
     created() {
-      this.title = this.$route.params.title;
+      if (this.$route.params.count_star === 1) {
+        this.star1go()
+      }
+      if (this.$route.params.count_star === 2) {
+        this.star2go()
+      }
+      if (this.$route.params.count_star === 3) {
+        this.star3go()
+      }
+      if (this.$route.params.count_star === 4) {
+        this.star4go()
+      }
+      if (this.$route.params.count_star === 5) {
+        this.star5go()
+      };
+      this.num = this.$route.params.num;
+      this.subject = this.$route.params.title;
+      this.content = this.$route.params.content;
+      this.address = this.$route.params.address;
+      this.tmpimage = this.$route.params.image
+      this.image = this.$route.params.image;
+      processFile(this.$route.params.image)
+
+      
+      // this.image = this.$route.params.image;
     },
     
     watch: {
@@ -121,6 +145,10 @@ import http from "../../../http-common"
       },
     },
     methods: {
+        goBack() {
+          var router = this.$router;
+          router.go(-1)
+        },
         checkForm() {
           if(this.subject.length < 1){
             this.check.subject = '제목 1자이상'
@@ -148,21 +176,25 @@ import http from "../../../http-common"
 
         },
         submit(){
+          console.log('asd')
           if(this.issubmit){
             let form = new FormData()
+            form.append('num', this.num)
             form.append('email', this.$store.state.userinfo.email)
             form.append('title', this.subject)
             form.append('content', this.content)
             form.append('address', this.address)
             let star = this.star1+this.star2+this.star3+this.star4+this.star5
             form.append('count_star', star)
+            if (this.imageResult === null) {
+              this.imageResult = this.tmpimage
+            }
             form.append('image', this.imageResult)
             
-            http.post("/post/post", form)
+            http.patch("/post/post", form)
+            var router = this.$router;
+              router.go(-1)
             .then(Response => {
-              if(Response.data=="success"){
-                this.$emit('child', this.propDrawer)
-              }
             })
             .catch(Error => {
               console.log(Error)
@@ -262,6 +294,9 @@ import http from "../../../http-common"
     },
     data () {
       return {
+       tmpimage:'',
+       num:0,
+       count_star:0,
        date: '',
        subject: '',
        content: '',
@@ -285,3 +320,4 @@ import http from "../../../http-common"
   }
   
 </script>
+

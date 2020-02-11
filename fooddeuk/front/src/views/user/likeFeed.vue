@@ -135,7 +135,7 @@
         props:['propsNickname'],
         created () {
             this.getPostByNum()
-    
+        
         },
         watch : {
             newcomment: function(v) {
