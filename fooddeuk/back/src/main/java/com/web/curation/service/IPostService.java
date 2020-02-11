@@ -20,4 +20,7 @@ public interface IPostService {
 	Post getPost(Post post);
 	int scrapPost(Post post);
 	int deletePost(int num);
+	List<Post> getMyFollowingPost(int num);
+	List<Post> getMyMainPost(Curation curation);
+	int updatePost(Post post);
 }

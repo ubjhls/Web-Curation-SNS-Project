@@ -29,4 +29,9 @@ public class CommentService implements ICommentService {
 		return commentdao.deleteComment(comment);
 	}
 
+	@Override
+	public int getCommentCount(int num) {
+		return commentdao.getCommentCount(num);
+	}
+
 }

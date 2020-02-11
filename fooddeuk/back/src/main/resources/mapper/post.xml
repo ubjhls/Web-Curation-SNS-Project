@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getMyCurationPost" parameterType="curation" resultType="post">
 		SELECT * FROM POST 
-		WHERE NUM IN (SELECT NUM FROM POST WHERE SUBSTRING_INDEX(ADDRESS, ' ', 2) LIKE CONCAT(#{place}, '%'))
+		WHERE NUM IN (SELECT NUM FROM POST WHERE SUBSTRING_INDEX(ADDRESS, ' ', 3) LIKE CONCAT(#{place}, '%'))
         AND (AUTHOR IN (SELECT FOLLOWING FROM FOLLOW WHERE FOLLOWER=#{num})
 		OR AUTHOR IN (SELECT NUM FROM USER WHERE AUTH=0))
 		ORDER BY DATE DESC;
@@ -70,8 +70,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		VALUES(#{author}, #{title}, #{content}, NOW(), 0, 0, #{count_star}, #{address}, #{image}, '스크랩', #{scrap_author})
 	</insert>
 	
-	<delete id="deletePost" parameterType="post">
+	<delete id="deletePost" parameterType="java.lang.Integer">
 		DELETE FROM POST WHERE NUM=#{num}
 	</delete>
+	
+	<select id="getMyFollowingPost" parameterType="java.lang.Integer" resultType="post">
+		SELECT * FROM POST WHERE AUTHOR IN (SELECT FOLLOWING FROM FOLLOW WHERE FOLLOWER=#{num});
+	</select>
+	
+	<select id="getMyMainPost" parameterType="post" resultType="curation">
+		SELECT * FROM POST 
+		WHERE NUM IN (SELECT NUM FROM POST WHERE SUBSTRING_INDEX(ADDRESS, ' ', 3) LIKE CONCAT(#{address}, '%'))
+        AND (AUTHOR IN (SELECT FOLLOWING FROM FOLLOW WHERE FOLLOWER=#{num})
+		OR AUTHOR IN (SELECT NUM FROM USER WHERE AUTH=0)) OR AUTHOR IN (SELECT FOLLOWING FROM FOLLOW WHERE FOLLOWER=#{num})
+        ORDER BY DATE DESC;
+	</select>
+	
+	<update id="updatePost" parameterType="post">
+		UPDATE POST SET TITLE=#{title}, CONTENT=#{content}, COUNT_STAR=#{count_star}, ADDRESS=#{address}, IMAGE=#{image}
+		WHERE NUM=#{num}
+	</update>
 	
  </mapper>

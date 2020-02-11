@@ -56,6 +56,10 @@ public class ProfileController {
 
 		int num = userService.getNumByEmail(email);
 		StringBuilder sb = new StringBuilder();
+		
+		if(place1.equals("없음")) {
+			place2 = "없음";
+		}
 		sb.append(place1 + "/" + place2);
 		
 		Profile profile = new Profile(num, sb.toString());

@@ -85,4 +85,19 @@ public class PostServiceImpl implements IPostService {
 		return postdao.deletePost(num);
 	}
 
+	@Override
+	public List<Post> getMyFollowingPost(int num) {
+		return postdao.getMyFollowingPost(num);
+	}
+
+	@Override
+	public List<Post> getMyMainPost(Curation curation) {
+		return postdao.getMyMainPost(curation);
+	}
+
+	@Override
+	public int updatePost(Post post) {
+		return postdao.updatePost(post);
+	}
+
 }

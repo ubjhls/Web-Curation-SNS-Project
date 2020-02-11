@@ -72,4 +72,16 @@ public class PostDaoImpl {
 		return sqlSession.delete(ns+"deletePost", num);
 	}
 	
+	public List<Post> getMyFollowingPost(int num){
+		return sqlSession.selectList(ns+"getMyFollowingPost", num);
+	}
+	
+	public List<Post> getMyMainPost(Curation curation){
+		return sqlSession.selectList(ns+"getMyMainPost", curation);
+	}
+	
+	public int updatePost(Post post) {
+		return sqlSession.update(ns+"updatePost", post);
+	}
+	
 }
