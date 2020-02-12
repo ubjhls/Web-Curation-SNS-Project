@@ -23,8 +23,8 @@ public class CommentDaoImpl {
 		return sqlSession.insert(ns+"insertComment", comment);
 	}
 	
-	public int deleteComment(Comment comment) {
-		return sqlSession.delete(ns+"deleteComment", comment);
+	public int deleteComment(int num) {
+		return sqlSession.delete(ns+"deleteComment", num);
 	}
 
 	public int getCommentCount(int num) {

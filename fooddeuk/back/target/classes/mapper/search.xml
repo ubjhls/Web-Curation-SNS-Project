@@ -5,31 +5,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="search">
 
 	<select id="getAllSearch" parameterType="java.lang.Integer" resultType="search">
-		SELECT WHO FROM SEARCH WHERE NUM=#{num} ORDER BY DATE DESC
+		select who from search where num=#{num} order by date desc
 	</select>
 	
 	<select id="getNickname" parameterType="java.lang.Integer" resultType="java.lang.String">
-		SELECT NICKNAME FROM USER WHERE NUM=#{num}
+		select nickname from user where num=#{num}
 	</select>
 	
 	<select id="searchNickname" parameterType="java.lang.String" resultType="user">
-		SELECT NUM, EMAIL, NICKNAME, NAME, PASSWORD, INTRO, AUTH, CONFIRM, SOCIAL FROM USER WHERE NICKNAME LIKE CONCAT('%', #{nickname}, '%') AND CONFIRM='Y'
+		select num, email, nickname, name, password, intro, auth, confirm, social from user where nickname like concat('%', #{nickname}, '%') and confirm='Y'
 	</select>
 	
 	<select id="isSearched" parameterType="search" resultType="search">
-		SELECT * FROM SEARCH WHERE NUM=#{num} AND WHO=#{who}
+		select * from search where num=#{num} and who=#{who}
 	</select>
 	
 	<insert id="search" parameterType="search">
-		INSERT INTO SEARCH(NUM, WHO, DATE) VALUES(#{num}, #{who}, now()) 
+		insert into search(num, who, date) values(#{num}, #{who}, now()) 
 	</insert>
 	
 	<delete id="deleteSearch" parameterType="search">
-		DELETE FROM SEARCH WHERE NUM=#{num} AND WHO=#{who}
+		delete from search where num=#{num} and who=#{who}
 	</delete>
 	
 	<update id="updateSearch" parameterType="search">
-		UPDATE SEARCH SET DATE=NOW() WHERE NUM=#{num} AND WHO=#{who}
+		update search set date=now() where num=#{num} and who=#{who}
 	</update>
 	
  </mapper>

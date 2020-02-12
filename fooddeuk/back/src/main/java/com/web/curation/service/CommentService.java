@@ -25,8 +25,8 @@ public class CommentService implements ICommentService {
 	}
 
 	@Override
-	public int deleteComment(Comment comment) {
-		return commentdao.deleteComment(comment);
+	public int deleteComment(int num) {
+		return commentdao.deleteComment(num);
 	}
 
 	@Override

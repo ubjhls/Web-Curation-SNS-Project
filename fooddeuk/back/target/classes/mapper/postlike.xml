@@ -5,16 +5,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="postlike">
 
 	<insert id="like" parameterType="postlike">
-		INSERT INTO POSTLIKE(POSTNUM, LIKER, DATE)
-		VALUES(#{postnum}, #{liker}, NOW());
+		insert into postlike(postnum, liker, date)
+		values(#{postnum}, #{liker}, now());
 	</insert>
 	
 	<delete id="unlike" parameterType="postlike">
-		DELETE FROM POSTLIKE WHERE POSTNUM=#{postnum} AND LIKER=#{liker}
+		delete from postlike where postnum=#{postnum} and liker=#{liker}
 	</delete>
 	
 	<select id="checkLike" parameterType="postlike" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM POSTLIKE WHERE POSTNUM=#{postnum} AND LIKER=#{liker}
+		select count(*) from postlike where postnum=#{postnum} and liker=#{liker}
 	</select>
 	
  </mapper>

@@ -48,7 +48,7 @@
                         <v-list-item-title class="headline">{{item.title}}
                         <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
                         <button style="float:right" @click="removeFeed(item.num)">삭제</button>
-                        </v-list-item-title>
+                        </v-list-item-title> 
 
                         <v-list-item-subtitle style="width:50px">{{nickname}} <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
                         <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->

@@ -59,8 +59,11 @@ public class PostController {
 		
 		int author = userService.getNumByEmail(email);
 		int star = Integer.parseInt(count_star);
+		
 		Post post = new Post(author, title, content, star, address);
-		post.setImage(image);
+		if(!image.equals("null")) {
+			post.setImage(image);
+		}
 		
 		if(postService.insertPost(post) != 1) {
 			return "failed";
