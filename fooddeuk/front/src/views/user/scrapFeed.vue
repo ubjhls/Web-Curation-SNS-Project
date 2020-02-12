@@ -1,6 +1,6 @@
 <template>
 
-         <div style="margin-top:200px; float:right; height:30px; position:relaive; z-index:1000" class="mynum">
+         <div style="margin-top:200px; float:right; height:30px; position:relaive; z-index:10" class="mynum">
             <dropdown>
             <input id="toggle2" type="checkbox">
             <label for="toggle2" class="animate"><i class="fa fa-bars float-right"></i></label>

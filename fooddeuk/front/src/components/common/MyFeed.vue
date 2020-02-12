@@ -38,7 +38,10 @@
                         <v-list-item-avatar><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title class="headline">{{item.title}}</v-list-item-title>
-                        <v-list-item-subtitle style="width:50px">{{nickname}} <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
+                    
+                        <v-list-item-subtitle v-if="item.scrap_author">{{item.scrap_author}}님의 글 <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
+                        <v-list-item-subtitle v-else style="width:50px">{{nickname}} <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
+                    
                         <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->
                         </v-list-item-content>
                         </v-list-item>
@@ -265,6 +268,13 @@
                         }
                         this.likelist.push(this.post[index].count_like);
                         this.coment.push(false)
+                        if (this.post[index].type=="스크랩") {
+                            this.scrapnick=this.post[index].scrap_author
+                            console.log(this.scrapnick)
+                        }
+                        else{
+                            this.scrapnick=""
+                        }
                         
                     }
                    
@@ -527,6 +537,7 @@
                 error:{
                     comment:false
                 },
+                scrapnick:'',
                 nick:'',
                 nickname : '',
                 num:0,

@@ -1,5 +1,5 @@
 <template>
-<v-app data-app style="color:white">
+<v-app data-app style="position:relative; z-index:5">
 
 
     <div class="wrapC">
@@ -27,7 +27,7 @@
 
                             <div class="profile-card-inf__item">
                                 <div class="profile-card-inf__title">{{following}}</div>
-                                <div class="profile-card-inf__txt" style="color:black">Following</div>
+                                <div class="profile-card-inf__txt" style="color:black">Following</div>  
                             </div>
                         </div> 
                 </div>
@@ -43,26 +43,13 @@
                     <v-card
                             max-width="100%"
                             class="mx-auto"
-                            style="margin-bottom:100px;"
+                            style="margin-bottom:100px; position:relative"
                     >
-                            <!-- <div style="padding:1px; float:right; height:30px;" class="mynum" v-if="item.author == mynum ">
-                            <dropdown>
-                            <input id="toggle2" type="checkbox">
-                            <label for="toggle2" class="animate" style="padding-left:40px"><i class="fas fa-ellipsis-v"></i></label>
-                            <ul class="animate">
-
-                                <li class="animate" style="line-height:5px"><button style="float:right;" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button></li>
-                                <li class="animate" style="line-height:5px"><button style="float:right;" @click="removeFeed(item.num)">삭제</button></li>
-                            </ul>
-                            </dropdown>
-                            </div> -->
-                        <!-- <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
-                        <button style="float:right" @click="removeFeed(item.num)">삭제</button> -->
                     <v-list-item>
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
-                            <v-menu offset-y style="float:right">
+                            <v-menu offset-y style="float:right;">
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">
                                     <v-icon>mdi-dots-vertical</v-icon>
@@ -78,9 +65,6 @@
                             </v-list>
                             </v-menu>
                         </v-list-item-title>
-                        
-
-                            
 
                         <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
                          <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
@@ -119,7 +103,7 @@
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
                         <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
-                        <button><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
+                        <button @click="scrapfeed(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
 
                         </div>
                         <br>
@@ -622,6 +606,18 @@
                 })
                 alert("댓글이 등록되었습니다.")
                
+            },
+            scrapfeed(num,idx) {
+                let form = new FormData()
+                form.append('postnum', num)
+                form.append('num',this.$store.state.userinfo.num)
+                http.post("/post/scrap", form)
+                .then(Response => {
+                    console.log(Response.data)
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
             }
            
         },
@@ -665,49 +661,5 @@ p {
     margin-left:5px;
     color: gray;
     font-size:12px;
-}
-
-.fa{
- font-size: .8em;
-  line-height: 22px !important;
-}
-
-dropdown label, dropdown ul li{
-  display: block;
-  width: 60px;
-  background: rgb(255, 255, 255);
-  padding: 15px 20px;
-}
-
-dropdown input{
-  display: none;
-}
-dropdown input ~ ul{
-  position: relative;
-  visibility: hidden;
-  opacity: 0;
-  top: -20px;
-  z-index: 1;
-}
-dropdown input:checked + label{
-  background: rgb(255, 255, 255);
-  color: rgb(0, 0, 0);
-}
-
-dropdown input:checked ~ ul{
-  box-shadow: 0px 0px 3px #000;
-  visibility: visible;
-  opacity: 1;
-  top: 0;
-}
-
-.animate{
-  -webkit-transition: all .3s;
-  -moz-transition: all .3s;
-  -ms-transition: all .3s;
-  -ms-transition: all .3s;
-  transition: all .3s;  
-  backface-visibility:hidden;
-  -webkit-backface-visibility:hidden; /* Chrome and Safari */
 }
 </style>
