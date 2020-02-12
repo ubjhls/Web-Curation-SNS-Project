@@ -42,5 +42,6 @@
        <mapper resource="mapper/comment.xml"/>
        <mapper resource="mapper/alarm.xml"/>
        <mapper resource="mapper/postlike.xml"/>
+       <mapper resource="mapper/statistics.xml"/>
     </mappers>
 </configuration>
