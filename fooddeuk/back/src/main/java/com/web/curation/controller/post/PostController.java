@@ -59,8 +59,11 @@ public class PostController {
 		
 		int author = userService.getNumByEmail(email);
 		int star = Integer.parseInt(count_star);
+		
 		Post post = new Post(author, title, content, star, address);
-		post.setImage(image);
+		if(!image.equals("null")) {
+			post.setImage(image);
+		}
 		
 		if(postService.insertPost(post) != 1) {
 			return "failed";
@@ -261,6 +264,7 @@ public class PostController {
 		
 		if(placeArr[0].equals("없음")) {
 			list = postService.getMyFollowingPost(num);
+			result.object = list;
 			return new ResponseEntity<>(result , HttpStatus.OK);
 		} else if(placeArr[0].equals("전체")) {
 			// 모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
@@ -309,6 +313,7 @@ public class PostController {
 		
 		if(list.size() == 0) {
 			result.data = "nothing";
+			result.object = list; 
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		     

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="statistics">
+	
+	<select id="getPostCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*) from post where author=#{num}
+	</select>
+	
+	<select id="getScrapCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*) from post where type='스크랩' and author=#{num}
+	</select>
+	
+	<select id="getLikeCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select sum(count_like) from post where author=#{num}
+	</select>
+	
+	<select id="getLikeClickCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select sum(liker) from postlike where liker=#{num}
+	</select>
+	
+	<select id="getCommentCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select sum(count_comment) from post where author=#{num}
+	</select>
+	
+	<select id="getCommentWriteCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*) from comment where author=#{num}
+	</select>
+	
+ </mapper>

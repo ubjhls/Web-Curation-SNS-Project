@@ -35,11 +35,11 @@ public class CommentController {
 	
 	@GetMapping("/comment/comment")
 	@ApiOperation(value = "댓글 가져오기")
-	public Object getAllComment(@RequestParam(required = true) int num) throws Exception {
+	public Object getAllComment(@RequestParam(required = true) int postnum) throws Exception {
 		System.out.println("-----------------/comment/comment-----------------");
-		System.out.println("num : " + num);
+		System.out.println("postnum : " + postnum);
 		
-		List<Comment> list = commentService.getAllComment(num);
+		List<Comment> list = commentService.getAllComment(postnum);
 		BasicResponse result = new BasicResponse();
 		
 		result.data="success";
@@ -62,23 +62,23 @@ public class CommentController {
 	
 	@PostMapping("/comment/comment")
 	@ApiOperation(value = "댓글 등록하기")
-	public Object insertComment(@RequestParam(required = true) int num,
+	public Object insertComment(@RequestParam(required = true) int postnum,
 			@RequestParam(required = true) String email,
 			@RequestParam(required = true) String comment) throws Exception {
 		System.out.println("-----------------/comment/comment-----------------");
-		System.out.println("num : " + num);
+		System.out.println("postnum : " + postnum);
 		System.out.println("email : " + email);
 		System.out.println("comment : " + comment);
 		
 		int myNum = userService.getNumByEmail(email);
 		
-		Comment c = new Comment(num, myNum, comment);
+		Comment c = new Comment(postnum, myNum, comment);
 		
-		if(commentService.insertComment(c) == 0 || postService.commentCountUp(num) == 0) {
+		if(commentService.insertComment(c) == 0 || postService.commentCountUp(postnum) == 0) {
 			return "failed";
 		}
 		
-		List<Comment> list = commentService.getAllComment(num);
+		List<Comment> list = commentService.getAllComment(postnum);
 		BasicResponse result = new BasicResponse();
 		
 		result.data="success";
@@ -96,29 +96,22 @@ public class CommentController {
 	@DeleteMapping("/comment/comment")
 	@ApiOperation(value = "댓글 삭제하기")
 	public Object deleteComment(@RequestParam(required = true) int num,
-			@RequestParam(required = true) String nickname,
-			@RequestParam(required = true) String date) throws Exception {
+			@RequestParam(required = true) int postnum) throws Exception {
 		System.out.println("-----------------/comment/comment-----------------");
 		System.out.println("num : " + num);
-		System.out.println("nickname : " + nickname);
-		System.out.println("date : " + date);
+		System.out.println("postnum : " + postnum);
 		
-		int myNum = userService.getNumByNickname(nickname);
-		
-		Comment c = new Comment(num, myNum);
-		c.setDate(date);
-		
-		if(commentService.deleteComment(c) == 0 || postService.commentCountDown(num) == 0) {
-			return "failed";
+		BasicResponse result = new BasicResponse();
+		if(commentService.deleteComment(num) == 0 || postService.commentCountDown(postnum) == 0) {
+			result.data = "failed";
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		
-		List<Comment> list = commentService.getAllComment(num);
-		BasicResponse result = new BasicResponse();
-		
-		result.data="success";
+		List<Comment> list = commentService.getAllComment(postnum);
 		
 		if(list.size() == 0) {
 			result.data = "empty";
+			result.object = list;
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		
@@ -128,17 +121,20 @@ public class CommentController {
 		}
 		
 		result.object = list;
+		result.data="success";
 		result.status = true;
+		System.out.println("삭제리턴확인");
+		System.out.println(result.object);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping("/comment/count")
 	@ApiOperation(value = "댓글 개수 가져오기")
-	public int getCommentCount(@RequestParam(required = true) int num) throws Exception {
+	public int getCommentCount(@RequestParam(required = true) int postnum) throws Exception {
 		System.out.println("-----------------/comment/count-----------------");
-		System.out.println("num : " + num);
+		System.out.println("postnum : " + postnum);
 		
-		return commentService.getCommentCount(num);
+		return commentService.getCommentCount(postnum);
 	}
 	
 }
