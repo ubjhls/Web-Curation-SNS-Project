@@ -45,6 +45,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by date desc;
 	</select>
 	
+	<select id="getMyScrapPost" parameterType="java.lang.Integer" resultType="post">
+		select * from post where author=#{num} and type='스크랩' order by date desc
+	</select>
+	
 	<select id="getMyCurationPost" parameterType="curation" resultType="post">
 		select * from post 
 		where num in (select num from post where substring_index(address, ' ', 3) like concat(#{place}, '%'))
@@ -61,13 +65,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by date desc;
 	</select>
 	
-	<select id="getPost" parameterType="post" resultType="post">
-		select * from post where num=#{num} and author=#{author} and date=#{date}
+	<select id="getPost" parameterType="java.lang.Integer" resultType="post">
+		select * from post where num=#{num};
 	</select>
 	
 	<insert id="scrapPost" parameterType="post">
-		insert into post(author, title, content, date, count_like, count_comment, count_star, address, image, type, scrap_author)
-		values(#{author}, #{title}, #{content}, now(), 0, 0, #{count_star}, #{address}, #{image}, '스크랩', #{scrap_author})
+		insert into post(author, title, content, date, count_like, count_comment, count_star, address, image, type, scrapnum)
+		values(#{author}, #{title}, #{content}, now(), 0, 0, 0, #{address}, #{image}, '스크랩', #{scrapnum})
 	</insert>
 	
 	<delete id="deletePost" parameterType="java.lang.Integer">

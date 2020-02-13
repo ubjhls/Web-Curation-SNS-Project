@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,6 +44,7 @@ public class PostController {
 
 	@PostMapping("/post/post")
 	@ApiOperation(value = "게시물 작성")
+	
 	public String insertPost(@RequestParam(required = true) String email,
 							@RequestParam(required = true) String title,
 							@RequestParam(required = true) String content,
@@ -163,6 +165,30 @@ public class PostController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@GetMapping("/post/myscrappost")
+	@ApiOperation(value = "내가 스크랩한 게시물 가져오기")
+	public Object getMyScrapPost(@RequestParam(required = true) String nickname) throws Exception {
+		System.out.println("-----------------/post/myscrappost-----------------");
+		System.out.println("nickname : " + nickname);
+		
+		int num = userService.getNumByNickname(nickname);
+		
+		BasicResponse result = new BasicResponse();
+		result.data="success";
+		
+		List<Post> list = postService.getMyScrapPost(num);
+		if(list.size() == 0) {
+			result.data = "nothing";
+			result.object = list;
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		System.out.println(list);
+		result.status=true;
+		result.object = list;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
 	@GetMapping("/post/mycurationpost")
 	@ApiOperation(value = "내 큐레이션 지역 게시물 가져오기")
 	public Object getMyCurationPost(@RequestParam(required = true) String nickname) throws Exception {
@@ -260,7 +286,6 @@ public class PostController {
 		
 		Post post = new Post();
 		post.setAddress(place);
-		post.setMynum(num);
 		
 		if(placeArr[0].equals("없음")) {
 			list = postService.getMyFollowingPost(num);
@@ -327,18 +352,18 @@ public class PostController {
 	@ApiOperation(value = "게시물 스크랩하기")
 	public String scrapPost(@RequestParam(required = true) int num,
 							@RequestParam(required = true) int postnum,
-							@RequestParam(required = true) int author,
-							@RequestParam(required = true) String date) throws Exception {
+							@RequestParam(required = true) String title,
+							@RequestParam(required = true) String content) throws Exception {
 		System.out.println("-----------------/post/scrap-----------------");
-		System.out.println("num : " + num);
-		System.out.println("postnum : " + postnum);
-		System.out.println("author : " + author);
-		System.out.println("date : " + date);
+		System.out.println("num : " + num); // user.num
+		System.out.println("postnum : " + postnum); // post.num
 		
-		Post temp = new Post(postnum, author, date);
-		Post scrapPost = postService.getPost(temp); // 해당 포스트를 찾음
-		scrapPost.setScrap_author(author);
+		Post scrapPost = postService.getPost(postnum); // 해당 포스트를 찾음
+		
+		scrapPost.setTitle(title);
+		scrapPost.setContent(content);
 		scrapPost.setAuthor(num);
+		scrapPost.setScrapnum(postnum);
 		
 		if(postService.scrapPost(scrapPost) == 0) {
 			return "failed";

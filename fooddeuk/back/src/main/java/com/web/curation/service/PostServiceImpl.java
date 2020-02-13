@@ -71,8 +71,8 @@ public class PostServiceImpl implements IPostService {
 	}
 
 	@Override
-	public Post getPost(Post post) {
-		return postdao.getPost(post);
+	public Post getPost(int num) {
+		return postdao.getPost(num);
 	}
 
 	@Override
@@ -98,6 +98,11 @@ public class PostServiceImpl implements IPostService {
 	@Override
 	public int updatePost(Post post) {
 		return postdao.updatePost(post);
+	}
+
+	@Override
+	public List<Post> getMyScrapPost(int num) {
+		return postdao.getMyScrapPost(num);
 	}
 
 }

@@ -60,8 +60,8 @@ public class PostDaoImpl {
 		return sqlSession.selectList(ns+"getAllUserPost", num);
 	}
 	
-	public Post getPost(Post post) {
-		return sqlSession.selectOne(ns+"getPost", post);
+	public Post getPost(int num) {
+		return sqlSession.selectOne(ns+"getPost", num);
 	}
 	
 	public int scrapPost(Post post) {
@@ -82,6 +82,10 @@ public class PostDaoImpl {
 	
 	public int updatePost(Post post) {
 		return sqlSession.update(ns+"updatePost", post);
+	}
+
+	public List<Post> getMyScrapPost(int num) {
+		return sqlSession.selectList(ns + "getMyScrapPost", num);
 	}
 	
 }
