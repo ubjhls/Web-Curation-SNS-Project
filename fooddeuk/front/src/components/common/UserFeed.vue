@@ -1,5 +1,5 @@
 <template>
-<v-app data-app style="position:relative; z-index:5">
+<v-app data-app>
 
 
     <div class="wrapC">
@@ -131,7 +131,7 @@
 
                         <div v-if="coment[index]===true">
                             <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
-                                <div style="margin-bottom:5px" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
                                     <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
                                     <h5 style="float:left; ">{{ cmts.comment }} 
                                     </h5>
@@ -227,7 +227,6 @@
                 this.isSubmit = isSubmit;
             },
             getTime(time) {
-                console.log( moment(time).fromNow())
                 moment.locale('ko')
                 return moment(time).fromNow();
             },
@@ -241,7 +240,6 @@
                     this.intro = Response.data.intro;
                     this.email = Response.data.email;
                     this.auth = Response.data.auth;
-                    console.log(this.num)
                     //팔로잉 내역 불러오기
                     this.getFollowing(this.email);
                     //팔로워 내역 불러오기
@@ -367,7 +365,6 @@
                     
                     http.post("/follow/nonfollow", form)
                     .then(Response => {
-                        console.log(Response)
                         if(Response.data==='success') {
                             this.updateAlarmToFirebase();
                             alert("팔로우가 요청되었습니다.")
@@ -420,7 +417,6 @@
                 .then(response => {
                     if(response.data.object!=null){
                         this.todolist[index].push(response.data.object)
-                        console.log(this.todolist)
                     } 
                 
                    
@@ -451,7 +447,6 @@
             }
             ,
             addcomment(num,index) {
-                console.log(num)
                 let form = new FormData()
                 form.append('comment', this.newcomment)
                 form.append('email', this.$store.state.userinfo.email)
@@ -468,7 +463,6 @@
                     .then(Response => {
                     
                         this.$set(this.commentcount,index,Response.data)
-                        console.log(this.todolist[index][0])
                     })
                     .catch(Error => {
                         console.log(Error)
@@ -484,14 +478,12 @@
                 http.delete("/comment/comment?num=" + cmt.num + "&postnum=" + num)
                 .then(response => {
                     //댓글 삭제(갱신까지)
-                    console.log(response)
                     this.$delete(this.todolist[index],0);
                     this.todolist[index].push(response.data.object)
                     
                     //댓글 수 갱신
                     http.get("/comment/count?postnum="+num)
                     .then(Response => {
-                        console.log(Response)
                         
                         this.$set(this.commentcount,index,Response.data)
                         
@@ -535,7 +527,6 @@
             },
             updateFeed(num, title, content, count_star, address, image){
                 var router = this.$router
-                console.log(image)
                  router.push({
                     name: "UpdateFeed",
                     params: {
@@ -613,7 +604,6 @@
                 form.append('num',this.$store.state.userinfo.num)
                 http.post("/post/scrap", form)
                 .then(Response => {
-                    console.log(Response.data)
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -623,6 +613,7 @@
         },
         data: () => {
             return {
+                dialog: false,
                 usernum:0,
                 isSubmit: false,
                 error:{
@@ -656,9 +647,13 @@
     }
 </script>
 <style lang="scss" scoped>
-
+#app {
+    position:relative;
+    z-index:3
+}
 p {
     margin-left:5px;
+    margin-bottom:1px;
     color: gray;
     font-size:12px;
 }

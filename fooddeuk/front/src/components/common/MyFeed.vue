@@ -1,4 +1,7 @@
 <template>
+<v-app data-app style="position:relative; z-index:5">
+
+
     <div class="wrapC">
         <div class="wrapper">
             <div class="profile-card js-profile-card">
@@ -7,18 +10,17 @@
                         <div class="profile-card__name">{{nickname}}</div>
                         <div class="profile-card__txt">{{intro}}</div>
 
-
                         <div class="profile-card-inf">
                             <div class="profile-card-inf__item">
                                 <div class="profile-card-inf__title">{{follower}}</div>
-                                <div class="profile-card-inf__txt">Followers</div>
+                                <div class="profile-card-inf__txt" style="color:black">Followers</div>
                             </div>
 
-                        <div class="profile-card-inf__item">
-                            <div class="profile-card-inf__title">{{following}}</div>
-                            <div class="profile-card-inf__txt">Following</div>
-                        </div>
-                    </div> 
+                            <div class="profile-card-inf__item">
+                                <div class="profile-card-inf__title">{{following}}</div>
+                                <div class="profile-card-inf__txt" style="color:black">Following</div>  
+                            </div>
+                        </div> 
                 </div>
             </div>
 
@@ -28,21 +30,35 @@
             </div>
             <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
-                  <div v-for="(item,index) in post" v-bind:key="item.num">
+                  <div v-for="(item,index) in post" v-bind:key="item.num">  
                     <v-card
                             max-width="100%"
                             class="mx-auto"
-                            style="margin-bottom:100px"
+                            style="margin-bottom:100px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title class="headline">{{item.title}}</v-list-item-title>
-                    
-                        <v-list-item-subtitle v-if="item.scrap_author">{{item.scrap_author}}님의 글 <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
-                        <v-list-item-subtitle v-else style="width:50px">{{nickname}} <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
-                    
-                        <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                            <v-menu offset-y style="float:right;">
+                            <template v-slot:activator="{ on }">
+                                <v-btn icon v-on="on" style="float:right">
+                                    <v-icon>mdi-dots-vertical</v-icon>
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item>
+                                    <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
+                                </v-list-item>
+                                <v-list-item>
+                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                </v-list-item>
+                            </v-list>
+                            </v-menu>
+                        </v-list-item-title>
+
+                        <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
+                         <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
                         </v-list-item-content>
                         </v-list-item>
                             <v-col cols="12" sm="3">
@@ -56,11 +72,9 @@
                             <br>
                             <v-card-text>
                                 {{item.content}}
-                                <br>
-                                <img v-bind:src="item.image"  style="width:100%; heigh:auto; ">
-        <br>
-
-                        
+                                
+                                <img v-if="item.image!=='null'" v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+                            <br>
                             <br><br><hr><br>
                             주소 : {{item.address}} 
                             </v-card-text>
@@ -79,7 +93,7 @@
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
                         <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
-                        <button><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
+                        <button @click="scrapfeed(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
 
                         </div>
                         <br>
@@ -102,19 +116,17 @@
                         </div>
 
                         <p>
-                            {{ item.count_comment }} 개의 댓글이 있습니다.
+                            {{ commentcount[index] }} 개의 댓글이 있습니다.
                         </p>
 
                         <div v-if="coment[index]===true">
-                            <div v-for="cmt in todolist" v-bind:key="cmt.date" >
-                                <div v-if="cmt[0].num==item.num">
-                                    <div style="margin-bottom:5px" v-for="cmts in cmt" v-bind:key="cmts.date" >
-                                        <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                        <h5 style="float:left; ">{{ cmts.comment }} 
-                                        </h5>
-                                        <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
-                                        <br>
-                                    </div>                
+                            <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
+                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <h5 style="float:left; ">{{ cmts.comment }} 
+                                    </h5>
+                                    <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>                 
                                 </div>
                             </div>
                   
@@ -136,6 +148,7 @@
             </div>
         </div>
     </div>
+    </v-app>
 </template>
 
 
@@ -172,7 +185,6 @@
             }
 
             this.nickname = this.propsNickname;
-
             //포스트 불러오기
             this.getUserByNickname(this.nickname);
 
@@ -198,13 +210,15 @@
                 Object
                 .values(this.error)
                 .map(v => {
-                    if (v) 
+                    if (v)
                         isSubmit = false;
                     }
                 )
                 this.isSubmit = isSubmit;
             },
             getTime(time) {
+                console.log( moment(time).fromNow())
+                moment.locale('ko')
                 return moment(time).fromNow();
             },
              getUserByNickname(nick) {
@@ -217,7 +231,7 @@
                     this.intro = Response.data.intro;
                     this.email = Response.data.email;
                     this.auth = Response.data.auth;
-                    
+                    console.log(this.num)
                     //팔로잉 내역 불러오기
                     this.getFollowing(this.email);
                     //팔로워 내역 불러오기
@@ -256,11 +270,11 @@
 
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
-                   
-                    this.post = Response.data.object; 
-                    console.log(this.post)
+                    this.post = Response.data.object;
+          
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
+                     
                         if(this.post[index].islike==1){
                             this.like.push(true)
                         }else{
@@ -268,17 +282,12 @@
                         }
                         this.likelist.push(this.post[index].count_like);
                         this.coment.push(false)
-                        if (this.post[index].type=="스크랩") {
-                            this.scrapnick=this.post[index].scrap_author
-                            console.log(this.scrapnick)
-                        }
-                        else{
-                            this.scrapnick=""
-                        }
-                        
+
+                        this.todolist.push([])
+                        this.commentcount.push(this.post[index].count_comment)
                     }
-                   
-            
+
+                    
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -397,85 +406,144 @@
             commentview(num,index){ //댓글 버튼 누를 때
             //댓글 불러오기
             if(this.coment[index]==false){
-                    http.get('/comment/comment?num='+num)
+                    http.get('/comment/comment?postnum='+num)
                 .then(response => {
                     if(response.data.object!=null){
-                        this.todolist.push(response.data.object)
+                        this.todolist[index].push(response.data.object)
+                        console.log(this.todolist)
                     } 
+                
+                   
                 })
                 .catch(Error => {
                     console.log(Error)
                 })
 
-            //댓글 숨기기
-            }else if(this.coment[index]==true){
-                    for (let index = 0; index < this.todolist.length; index++) {
-                        if(this.todolist[index][0].num==num){
-                            this.$delete(this.todolist,index);
-                        }   
-                    }
+            // //댓글 숨기기
+             }
+            else if(this.coment[index]==true){
+                 
+                    this.$delete(this.todolist[index],0);
                 }
-
                 this.$set(this.coment,index,!this.coment[index])
+
+                //댓글 수 갱신
+                    http.get("/comment/count?postnum="+num)
+                    .then(Response => {
+                        
+                        this.$set(this.commentcount,index,Response.data)
+                        
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+                    
             }
             ,
             addcomment(num,index) {
+                console.log(num)
                 let form = new FormData()
                 form.append('comment', this.newcomment)
                 form.append('email', this.$store.state.userinfo.email)
-                form.append('num', num)
+                form.append('postnum', num)
                 http.post("/comment/comment", form)
                 .then(response => {
                    
-                    //댓글 재등록
-                    this.commentview(num, index);
-                    this.commentview(num, index);
-                   
+                    //댓글 등록
+                    this.$delete(this.todolist[index],0);
+                    this.todolist[index].push(response.data.object)
+
+                    //댓글 수 갱신
+                    http.get("/comment/count?postnum="+num)
+                    .then(Response => {
+                    
+                        this.$set(this.commentcount,index,Response.data)
+                        console.log(this.todolist[index][0])
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+                    
                     //댓글 초기화
                     this.newcomment=''
-
-                    //댓글 수 갱신하기
-                    this.refresh();
-
                 })
-
-            },
-            refresh(){ //댓글 수 갱신하기
-
-                http.get("/post/post/{num}?num="+this.num + '&email=' + this.$store.state.userinfo.email)
-                .then(Response => {
-                   
-                    this.post = Response.data.object; 
-    
-            
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
+                
             },
             removeComent(num, cmt, index){
-                
-                http.delete("/comment/comment?num=" + cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
+                console.log(this.todolist)
+                http.delete("/comment/comment?num=" + cmt.num + "&postnum=" + num)
                 .then(response => {
-
-                    //삭제 완료시 댓글창, 댓글수 바로 갱신
-     
-                    this.commentview(num, index);
-                    this.commentview(num, index);
-                
-
-                    this.refresh();
+                    //댓글 삭제(갱신까지)
+                    console.log(response)
+                    this.$delete(this.todolist[index],0);
+                    this.todolist[index].push(response.data.object)
                     
+                    //댓글 수 갱신
+                    http.get("/comment/count?postnum="+num)
+                    .then(Response => {
+                        console.log(Response)
+                        
+                        this.$set(this.commentcount,index,Response.data)
+                        
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
                 })
                 .catch(Error =>{
                 })
+ 
+                
+            },
+            
+            removeFeed(num){
+                 if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+                    http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
+                    .then(response => {
+                        alert('게시물이 삭제되었습니다.')
+                        console.log(response.data)
+                        this.post = response.data.object
+                        
+                    })
+                .catch(Error =>{
+                })
+
+                }else{   //취소
+
+                    return false;
+
+                }
+                //  http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
+                // .then(response => {
+                //     alert('게시물이 삭제되었습니다.')
+                //     console.log(response.data)
+                //     this.post = response.data.object
+                    
+                // })
+                // .catch(Error =>{
+                // })
+            },
+            updateFeed(num, title, content, count_star, address, image){
+                var router = this.$router
+                console.log(image)
+                 router.push({
+                    name: "UpdateFeed",
+                    params: {
+                        "num": num,
+                        "title": title,
+                        "content": content,
+                        "address": address,
+                        "count_star": count_star,
+                        "image": image
+                    }
+                });
             },
 
             //밑은 알람 메소드
             setAlarm(alarm) {
                 this.userAlarmCount = alarm;
             },
-            updateAlarmToFirebase() {
+            updateAlarmToFirebase() {       
                 console.log(this.email + ":" + this.userAlarmCount)
                 fireDB.collection('Alarm').doc(this.email)
                 .set({
@@ -528,16 +596,28 @@
                 })
                 alert("댓글이 등록되었습니다.")
                
+            },
+            scrapfeed(num,idx) {
+                let form = new FormData()
+                form.append('postnum', num)
+                form.append('num',this.$store.state.userinfo.num)
+                http.post("/post/scrap", form)
+                .then(Response => {
+                    console.log(Response.data)
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
             }
            
         },
         data: () => {
             return {
+                usernum:0,
                 isSubmit: false,
                 error:{
                     comment:false
                 },
-                scrapnick:'',
                 nick:'',
                 nickname : '',
                 num:0,
@@ -558,14 +638,18 @@
                 userAlarmCount: 0,
                 likelist:[],
                 mynum:0,
-                
+                commentcount:[],
+
+               
             }
         }
     }
 </script>
-<style>
+<style lang="scss" scoped>
+
 p {
     margin-left:5px;
+    margin-bottom: 1px;
     color: gray;
     font-size:12px;
 }
