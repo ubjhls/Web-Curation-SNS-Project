@@ -18,6 +18,11 @@ import FollowingPage from './views/user/FollowingPage.vue'
 import EmailConfirm from './views/user/EmailConfirm.vue'
 import Address from './views/curation/Address.vue'
 import ModifyPassword from './views/user/ModifyPassword.vue'
+import curationFeed from './views/user/curationFeed.vue'
+import scrapFeed from './views/user/scrapFeed.vue'
+import likeFeed from './views/user/likeFeed.vue'
+import Statistics from './views/user/Statistics.vue'
+import UpdateFeed from './views/user/UpdateFeed.vue'
 
 
 import Vue from 'vue';
@@ -92,6 +97,12 @@ const onlyAuthUser = (to, from, next) =>{
         props: true
     },
     {
+        path : '/user/UpdateFeed',
+        name : 'UpdateFeed',
+        component : UpdateFeed,
+        props: true
+    },
+    {
         path : '/components',
         name : 'Components',
         component : Components
@@ -136,11 +147,13 @@ const onlyAuthUser = (to, from, next) =>{
         path : '/user/FollowPage',
         name : 'FollowPage',
         component : FollowPage,
+        beforeEnter : onlyAuthUser,
     },
     {
         path : '/user/FollowingPage',
         name : 'FollowingPage',
         component : FollowingPage,
+        beforeEnter : onlyAuthUser,
     },
     {
         path : '/user/ModifyProfile',
@@ -172,6 +185,33 @@ const onlyAuthUser = (to, from, next) =>{
         name : 'ConfirmFindPassword',
         component : ConfirmFindPassword,
         props: true
+    },
+    {
+        path : '/user/curationFeed',
+        name : 'curationFeed',
+        component : curationFeed,
+        beforeEnter : onlyAuthUser,
+        props: true
+    },
+    {
+        path : '/user/likeFeed',
+        name : 'likeFeed',
+        component : likeFeed,
+        beforeEnter : onlyAuthUser,
+        props: true
+    },
+    {
+        path : '/user/scrapFeed',
+        name : 'scrapFeed',
+        component : scrapFeed,
+        beforeEnter : onlyAuthUser,
+        props: true,
+    },
+    {
+        path : '/user/Statistics',
+        name : 'Statistics',
+        component : Statistics,
+        beforeEnter : onlyAuthUser,
     },
 
 ];

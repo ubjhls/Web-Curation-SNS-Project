@@ -5,76 +5,76 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="user">
  
     <select id="getUserByEmail" parameterType="java.lang.String" resultType="user">
-		SELECT NUM, EMAIL, NICKNAME, NAME, PASSWORD, INTRO, AUTH, CONFIRM, SOCIAL FROM USER WHERE EMAIL=#{email}
+		select num, email, nickname, name, password, intro, auth, confirm, social from user where email=#{email}
 	</select>
 	
 	<select id="findUserByEmailAndPassword" parameterType="user" resultType="user">
-		SELECT NUM, EMAIL, NICKNAME, NAME, PASSWORD, INTRO, AUTH, CONFIRM, SOCIAL FROM USER WHERE EMAIL=#{email} AND PASSWORD=#{password} AND SOCIAL=0
+		select num, email, nickname, name, password, intro, auth, confirm, social from user where email=#{email} and social=0
 	</select>
 	
 	<insert id="signUp" parameterType="user">
-		INSERT INTO USER(EMAIL, NICKNAME, NAME, PASSWORD, INTRO, CONFIRM, SOCIAL, DATE)
-		VALUES(#{email}, #{nickname}, #{name}, #{password}, #{intro}, #{confirm}, #{social}, NOW())
+		insert into user(email, nickname, name, password, intro, confirm, social, date)
+		values(#{email}, #{nickname}, #{name}, #{password}, #{intro}, #{confirm}, #{social}, now())
 	</insert>
 	
 	<select id="checkNick" parameterType="java.lang.String" resultType="java.lang.String">
-		SELECT NICKNAME FROM USER WHERE NICKNAME=#{nickname}
+		select nickname from user where nickname=#{nickname}
 	</select>
 	
 	<select id="checkEmail" parameterType="java.lang.String" resultType="java.lang.String">
-		SELECT EMAIL FROM USER WHERE EMAIL=#{email}
+		select email from user where email=#{email}
 	</select>
 	
 	<select id="getConfirm" parameterType="java.lang.String" resultType="java.lang.String">
-		SELECT CONFIRM FROM USER WHERE EMAIL=#{email}
+		select confirm from user where email=#{email}
 	</select>
 	
 	<update id="updateConfirm" parameterType="user">
-		UPDATE USER SET CONFIRM=#{confirm} WHERE EMAIL=#{email}
+		update user set confirm=#{confirm} where email=#{email}
 	</update>
 	
 	<select id="getKey" parameterType="java.lang.String" resultType="java.lang.String">
-		SELECT TEMP FROM USER WHERE EMAIL=#{email}
+		select temp from user where email=#{email}
 	</select>
 	
 	<update id="updateKey" parameterType="user">
-		UPDATE USER SET TEMP=#{temp} WHERE EMAIL=#{email}
+		update user set temp=#{temp} where email=#{email}
 	</update>
 	
 	<update id="updatePassword" parameterType="user">
-		UPDATE USER SET PASSWORD=#{password} WHERE EMAIL=#{email}
+		update user set password=#{password} where email=#{email}
 	</update>
 	
 	<select id="getSocial" parameterType="java.lang.String">
-		SELECT SOCIAL FROM USER WHERE EMAIL=#{email}
+		select social from user where email=#{email}
 	</select>
 	
 	<update id="successJoin" parameterType="java.lang.String">
-		UPDATE USER SET CONFIRM='Y' WHERE EMAIL=#{email}
+		update user set confirm='Y' where email=#{email}
 	</update>
 
 	<select id="getNumByEmail" parameterType="java.lang.String" resultType="java.lang.Integer">
-		SELECT NUM FROM USER WHERE EMAIL=#{email}
+		select num from user where email=#{email}
 	</select>
 	
 	<select id="getNumByNickname" parameterType="java.lang.String" resultType="java.lang.Integer">
-		SELECT NUM FROM USER WHERE NICKNAME=#{nickname}
+		select num from user where nickname=#{nickname}
 	</select>
 	
 	<update id="updateUser" parameterType="user">
-		UPDATE USER SET NICKNAME=#{nickname}, INTRO=#{intro}, AUTH=#{auth} WHERE EMAIL=#{email}
+		update user set nickname=#{nickname}, intro=#{intro}, auth=#{auth} where email=#{email}
 	</update>
 
 	<select id="getUserByNickname" parameterType="java.lang.String" resultType="user">
-		SELECT NUM, EMAIL, NICKNAME, NAME, PASSWORD, INTRO, AUTH, CONFIRM, SOCIAL FROM USER WHERE NICKNAME=#{nickname}
+		select num, email, nickname, name, password, intro, auth, confirm, social from user where nickname=#{nickname}
 	</select>
 	
 	<select id="getAuth" parameterType="java.lang.Integer">
-		SELECT AUTH FROM USER WHERE NUM=#{num}
+		select auth from user where num=#{num}
 	</select>
 	
 	<select id="getNickname" parameterType="java.lang.Integer" resultType="java.lang.String">
-		SELECT NICKNAME FROM USER WHERE NUM=#{num}
+		select nickname from user where num=#{num}
 	</select>
 
  </mapper>

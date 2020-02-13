@@ -3,6 +3,6 @@ module.exports = {
     "vuetify"
   ],
   "devServer": {
-    "proxy": "http://192.168.31.105:8080/"
+    "proxy": "http://192.168.31.103:8081/"
   }
 }

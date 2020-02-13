@@ -29,8 +29,9 @@
     	<typeAlias type="com.web.curation.model.post.Post" alias="post" />
     	<typeAlias type="com.web.curation.model.follow.Follow" alias="follow" />
     	<typeAlias type="com.web.curation.model.comment.Comment" alias="comment" />
-    	<typeAlias type="com.web.curation.model.Alarm" alias="alarm" />
+    	<typeAlias type="com.web.curation.model.alarm.Alarm" alias="alarm" />
     	<typeAlias type="com.web.curation.model.postlike.Postlike" alias="postlike" />
+    	<typeAlias type="com.web.curation.model.curation.Curation" alias="curation" />
     </typeAliases>
     <mappers>
        <mapper resource="mapper/user.xml"/>
@@ -41,5 +42,6 @@
        <mapper resource="mapper/comment.xml"/>
        <mapper resource="mapper/alarm.xml"/>
        <mapper resource="mapper/postlike.xml"/>
+       <mapper resource="mapper/statistics.xml"/>
     </mappers>
 </configuration>

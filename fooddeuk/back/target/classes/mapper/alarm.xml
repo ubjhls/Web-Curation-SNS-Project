@@ -5,8 +5,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="alarm">
 	
 	<insert id="nonfollowSave" parameterType="alarm">
-		INSERT INTO alarm(sender, receiver, reason, confirm, DATE) 
-		VALUES(#{sender}, #{receiver}, #{reason}, 0, NOW())
+		insert into alarm(sender, receiver, reason, confirm, date) 
+		values(#{sender}, #{receiver}, #{reason}, 0, now())
 	</insert>
 	
 	<select id="checkFollowAlarm"  parameterType="alarm" resultType="alarm">
@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<update id="changeConfirm" parameterType="java.lang.Integer">
-		UPDATE alarm SET confirm=1 where num=#{num}
+		update alarm set confirm=1 where num=#{num}
 	</update>
 	
 	<select id="alarmtlist"  parameterType="java.lang.String" resultType="alarm">

@@ -1,10 +1,13 @@
 package com.web.curation.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.web.curation.model.follow.Follow;
+import com.web.curation.model.user.User;
 
 @Repository
 public class FollowDaoImpl {
@@ -51,6 +54,13 @@ public class FollowDaoImpl {
 	
 	public int followingDown(int num) {
 		return sqlSession.update(ns+"followingDown", num);
+	}
+
+	public List<User> getFollower(int num) {
+		return sqlSession.selectList(ns+"getFollower", num);
+	}
+	public List<User> getFollowing(int num) {
+		return sqlSession.selectList(ns+"getFollowing", num);
 	}
 	
 }

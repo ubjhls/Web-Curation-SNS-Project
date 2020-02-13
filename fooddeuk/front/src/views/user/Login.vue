@@ -2,7 +2,7 @@
     <div class="user" id="login">
         <div class="wrapC">
             <div style="text-align:center;">
-            <img src="../../assets/images/fooddeuk_logoo.png" style="height:140px;">
+            <img class="animated jackInTheBox" src="../../assets/images/fooddeuk_logoo.png" style="height:140px;">
             </div>
             <br>
             <br>
@@ -57,7 +57,7 @@
                     <br>
                     <div class="p" id="app">
                         <a :href=naverLoginURL>
-                        <img width="100%" src="https://developers.naver.com/doc/review_201802/CK_bEFnWMeEBjXpQ5o8N_20180202_7aot50.png">
+                        <img height="50px" width="100%" src="https://developers.naver.com/doc/review_201802/CK_bEFnWMeEBjXpQ5o8N_20180202_7aot50.png">
                         </a>
                     </div>
                 </div>
@@ -87,9 +87,8 @@
         </div>
     </div>
 </template>
-
 <script>
-
+    import '../../assets/css/animate.scss'
     import '../../assets/css/style.scss'
     import '../../assets/css/user.scss'
     import PV from 'password-validator'

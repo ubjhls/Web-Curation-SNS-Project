@@ -5,40 +5,47 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="follow">
 
 	<select id="countFollower" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-		SELECT COUNT_FOLLOWER FROM PROFILE WHERE NUM=#{num}
+		select count_follower from profile where num=#{num}
 	</select>
 	
 	<select id="countFollowing" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-		SELECT COUNT_FOLLOWING FROM PROFILE WHERE NUM=#{NUM}
+		select count_following from profile where num=#{num}
 	</select>
 	
 	<select id="checkFollow" parameterType="follow" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM FOLLOW WHERE FOLLOWER=#{follower} AND FOLLOWING=#{following}
+		select count(*) from follow where follower=#{follower} and following=#{following}
 	</select>
 	
 	<insert id="follow" parameterType="follow">
-		INSERT INTO FOLLOW(FOLLOWER, FOLLOWING, DATE)
-		VALUES(#{follower}, #{following}, NOW())
+		insert into follow(follower, following, date)
+		values(#{follower}, #{following}, now())
 	</insert>
 	
 	<delete id="unFollow" parameterType="follow">
-		DELETE FROM FOLLOW WHERE FOLLOWER=#{follower} AND FOLLOWING=#{following}
+		delete from follow where follower=#{follower} and following=#{following}
 	</delete>
 	
 	<update id="followerUp" parameterType="java.lang.Integer">
-		UPDATE PROFILE SET COUNT_FOLLOWER=COUNT_FOLLOWER+1 WHERE NUM=#{num} 
+		update profile set count_follower=count_follower+1 where num=#{num} 
 	</update>
 	
 	<update id="followerDown" parameterType="java.lang.Integer">
-		UPDATE PROFILE SET COUNT_FOLLOWER=COUNT_FOLLOWER-1 WHERE NUM=#{num} 
+		update profile set count_follower=count_follower-1 where num=#{num} 
 	</update>
 	
 	<update id="followingUp" parameterType="java.lang.Integer">
-		UPDATE PROFILE SET COUNT_FOLLOWING=COUNT_FOLLOWING+1 WHERE NUM=#{num} 
+		update profile set count_following=count_following+1 where num=#{num} 
 	</update>
 	
 	<update id="followingDown" parameterType="java.lang.Integer">
-		UPDATE PROFILE SET COUNT_FOLLOWING=COUNT_FOLLOWING-1 WHERE NUM=#{num} 
+		update profile set count_following=count_following-1 where num=#{num} 
 	</update>
+	<select id="getFollower" parameterType="java.lang.Integer" resultType="user">
+		select * from user where num in (select follower from follow where `following`=#{num});
+	</select>
+	<select id="getFollowing" parameterType="java.lang.Integer" resultType="user">
+		select * from user where num in (select following from follow where `follower`=#{num});
+	</select>
+	
 	
  </mapper>

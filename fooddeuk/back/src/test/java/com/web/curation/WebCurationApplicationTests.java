@@ -10,9 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 class WebCurationApplicationTests {
 
 	private final String DRIVER = "com.mysql.cj.jdbc.Driver";
-	private final String URL = "jdbc:mariadb://127.0.0.1/test";
-	private final String USER = "ssafy";
-	private final String PW = "ssafy";
+	private final String URL = "jdbc:mysql://52.78.215.167/fooddeuk";
+	private final String USER = "root";
+	private final String PW = "fooddeuk1234!";
 
 	@Test
 	public void test() {

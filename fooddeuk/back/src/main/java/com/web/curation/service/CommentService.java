@@ -19,8 +19,19 @@ public class CommentService implements ICommentService {
 		return commentdao.getAllComment(num);
 	}
 	
-	public int insertComment(int num) {
-		return commentdao.insertComment(num);
+	@Override
+	public int insertComment(Comment comment) {
+		return commentdao.insertComment(comment);
+	}
+
+	@Override
+	public int deleteComment(int num) {
+		return commentdao.deleteComment(num);
+	}
+
+	@Override
+	public int getCommentCount(int num) {
+		return commentdao.getCommentCount(num);
 	}
 
 }

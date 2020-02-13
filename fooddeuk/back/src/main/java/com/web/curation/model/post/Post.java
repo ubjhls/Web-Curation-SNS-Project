@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class Post {
 	@Id
@@ -27,14 +26,29 @@ public class Post {
 	private int count_star;
 	private String address;
 	private String image;
-
+	private String type;
+	private int scrap_author;
+	private String nickname;
+	private int mynum;
 	private int islike;
-
 
 	public Post() {
 		super();
 	}
 	
+	public Post(int num, String address) {
+		super();
+		this.num = num;
+		this.address = address;
+	}
+	
+	public Post(int num, int author, String date) {
+		super();
+		this.num = num;
+		this.author = author;
+		this.date = date;
+	}
+
 	public Post(int author, String title, String content, int count_star, String address) {
 		super();
 		this.author = author;
@@ -137,12 +151,38 @@ public class Post {
 	public void setIslike(int islike) {
 		this.islike = islike;
 	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public int getScrap_author() {
+		return scrap_author;
+	}
+	public void setScrap_author(int scrap_author) {
+		this.scrap_author = scrap_author;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public int getMynum() {
+		return mynum;
+	}
+	public void setMynum(int mynum) {
+		this.mynum = mynum;
+	}
 
 	@Override
 	public String toString() {
 		return "Post [num=" + num + ", author=" + author + ", title=" + title + ", content=" + content + ", date="
 				+ date + ", count_like=" + count_like + ", count_comment=" + count_comment + ", count_star="
-				+ count_star + ", address=" + address + ", image=" + image + ", islike=" + islike + "]";
+				+ count_star + ", address=" + address + ", image=" + image + ", type=" + type + ", scrap_author="
+				+ scrap_author + ", nickname=" + nickname + ", mynum=" + mynum + ", islike=" + islike + "]";
 	}
+	
 	
 }

@@ -53,13 +53,13 @@ public class ProfileController {
 		System.out.println("email : " + email);
 		System.out.println("place1 : " + place1);
 		System.out.println("place2 : " + place2);
-		
-		if(place2 == null || place2.equals("")) {
-			place2 = "전체";
-		}
 
 		int num = userService.getNumByEmail(email);
 		StringBuilder sb = new StringBuilder();
+		
+		if(place1.equals("없음")) {
+			place2 = "없음";
+		}
 		sb.append(place1 + "/" + place2);
 		
 		Profile profile = new Profile(num, sb.toString());

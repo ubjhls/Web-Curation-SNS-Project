@@ -1,11 +1,14 @@
 package com.web.curation.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 import com.web.curation.dao.FollowDaoImpl;
 import com.web.curation.model.follow.Follow;
+import com.web.curation.model.user.User;
 @Service
 public class FollowServiceImpl implements IFollowService {
 	@Autowired
@@ -55,5 +58,15 @@ public class FollowServiceImpl implements IFollowService {
 	public int followingDown(int num) {
 		return followdao.followingDown(num);
 	}
+
+	@Override
+	public List<User> getFollower(int num) {
+		return followdao.getFollower(num);
+	}
+	@Override
+	public List<User> getFollowing(int num) {
+		return followdao.getFollowing(num);
+	}
+	
 	
 }

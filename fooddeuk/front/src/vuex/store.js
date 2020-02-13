@@ -27,14 +27,11 @@ export default new Vuex.Store({
         state.isLoginError = true
       },
       logout(state){
-        
-       
         state.isLogin = false
         state.isLoginError = false
         state.userinfo = null
         sessionStorage.removeItem('access_token')
-   
-      }
+      },
     }, 
     actions: { //비지니스로직
       //로그인을 시도
@@ -94,6 +91,7 @@ export default new Vuex.Store({
                   .post("/account/loginToken", form)
                   .then(response=>{
                       let userinfo = {
+                          num : response.data.object.num,
                           name : response.data.object.name,
                           email : response.data.object.email,
                           nickName : response.data.object.nickname,

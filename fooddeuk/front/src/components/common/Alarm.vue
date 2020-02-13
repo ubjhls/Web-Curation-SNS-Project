@@ -2,8 +2,10 @@
   <v-card
     class="mx-auto"
   >
-
-    <v-list three-line>
+    <div v-if="items.length==0">
+      알림이 없습니다.
+    </div>
+    <v-list v-if="items.length!=0" three-line>
       <template v-for="(item, index) in items">
         <v-subheader
           v-if="item.header"
@@ -45,6 +47,7 @@
   import moment from 'moment'
   import VueMomentJS from 'vue-momentjs'
   import {fireDB} from '../../main'
+  import EventBus from '../../EventBus'
 
   Vue.use(VueMomentJS, moment)
 
@@ -58,35 +61,54 @@
         this.email = this.$store.state.userinfo.email;
         this.nickname = this.$store.state.userinfo.nickName;
       }
-      this.getAlarms();
+      // this.getAlarms();
+      this.watchAlarmFromFirebase();
+    },
+    mounted : function() {
+      this.emitAlarm();
     },
     watch: {
-      itemSize : function (v) {
-        this.getAlarmFromFirebase();
-      }
     },
     methods : {
-      getAlarmFromFirebase() {
-        // var alarmCountRef = fireDB.collection(this.email).add({
-        //   alarm : 2,
-        //   request : 3
-        // }).then(function(docRef) {
-        //   console.log("Document written with ID: ", docRef.id);
-        // }).catch(function(error) {
-        //   console.error("Error adding document: ", error);
-        // });
-
-        fireDB.collection('Alarm').doc(this.email).get().onSnapshot(function(doc) {
-            console.log("Current data: ", doc.data());
-        });
-        
+      
+      emitAlarm() {
+        let whoami = this;
+        EventBus.$on('emitAlarm', function() {
+          // alert("emitAlarm 감지")
+          whoami.getAlarms();
+        })
+      },
+      setAlarm(alarm) {
+        this.alarmCount = alarm;
+      },
+      updateAlarmToFirebase() {
+        fireDB.collection('Alarm').doc(this.email)
+        .set({
+          count : this.alarmCount - 1
+        })
+      },
+      watchAlarmFromFirebase() {
+        let whoami = this;
+        let count=0;
+        fireDB.collection('Alarm').doc(this.email).onSnapshot( {
+            includeMetadataChanges: true    
+        },function(doc) {
+            if(doc.data()==undefined) {
+                count = 0;
+            } else {
+                count = doc.data().count;
+            }
+            whoami.setAlarm(count);
+            whoami.getAlarms();
+        })
       },
       confirmAlarm(num) {
         http.patch("/follow/alarmconfirm?num=" + num)
         .then(Response => {
           this.items = Response.data
-          console.log(Response.data)
+          // console.log(Response.data)
           this.getAlarms()
+          this.updateAlarmToFirebase();
         })
         .catch(Error => {
             console.log(Error)
@@ -99,7 +121,7 @@
         http.get("/follow/alarmlist?mynickname=" + this.nickname)
         .then(Response => {
           this.items = Response.data
-          console.log(Response.data)
+          // console.log(Response.data)
         })
         .catch(Error => {
             console.log(Error)
@@ -113,7 +135,7 @@
         http.post("/follow/followagree", form)
         .then(Response => {
           this.isfollow = 1;
-          console.log(Response.data)
+          // console.log(Response.data)
           this.getAlarms();
         })
         .catch(Error => {
@@ -125,7 +147,7 @@
       email : '',
       nickname: '',
       items: [],
-      itemSize: 0,
+      alarmCount: 0,
     }),
     computed : {
         ...mapState(['userinfo']),

@@ -19,10 +19,16 @@ public class CommentDaoImpl {
 		return sqlSession.selectList(ns+"getAllComment", num);
 	}
 	
-	public int insertComment(int num) {
-		return sqlSession.insert(ns+"insertComment", num);
+	public int insertComment(Comment comment) {
+		return sqlSession.insert(ns+"insertComment", comment);
 	}
 	
+	public int deleteComment(int num) {
+		return sqlSession.delete(ns+"deleteComment", num);
+	}
 
+	public int getCommentCount(int num) {
+		return sqlSession.selectOne(ns+"getCommentCount", num);
+	}
 	
 }

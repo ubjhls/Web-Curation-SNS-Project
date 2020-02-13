@@ -281,7 +281,7 @@
                         this.todolist.push([])
                         this.commentcount.push(this.post[index].count_comment)
                     }
-                console.log(this.post)
+
             
                 })
                 .catch(Error => {
@@ -397,6 +397,7 @@
                 .catch(Error => {
                      console.log(Error)
                 })
+
             },
             commentview(num,index){ //댓글 버튼 누를 때
           
@@ -411,8 +412,7 @@
                     
                    
                 })
-                .catch(Error => {
-                    console.log(Error)
+                .catch(Error =>{
                 })
 
             // //댓글 숨기기

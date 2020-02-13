@@ -14,32 +14,43 @@
       </div>
 
       <div style="text-align:center; padding-top:20px">
-        <div style="float:left; width:50%">팔로워</div>
-        <div>팔로잉</div>
+        <div style="float:left; width:50%" @click="goFollow">팔로워</div>
+        <div @click="goFollowing">팔로잉</div>
       </div>
 
       <div style="text-align:center; padding-top:10px; padding-bottom:20px">
-        <div style="float:left; width:50%">{{this.follower}}</div>
-        <div>{{this.following}}</div>
+        <div style="float:left; width:50%" @click="goFollow">{{this.follower}}</div>
+        <div @click="goFollowing">{{this.following}}</div>
       </div>
-
-      <v-divider style="margin-left:10%; width:80%"></v-divider>
+       <v-divider style="margin-left:10%; width:80%"></v-divider>
 
       <v-list dense>
-        <div style="padding-top:5%; padding-bottom:5%; padding-left:10%" @click="modifyProfile">
-          회원정보 수정
+        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="likeFeed">
+          내가 좋아한 피드
         </div>
-        <div style="padding-top:5%; padding-bottom:5%; padding-left:10%" @click="modifyPassword">
-          비밀번호 설정
+        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="scrapFeed">
+          내가 스크랩 한 피드
+        </div>
+        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="curationFeed">
+          나의 큐레이션 피드
         </div>
       </v-list>
 
       <v-divider style="margin-left:10%; width:80%"></v-divider>
 
-      
-        <div style="padding-top:5%; padding-bottom:5%; padding-left:10%" @click="Address">
+      <v-list dense>
+        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="modifyProfile">
+          회원정보 수정
+        </div>
+        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="modifyPassword">
+          비밀번호 설정
+        </div>
+        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="Address">
           뉴스피드 설정
         </div>
+      </v-list>
+
+      <v-divider style="margin-left:10%; width:80%"></v-divider>
      
 
       <v-divider style="margin-left:10%; width:80%"></v-divider>
@@ -88,6 +99,16 @@ import http from '../../../http-common'
       }
     },
     methods : {
+      likeFeed() {
+        this.$router.push({name:"likeFeed"})
+      },
+      scrapFeed() {
+        this.$router.push({name:"scrapFeed"})
+      },
+      curationFeed() {
+        this.$router.push({name:"curationFeed"})
+      },
+      
       Address() {
         this.$router.push({name:"Address"})
       },
@@ -127,6 +148,18 @@ import http from '../../../http-common'
         .catch(Error => {
             console.log(Error)
         })
+      },
+      goFollow(){
+        this.$router.push(
+          {name:"FollowPage"}
+        )
+        
+
+      },
+      goFollowing(){
+        this.$router.push(
+          {name:"FollowingPage"}
+        )
       }
     },
     computed : {

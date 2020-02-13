@@ -19,25 +19,23 @@
     <v-list subheader style="margin-top:50px">
       <v-subheader>팔로잉 리스트</v-subheader>
 
-      <v-list-item
-        v-for="item in items"
+     <v-list-item
+        v-for="(item, index) in items"
         :key="item.title"
       >
-        <v-list-item-avatar>
-          <v-img :src="item.avatar"></v-img>
-        </v-list-item-avatar>
 
         <v-list-item-content>
-          닉네임:<v-list-item-title v-text="item.title"></v-list-item-title>
+          {{item.nickname}}
+          <v-list-item-subtitle v-text="item.email"></v-list-item-subtitle>
         </v-list-item-content>
 
-        <v-list-item-content>
-          이메일:<v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
-        </v-list-item-content>
-
-<div>
-        <v-btn small rounded color="primary" @click="unfollow">팔로우취소</v-btn>
-</div>
+        <div class="profile-card-ctr" v-if="isfollow[index]==0">  
+            <button class="profile-card__button button--orange" @click="followgo(index)">Follow</button>
+        </div>
+        <div class="profile-card-ctr" v-if="isfollow[index]==1">
+          
+            <button class="profile-card__button button--gray" @click="unfollowgo(index)">UnFollow</button>
+        </div>
       </v-list-item>
     </v-list>
 
@@ -56,10 +54,14 @@
 
     import '../../assets/css/style.scss'
     import '../../assets/css/user.scss'
-
+    import UserApi from '../../apis/UserApi'
+    import http from '../../../http-common'
     export default {
         components: {},
-        created() {},
+        created() {
+          this.nickname = this.$store.state.userinfo.nickName;
+          this.getUserByNickname(this.nickname);
+        },
         watch: {},
         methods: {
             goNewsFeeds() {
@@ -68,18 +70,91 @@
                 router.push({
                     name: "MainPage"
                 });
-            }
+            },
+            getFollowing(num){
+              http.get("follow/getFollowing/{num}?num="+ num)
+              .then(Response => {
+                console.log(Response)
+                this.items = Response.data.object;
+                this.isfollow = Response.data.object2;
+
+              })
+            },
+            getUserByNickname(nick) {
+                let form = new FormData()
+                form.append('nickname', nick)
+                http.get("/user/userinfo/{nickname}?nickname=" + nick)
+                .then(Response => {
+                    this.num = Response.data.num;
+                    this.getFollowing(this.num);
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+            },
+            followgo(index){
+                if(this.items[index].auth==0) {
+                    let form = new FormData();
+                    let myn  = this.$store.state.userinfo.nickName;
+                    form.append('mynickname', myn)
+                    form.append('nickname',this.items[index].nickname)
+                    http.post("/follow/follow", form)
+                    .then(Response => {
+                        this.$set(this.isfollow,index,1)
+                        this.updateAlarmToFirebase(this.items[index].email, index);
+                        // console.log(Response.data)
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+                }
+                else if(this.items[index].auth==1) {
+                    let form = new FormData();
+                    let myn  = this.$store.state.userinfo.nickName;
+                    form.append('mynickname', myn)
+                    form.append('nickname',this.items[index].nickname)
+                    
+                    http.post("/follow/nonfollow", form)
+                    .then(Response => {
+                        console.log(Response)
+                        this.updateAlarmToFirebase(this.items[index].email, index);
+                        if(Response.data==='success') {
+                            alert("팔로우가 요청되었습니다.")
+                        }
+                        else if(Response.data==='failed') {
+                            alert("이미 팔로우 신청을 하였습니다.")
+                        }
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+
+                }
+            },
+            unfollowgo(index){
+                let form = new FormData()
+                let myn  = this.$store.state.userinfo.nickName;
+                form.append('mynickname', myn)
+                form.append('nickname',this.items[index].nickname)
+                http.post("/follow/unFollow", form)
+                .then(Response => {
+                  this.$set(this.isfollow,index,0)
+                    console.log(this.isfollow)
+                    // console.log(Response.data)
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+            },
         },
         data: () => ({
-      items: [
-        { active: true, title: 'Jason Oner', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg' },
-        { active: true, title: 'Ranee Carlson', subtitle:'hello@naver.com' ,avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
-        { title: 'Cindy Baker', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' },
-        { title: 'Ali Connors', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
-      ],
-      items2: [
-        { title: 'Travis Howard', avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg' },
-      ],
+      items: [],
+      isfollow:[],
+      email:'',
+      intro:'',
+      num:0,
+      nickname:'',
+    
     }),
     }
 </script>

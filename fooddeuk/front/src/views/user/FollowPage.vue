@@ -19,24 +19,24 @@
       <v-subheader>팔로워 리스트</v-subheader>
 
       <v-list-item
-        v-for="item in items"
+        v-for="(item, index) in items"
         :key="item.title"
       >
-        <v-list-item-avatar>
-          <v-img :src="item.avatar"></v-img>
-        </v-list-item-avatar>
 
         <v-list-item-content>
-          닉네임:<v-list-item-title v-text="item.title"></v-list-item-title>
+          {{item.nickname}}
+          <v-list-item-subtitle v-text="item.email"></v-list-item-subtitle>
         </v-list-item-content>
 
-        <v-list-item-content>
-          이메일:<v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
-        </v-list-item-content>
-
-        <div>
-        <v-btn small color="primary" @click="follow">팔로우</v-btn>
-      </div>
+        <div class="profile-card-ctr" v-if="isfollow[index]==0">
+          {{isfollow[index]}}
+          
+            <button class="profile-card__button button--orange" @click="followgo(index)">Follow</button>
+        </div>
+        <div class="profile-card-ctr" v-if="isfollow[index]==1">
+          {{isfollow[index]}}
+            <button class="profile-card__button button--gray" @click="unfollowgo(index)">UnFollow</button>
+        </div>
       </v-list-item>
     </v-list>
 
@@ -75,41 +75,154 @@
 
     import '../../assets/css/style.scss'
     import '../../assets/css/user.scss'
-import UserApi from '../../apis/UserApi';
+    import UserApi from '../../apis/UserApi'
+    import http from '../../../http-common'
+    import {fireDB} from '../../main'
+
 
     export default {
         components: {},
-        created() {},
+        created() {
+          this.nickname = this.$store.state.userinfo.nickName;
+          this.getUserByNickname(this.nickname);
+        },
         watch: {},
         methods: {
+            setAlarm(alarm) {
+                this.alarmCount.push(alarm);
+            },
+            updateAlarmToFirebase(email, index) {
+                console.log(email + ":" + this.alarmCount[index])
+                fireDB.collection('Alarm').doc(email)
+                .set({
+                    count : this.alarmCount[index] + 1
+                })
+            },
+            getAlarmFromFirebase(email) {
+                let whoami = this;
+                let count = 0;
+                fireDB.collection('Alarm').doc(email).get().then(function(doc) {
+                if(doc.data()==undefined) {
+                    count = 0;
+                } else {
+                    count = doc.data().count;
+                }
+                whoami.setAlarm(count);
+                }).catch(function(error) {
+                    console.log(error)
+                })
+            },
+            watchAlarmFromFirebase(email) {
+                let whoami = this;
+                let count=0;
+                fireDB.collection('Alarm').doc(email).onSnapshot( {
+                    includeMetadataChanges: true    
+                },function(doc) {
+                    if(doc.data()==undefined) {
+                        count = 0;
+                    } else {
+                        count = doc.data().count;
+                    }
+                    whoami.setAlarm(count);
+                })
+            },
             goNewsFeeds() {
                 var router = this.$router;
-
                 router.push({
                     name: "MainPage"
                 });
             },
-            follow(){
-              console.log(this.items)
-              let {nickName} = this;
-              let data = {
-                nickName
-              }
-              UserApi.requestFollow(data, res =>{
-                console.log(res)
+            getFollower(num){
+              http.get("follow/getFollower/{num}?num="+ num)
+              .then(Response => {
+                // console.log(Response)
+                this.items = Response.data.object;
+                this.isfollow = Response.data.object2;
+                console.log(this.isfollow)
+
               })
-            }
+            },
+            getUserByNickname(nick) {
+                let form = new FormData()
+                form.append('nickname', nick)
+                http.get("/user/userinfo/{nickname}?nickname=" + nick)
+                .then(Response => {
+                    // console.log(Response)
+                    this.num = Response.data.num;
+                    this.getFollower(this.num);
+                    this.getAlarmFromFirebase();
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+            },
+            followgo(index){
+                if(this.items[index].auth==0) {
+                    let form = new FormData();
+                    let myn  = this.$store.state.userinfo.nickName;
+                    form.append('mynickname', myn)
+                    form.append('nickname',this.items[index].nickname)
+                    http.post("/follow/follow", form)
+                    .then(Response => {
+                        this.$set(this.isfollow,index,1)
+                        this.updateAlarmToFirebase(this.items[index].email, index);
+                        // console.log(Response.data)
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+                }
+                else if(this.items[index].auth==1) {
+                    let form = new FormData();
+                    let myn  = this.$store.state.userinfo.nickName;
+                    form.append('mynickname', myn)
+                    form.append('nickname',this.items[index].nickname)
+                    
+                    http.post("/follow/nonfollow", form)
+                    .then(Response => {
+                        console.log(Response)
+                        this.updateAlarmToFirebase(this.items[index].email, index);
+                        if(Response.data==='success') {
+                            alert("팔로우가 요청되었습니다.")
+                        }
+                        else if(Response.data==='failed') {
+                            alert("이미 팔로우 신청을 하였습니다.")
+                        }
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+
+                }
+            },
+            unfollowgo(index){
+                let form = new FormData()
+                let myn  = this.$store.state.userinfo.nickName;
+                form.append('mynickname', myn)
+                form.append('nickname',this.items[index].nickname)
+                http.post("/follow/unFollow", form)
+                .then(Response => {
+                  this.$set(this.isfollow,index,0)
+                    console.log(this.isfollow)
+                    // console.log(Response.data)
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+            },
+            
         },
     data: () => ({
-      items: [
-        { active: true, title: 'Jason Oner', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg' },
-        { active: true, title: 'Ranee Carlson', avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
-        { title: 'Cindy Baker', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' },
-        { title: 'Ali Connors', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
-      ],
-      items2: [
-        { title: 'Travis Howard', avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg' },
-      ],
+      email:'',
+      intro:'',
+      auth:0,
+      num:0,
+      nickname:'',
+      items: [],
+      items2: [],
+      isfollow:[],
+      alarmCount:[],
+      userAlarmCount : 0,
     }),
     }
 </script>

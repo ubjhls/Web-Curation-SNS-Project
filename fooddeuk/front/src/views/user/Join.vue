@@ -53,6 +53,9 @@
                 <div class="error-textt" v-else-if="exist_nickName_confirm ==='b'"> 
                     {{ exist_nickName }}
                 </div>
+                <div class="error-textt" v-else-if="error.nickName ==='이메일 형식이 아닙니다.'"> 
+                    {{ exist_nickName }}
+                </div>
                 <br>
            
             <div>
@@ -140,6 +143,7 @@
         watch: {
             nickName: function (v) {
                 this.checkForm();
+                this.exist_nickName = ''
             },
             email: function (v) {
                 this.checkForm();
@@ -164,6 +168,7 @@
             },
             exist_email: function (v) {
                 this.checkForm();
+                this.checkEmail();
             }
         },methods: {
             goBack() {
@@ -210,8 +215,13 @@
                         this.exist_email_confirm = 'a';
                     }
                     else {
-                        this.exist_email = '사용가능한 이메일입니다.';
-                        this.exist_email_confirm = 'b';
+                        if (this.error.email=='이메일 형식이 아닙니다.'){
+                            this.exist_email = ''
+                        }
+                        else{
+                            this.exist_email = '사용가능한 이메일입니다.';
+                            this.exist_email_confirm = 'b';
+                        }
                     }
                 },error=>{  
                     var router = this.$router;
@@ -226,7 +236,6 @@
             },
 
             checkForm() {
-
                 if(this.nickName.length > 15)
                     this.error.nickName = "닉네임은 2 ~ 15자 이내로 작성해주세요";
                 else if(this.nickName.length < 2)
