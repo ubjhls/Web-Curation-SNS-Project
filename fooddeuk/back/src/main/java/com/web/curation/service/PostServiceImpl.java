@@ -84,7 +84,6 @@ public class PostServiceImpl implements IPostService {
 	public int deletePost(int num) {
 		return postdao.deletePost(num);
 	}
-
 	@Override
 	public List<Post> getMyFollowingPost(int num) {
 		return postdao.getMyFollowingPost(num);
