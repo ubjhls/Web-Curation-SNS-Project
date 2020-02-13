@@ -103,8 +103,18 @@
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
                         <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
-                        <button @click="scrapfeed(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
+                        <a href="#open-modal"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></a>
+                        </div>
 
+                        <div id="open-modal" class="modal-window">
+                            <div style="height:250px; background-image: linear-gradient(to right,#7f53ac 0,#657ced 100%);">
+                                <h1 style="margin-top:20px">스크랩</h1>
+                                <v-text-field style="color:blue; width:90%" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
+                                <v-text-field style="color:blue; width:90%" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
+                                <a href="#">
+                                <button class="close-modal" style="margin-top:20px" @click="scrapfeed(item.num, scraptitle, scrapcontent); href='#'">제출</button>
+                                </a>    
+                            </div>
                         </div>
                         <br>
                     </div>
@@ -174,6 +184,7 @@
     import Axios from 'axios'
     import http from '../../../http-common'
     import NavigationBar from '../../components/common/NavigationBar'
+    import UserFeed from '../../components/common/UserFeed'
     import {fireDB} from '../../main'
     
 
@@ -598,9 +609,11 @@
                 alert("댓글이 등록되었습니다.")
                
             },
-            scrapfeed(num,idx) {
+            scrapfeed(num,title,content) {
                 let form = new FormData()
                 form.append('postnum', num)
+                form.append('title',title)
+                form.append('content',content)
                 form.append('num',this.$store.state.userinfo.num)
                 http.post("/post/scrap", form)
                 .then(Response => {
@@ -619,6 +632,8 @@
                 error:{
                     comment:false
                 },
+                scraptitle:'',
+                scrapcontent:'',
                 nick:'',
                 nickname : '',
                 num:0,
@@ -648,6 +663,7 @@
 </script>
 <style lang="scss" scoped>
 #app {
+
     position:relative;
     z-index:3
 }
@@ -657,4 +673,69 @@ p {
     color: gray;
     font-size:12px;
 }
+.modal-window {
+  text-align: center;
+  box-shadow: #aaa;
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.25);
+  top: 0;
+  right:0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s;
+  &:target {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  &>div {
+    background-color: ivory;
+    width: 300px;
+    position: absolute;
+    top: 50%;
+
+    background: #ffffff;
+  }
+  h1 {
+    font-size: 150%;
+    margin: 0 0 15px;
+  }
+}
+
+.modal-close {
+  color: rgb(0, 0, 0);
+  line-height: 50px;
+  font-size: 100%;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
+  width: 70px;
+  text-decoration: none;
+  &:hover {
+    color: black;
+  }
+}
+.modal-window div:not(:last-of-type) {
+  margin-bottom: 15px;
+}
+
+small {
+  color: #aaa;
+}
+
+.btn {
+  background-color: #fff;
+  padding: 1em 1.5em;
+  border-radius: 3px;
+  text-decoration: none;
+  i {
+    padding-right: 0.3em;
+  }
+}
+
 </style>

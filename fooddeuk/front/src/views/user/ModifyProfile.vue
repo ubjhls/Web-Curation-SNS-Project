@@ -10,9 +10,7 @@
             <p style="vertical-align: middle;padding: 8px 5px;float:left;">내 정보 수정</p>
         </div>
         <div class="wrapC">
-            <br>
-            <br>
-            <br>
+ 
             <img src="../../assets/images/fooddeuk_logoo.png" style="height:70px; margin-left:120px">
                  <v-text-field style="color:blue;" v-model="email" label="이메일" id="email" hide-details="auto" disabled="disabled">
                      
@@ -58,10 +56,6 @@
             v-model="auth"
             ></v-switch>
             
-
-
-            <br>
-            <br>
                 <button class="btn btn--back btn--ok" v-on:click="submit"
                 :disabled="!isSubmit"
                 :class="{disabled : !isSubmit}">

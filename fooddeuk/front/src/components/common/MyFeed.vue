@@ -1,5 +1,5 @@
 <template>
-<v-app data-app style="position:relative; z-index:5">
+<v-app data-app>
 
 
     <div class="wrapC">
@@ -30,8 +30,9 @@
             </div>
             <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
-                  <div v-for="(item,index) in post" v-bind:key="item.num">  
-                    <v-card
+                 <div v-for="(item,index) in post" v-bind:key="item.num">  
+                <div v-if="item.type==='스크랩'">
+                     <v-card
                             max-width="100%"
                             class="mx-auto"
                             style="margin-bottom:100px; position:relative"
@@ -58,27 +59,40 @@
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
-                         <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
+
+                         <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> 
+                         </v-list-item-subtitle>
                         </v-list-item-content>
                         </v-list-item>
-                            <v-col cols="12" sm="3">
-                                <div v-for="star in item.count_star" :key="star.num">
-                                    <v-icon style="color:red; float : left">mdi-star</v-icon>
-                                </div>
-                                <div v-for="star in (5-item.count_star)" :key="star.num">
-                                    <v-icon style="float : left">mdi-star</v-icon>
-                                </div>
-                            </v-col>
-                            <br>
-                            <v-card-text>
-                                {{item.content}}
-                                
-                                <img v-if="item.image!=='null'" v-bind:src="item.image"  style="width:100%; heigh:auto; ">
-                            <br>
-                            <br><br><hr><br>
-                            주소 : {{item.address}} 
-                            </v-card-text>
-                            <hr>
+                            <div style="margin-left:20px; margin-bottom:20px">
+                                {{ item.content }}<br>
+                            </div>
+                        <p style="text-align:center">
+                            <v-card style="margin-left:13px; width:90%; height:100%; text-align:center">
+                                <v-img 
+                                style="width:100%;"
+                                :src="item.image"
+                                class="white--text align-end"
+                                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                                >
+                                <v-card-title v-text="item.scraptitle"></v-card-title>
+                                </v-img>
+                                <v-img 
+                                v-if="item.image==null"
+                                style="width:100%;"
+                                src="../../assets/images/noimage.png"  
+                                class="white--text align-end"
+                                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                                >
+                                <v-card-title v-text="item.scraptitle"></v-card-title>
+                                </v-img>
+
+
+                                <v-card-actions>
+                                <v-spacer></v-spacer>
+                                </v-card-actions>
+                            </v-card>
+                        </p>
                         <v-spacer></v-spacer>
 
                     <div style="width:100%">
@@ -144,9 +158,130 @@
                     </div>
                     
                     </v-card>
+
+
+                </div>
+
+                <div v-if="item.type==='일반'">
+                    <v-card
+                            max-width="100%"
+                            class="mx-auto"
+                            style="margin-bottom:100px; position:relative"
+                    >
+                    <v-list-item>
+                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-content style="padding-left:5%">
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                            <v-menu offset-y style="float:right;">
+                            <template v-slot:activator="{ on }">
+                                <v-btn icon v-on="on" style="float:right">
+                                    <v-icon>mdi-dots-vertical</v-icon>
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item>
+                                    <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
+                                </v-list-item>
+                                <v-list-item>
+                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                </v-list-item>
+                            </v-list>
+                            </v-menu>
+                        </v-list-item-title>
+
+                        <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
+
+                         <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
+                        </v-list-item-content>
+                        </v-list-item>
+                            <v-col cols="12" sm="3">
+                                <div v-for="star in item.count_star" :key="star.num">
+                                    <v-icon style="color:red; float : left">mdi-star</v-icon>
+                                </div>
+                                <div v-for="star in (5-item.count_star)" :key="star.num">
+                                    <v-icon style="float : left">mdi-star</v-icon>
+                                </div>
+                            </v-col>
+                            <br>
+                            <v-card-text>
+                                {{item.content}}
+                                
+                                <img v-if="item.image!=='null'" v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+                            <br>
+                            <br><br><hr><br>
+                            주소 : {{item.address}} 
+                            </v-card-text>
+                            <hr>
+                        <v-spacer></v-spacer>
+
+                    <div style="width:100%">
+                    <div style="margin-bottom:10px; margin-top:10px; padding-left:5px">
+                        <div style="width:33%; float:left;">
+
+                        <button class="animated rubberBand" v-if="like[index]===true" @click="toggledelete(item.num, index)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
+                        <button v-if="like[index]===false" @click="toggleadd(item.num, index)"><img class="animated rubberBand" style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
+                        </div>
+                        <div style="width:33%; float:left; text-align:center; margin-top:3px">
+
+                        <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
+                        </div>
+                        <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
+                        <button @click="scrapfeed(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
+
+                        </div>
+                        <br>
+                    </div>
+                    <br>
+                  
+                        <div v-if="like[index]===true">
+                            <p v-if="likelist[index] === 1">
+                                {{nick}}님<span>이 좋아합니다.</span>
+                            </p>
+                            <p v-else>
+                                {{nick}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
+                            </p>
+                        </div>
+
+                        <div v-if="like[index]===false">
+                            <p>
+                                {{ likelist[index] }} 명이 좋아합니다
+                            </p>
+                        </div>
+
+                        <p style="margin-bottom:3px">
+                            {{ commentcount[index] }} 개의 댓글이 있습니다.
+                        </p>
+
+                        <div v-if="coment[index]===true">
+                            <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
+                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <h5 style="float:left; ">{{ cmts.comment }} 
+                                    </h5>
+                                    <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>                 
+                                </div>
+                            </div>
+                  
+                            <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                                <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
+                                :disabled="!isSubmit"
+                                :class="{disabled : !isSubmit}"
+                                >댓글달기</button>
+                            </div>
+                            <div style="margin-left:5px; width:60%;">
+                                <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
+                                </v-text-field>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    </v-card>
+                
                 </div>
             </div>
         </div>
+    </div>
     </div>
     </v-app>
 </template>
@@ -271,7 +406,7 @@
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                     this.post = Response.data.object;
-          
+                    console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
                      
@@ -613,6 +748,7 @@
         },
         data: () => {
             return {
+                imm: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
                 usernum:0,
                 isSubmit: false,
                 error:{
@@ -646,8 +782,7 @@
     }
 </script>
 <style lang="scss" scoped>
-
-p {
+#app p {
     margin-left:5px;
     margin-bottom: 1px;
     color: gray;
