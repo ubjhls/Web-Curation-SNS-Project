@@ -70,6 +70,7 @@
                         <p style="text-align:center">
                             <v-card style="margin-left:13px; width:90%; height:100%; text-align:center">
                                 <v-img 
+                                v-if="item.image!==null"
                                 style="width:100%;"
                                 :src="item.image"
                                 class="white--text align-end"
@@ -206,7 +207,7 @@
                             <v-card-text>
                                 {{item.content}}
                                 
-                                <img v-if="item.image!=='null'" v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image"  style="width:100%; heigh:auto; ">
                             <br>
                             <br><br><hr><br>
                             주소 : {{item.address}} 
@@ -352,7 +353,6 @@
                 this.isSubmit = isSubmit;
             },
             getTime(time) {
-                console.log( moment(time).fromNow())
                 moment.locale('ko')
                 return moment(time).fromNow();
             },
@@ -366,7 +366,7 @@
                     this.intro = Response.data.intro;
                     this.email = Response.data.email;
                     this.auth = Response.data.auth;
-                    console.log(this.num)
+                    
                     //팔로잉 내역 불러오기
                     this.getFollowing(this.email);
                     //팔로워 내역 불러오기
@@ -406,7 +406,7 @@
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                     this.post = Response.data.object;
-                    console.log(this.post)
+
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
                      
@@ -492,7 +492,6 @@
                     
                     http.post("/follow/nonfollow", form)
                     .then(Response => {
-                        console.log(Response)
                         if(Response.data==='success') {
                             this.updateAlarmToFirebase();
                             alert("팔로우가 요청되었습니다.")
@@ -541,14 +540,11 @@
             commentview(num,index){ //댓글 버튼 누를 때
             //댓글 불러오기
             if(this.coment[index]==false){
-                    http.get('/comment/comment?postnum='+num)
+                    http.get('/comment/comment?num='+num)
                 .then(response => {
                     if(response.data.object!=null){
-                        this.todolist[index].push(response.data.object)
-                        console.log(this.todolist)
+                        this.todolist.push(response.data.object)
                     } 
-                
-                   
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -576,7 +572,7 @@
             }
             ,
             addcomment(num,index) {
-                console.log(num)
+
                 let form = new FormData()
                 form.append('comment', this.newcomment)
                 form.append('email', this.$store.state.userinfo.email)
@@ -593,7 +589,6 @@
                     .then(Response => {
                     
                         this.$set(this.commentcount,index,Response.data)
-                        console.log(this.todolist[index][0])
                     })
                     .catch(Error => {
                         console.log(Error)
@@ -605,18 +600,15 @@
                 
             },
             removeComent(num, cmt, index){
-                console.log(this.todolist)
                 http.delete("/comment/comment?num=" + cmt.num + "&postnum=" + num)
                 .then(response => {
                     //댓글 삭제(갱신까지)
-                    console.log(response)
                     this.$delete(this.todolist[index],0);
                     this.todolist[index].push(response.data.object)
                     
                     //댓글 수 갱신
                     http.get("/comment/count?postnum="+num)
                     .then(Response => {
-                        console.log(Response)
                         
                         this.$set(this.commentcount,index,Response.data)
                         
@@ -636,7 +628,6 @@
                     http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
                     .then(response => {
                         alert('게시물이 삭제되었습니다.')
-                        console.log(response.data)
                         this.post = response.data.object
                         
                     })
@@ -648,19 +639,10 @@
                     return false;
 
                 }
-                //  http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
-                // .then(response => {
-                //     alert('게시물이 삭제되었습니다.')
-                //     console.log(response.data)
-                //     this.post = response.data.object
-                    
-                // })
-                // .catch(Error =>{
-                // })
+
             },
             updateFeed(num, title, content, count_star, address, image){
                 var router = this.$router
-                console.log(image)
                  router.push({
                     name: "UpdateFeed",
                     params: {
@@ -679,7 +661,6 @@
                 this.userAlarmCount = alarm;
             },
             updateAlarmToFirebase() {       
-                console.log(this.email + ":" + this.userAlarmCount)
                 fireDB.collection('Alarm').doc(this.email)
                 .set({
                     count : this.userAlarmCount + 1
@@ -718,12 +699,6 @@
                 http.get("/comment/comment?num=" + num)
                 .then(response => {
                     this.comment = response.data.object
-                    // for(this.i=0; this.i< this.comment.length; this.i++){
-                    //     if (this.comment[this.i].num==num){
-                    //         alert('asd')
-                    //         this.comments.push(this.comment[this.i].comment)
-                    //     }
-                    // }
                     
                 })
                 .catch(Error => {
@@ -738,7 +713,6 @@
                 form.append('num',this.$store.state.userinfo.num)
                 http.post("/post/scrap", form)
                 .then(Response => {
-                    console.log(Response.data)
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -748,7 +722,6 @@
         },
         data: () => {
             return {
-                imm: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
                 usernum:0,
                 isSubmit: false,
                 error:{

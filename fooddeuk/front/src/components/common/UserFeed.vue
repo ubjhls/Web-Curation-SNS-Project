@@ -39,7 +39,7 @@
             </div>
             <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
-                  <div v-for="(item,index) in post" v-bind:key="item.num">  
+                  <div v-for="(item,index) in list" v-bind:key="item.num">  
                     <v-card
                             max-width="100%"
                             class="mx-auto"
@@ -162,12 +162,12 @@
                             </div>
                         </div>
                     </div>
-                    
                     </v-card>
                 </div>
+                <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
             </div>
-        </div>
-    </div>
+        </div>  
+    </div> 
     </v-app>
 </template>
 
@@ -184,9 +184,9 @@
     import Axios from 'axios'
     import http from '../../../http-common'
     import NavigationBar from '../../components/common/NavigationBar'
-    import UserFeed from '../../components/common/UserFeed'
     import {fireDB} from '../../main'
-    
+    import InfiniteLoading from 'vue-infinite-loading';
+
 
     export default {
         name: 'App',
@@ -211,6 +211,7 @@
 
             //검색한 사용자와 팔로잉 체크
             this.followcheck(this.nickname);
+          
         },
         watch : {
             newcomment: function(v) {
@@ -231,7 +232,7 @@
                 Object
                 .values(this.error)
                 .map(v => {
-                    if (v)
+                    if (v) 
                         isSubmit = false;
                     }
                 )
@@ -478,20 +479,21 @@
                     .catch(Error => {
                         console.log(Error)
                     })
-                    
+
                     //댓글 초기화
                     this.newcomment=''
                 })
-                
+
             },
             removeComent(num, cmt, index){
-                console.log(this.todolist)
-                http.delete("/comment/comment?num=" + cmt.num + "&postnum=" + num)
+  
+                http.delete("/comment/comment?postnum=" + num + "&num="+ cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
                 .then(response => {
                     //댓글 삭제(갱신까지)
+                  
                     this.$delete(this.todolist[index],0);
                     this.todolist[index].push(response.data.object)
-                    
+
                     //댓글 수 갱신
                     http.get("/comment/count?postnum="+num)
                     .then(Response => {
@@ -516,7 +518,6 @@
                         alert('게시물이 삭제되었습니다.')
                         console.log(response.data)
                         this.post = response.data.object
-                        
                     })
                 .catch(Error =>{
                 })
@@ -526,15 +527,6 @@
                     return false;
 
                 }
-                //  http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
-                // .then(response => {
-                //     alert('게시물이 삭제되었습니다.')
-                //     console.log(response.data)
-                //     this.post = response.data.object
-                    
-                // })
-                // .catch(Error =>{
-                // })
             },
             updateFeed(num, title, content, count_star, address, image){
                 var router = this.$router
@@ -550,12 +542,35 @@
                     }
                 });
             },
-
+            // //무한 스크롤 메소드
+            infiniteHandler($state){    
+               
+                setTimeout(()=>{
+                    //alert("ㅎㅇ")
+             
+                    const temp = [];
+                    const size = this.list.length;
+                    for (let i = size; i< size+3; i++) {
+                        if(this.post[i]!=null){
+                            temp.push(this.post[i]);
+                        }
+                    }
+                    this.list = this.list.concat(temp);
+                    console.log(this.list)
+                    $state.loaded();
+                 
+                    if(this.list.length==this.post.length){
+                        $state.complete();
+                  
+                    }
+                    
+                },1000)
+            },
             //밑은 알람 메소드
             setAlarm(alarm) {
                 this.userAlarmCount = alarm;
             },
-            updateAlarmToFirebase() {       
+            updateAlarmToFirebase() {
                 console.log(this.email + ":" + this.userAlarmCount)
                 fireDB.collection('Alarm').doc(this.email)
                 .set({
@@ -654,10 +669,14 @@
                 userAlarmCount: 0,
                 likelist:[],
                 mynum:0,
-                commentcount:[],
-
-               
+                commentcount:[],         
+                //무한스크롤
+                list:[],
             }
+        },
+        components:{
+            //무한스크롤 구현
+            InfiniteLoading
         }
     }
 </script>

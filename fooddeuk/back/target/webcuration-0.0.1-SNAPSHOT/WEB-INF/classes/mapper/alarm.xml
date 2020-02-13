@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="alarm">
+	
+	<insert id="nonfollowSave" parameterType="alarm">
+		INSERT INTO alarm(sender, receiver, reason, confirm, DATE) 
+		VALUES(#{sender}, #{receiver}, #{reason}, 0, NOW())
+	</insert>
+	
+	<select id="checkFollowAlarm"  parameterType="alarm" resultType="alarm">
+		SELECT * FROM ALARM WHERE RECEIVER=#{receiver} AND SENDER=#{sender} AND CONFIRM=0 AND REASON=1
+	</select>
+	
+	<select id="myalarmList"  parameterType="java.lang.String" resultType="alarm">
+		SELECT * FROM ALARM WHERE RECEIVER=#{num} AND CONFIRM=0 AND REASON=1 ORDER BY DATE DESC
+	</select>
+	
+	<update id="changeConfirm" parameterType="java.lang.Integer">
+		UPDATE ALARM SET CONFIRM=1 WHERE NUM=#{num}
+	</update>
+	
+	<select id="alarmtlist"  parameterType="java.lang.String" resultType="alarm">
+		SELECT * FROM ALARM WHERE RECEIVER=#{mynickname} AND CONFIRM=0 AND REASON!=1 ORDER BY DATE DESC
+	</select>
+	
+ </mapper>

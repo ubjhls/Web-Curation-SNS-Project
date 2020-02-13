@@ -4,6 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="comment">
 
+<<<<<<< HEAD
 	<select id="getAllComment" parameterType="comment" resultType="comment">
 		SELECT * FROM COMMENT WHERE NUM=#{num} ORDER BY DATE
 	</select>
@@ -17,4 +18,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DELETE FROM COMMENT WHERE NUM=#{num} AND AUTHOR=#{author} AND DATE=#{date}
 	</delete>
 	
+=======
+	<select id="getAllComment" parameterType="java.lang.Integer" resultType="comment">
+		select * from comment where postnum=#{postnum} order by date
+	</select>
+	
+	<insert id="insertComment" parameterType="comment">
+		insert into comment(postnum, author, comment, date) 
+		values(#{postnum}, #{author}, #{comment}, now())
+	</insert>
+	
+	<delete id="deleteComment" parameterType="java.lang.Integer">
+		delete from comment where num=#{num}
+	</delete>
+	
+	<select id="getCommentCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count_comment from post where num=#{postnum}
+	</select>
+	
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
  </mapper>

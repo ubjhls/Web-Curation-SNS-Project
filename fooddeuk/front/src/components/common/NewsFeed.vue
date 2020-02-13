@@ -227,7 +227,6 @@
              getUserByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
-                http.get("/user/userinfo/{nickname}?nickname="+nick)
                 .then(Response => {
                
                     this.num = Response.data.num;
@@ -277,15 +276,9 @@
           
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
-                     
-                        if(this.post[index].islike==1){
-                            this.like.push(true)
-                        }else{
-                            this.like.push(false)
-                        }
+            
                         this.likelist.push(this.post[index].count_like);
                         this.coment.push(false)
-
                         this.todolist.push([])
                         this.commentcount.push(this.post[index].count_comment)
                     }

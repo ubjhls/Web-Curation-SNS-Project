@@ -7,6 +7,14 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
+<<<<<<< HEAD
+=======
+			<name>org.eclipse.wst.common.project.facet.core.builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 			<name>org.eclipse.jdt.core.javabuilder</name>
 			<arguments>
 			</arguments>
@@ -31,5 +39,9 @@
 		<nature>org.springframework.ide.eclipse.core.springnature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
+<<<<<<< HEAD
+=======
+		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	</natures>
 </projectDescription>
