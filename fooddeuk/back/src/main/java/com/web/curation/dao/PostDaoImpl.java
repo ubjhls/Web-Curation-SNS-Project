@@ -85,7 +85,11 @@ public class PostDaoImpl {
 	}
 
 	public List<Post> getMyScrapPost(int num) {
-		return sqlSession.selectList(ns + "getMyScrapPost", num);
+		return sqlSession.selectList(ns+"getMyScrapPost", num);
+	}
+	
+	public String getPicture(int num) {
+		return sqlSession.selectOne(ns+"getPicture", num);
 	}
 	
 }

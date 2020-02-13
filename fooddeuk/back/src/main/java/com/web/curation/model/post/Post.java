@@ -28,11 +28,13 @@ public class Post {
 	private int count_comment;
 	private int count_star;
 	private String address;
-	private String image;
+	private String image; // 게시물 사진
+	private int islike;
 	private String type;
 	private int scrapnum;
 	private String nickname;
-	private int islike;
+	private String picture; // 사용자 사진
+	private String scraptitle;
 
 	public Post() {
 		super();
@@ -196,7 +198,31 @@ public class Post {
 	public void setIslike(int islike) {
 		this.islike = islike;
 	}
-	
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+
+	public String getScraptitle() {
+		return scraptitle;
+	}
+
+	public void setScraptitle(String scraptitle) {
+		this.scraptitle = scraptitle;
+	}
+
+	@Override
+	public String toString() {
+		return "Post [num=" + num + ", author=" + author + ", title=" + title + ", content=" + content + ", date="
+				+ date + ", count_like=" + count_like + ", count_comment=" + count_comment + ", count_star="
+				+ count_star + ", address=" + address + ", image=" + image + ", islike=" + islike + ", type=" + type
+				+ ", scrapnum=" + scrapnum + ", nickname=" + nickname + ", picture=" + picture + ", scraptitle="
+				+ scraptitle + "]";
+	}
 
 	
 }

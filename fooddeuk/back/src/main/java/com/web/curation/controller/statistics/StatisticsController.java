@@ -31,7 +31,7 @@ public class StatisticsController {
 		
 		stats.setPost_count(statsService.getPostCount(num));
 		stats.setScrap_count(statsService.getScrapCount(num));
-		stats.setLike_count(statsService.getLikeClickCount(num));
+		stats.setLike_count(statsService.getLikeCount(num));
 		stats.setLikeClick_count(statsService.getLikeClickCount(num));
 		stats.setComment_count(statsService.getCommentCount(num));
 		stats.setCommentWrite_count(statsService.getCommentWriteCount(num));
@@ -59,7 +59,7 @@ public class StatisticsController {
 		
 		stats.setPost_count(statsService.getPostCountForDate(stats));
 		stats.setScrap_count(statsService.getScrapCountForDate(stats));
-		stats.setLike_count(statsService.getLikeClickCountForDate(stats));
+		stats.setLike_count(statsService.getLikeCountForDate(stats));
 		stats.setLikeClick_count(statsService.getLikeClickCountForDate(stats));
 		stats.setComment_count(statsService.getCommentCountForDate(stats));
 		stats.setCommentWrite_count(statsService.getCommentWriteCountForDate(stats));
@@ -67,6 +67,7 @@ public class StatisticsController {
 		result.data = "success";
 		result.object = stats;
 		
+		System.out.println(stats.toString());
 		return result;
 	}
 

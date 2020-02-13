@@ -105,4 +105,9 @@ public class PostServiceImpl implements IPostService {
 		return postdao.getMyScrapPost(num);
 	}
 
+	@Override
+	public String getPicture(int num) {
+		return postdao.getPicture(num);
+	}
+
 }

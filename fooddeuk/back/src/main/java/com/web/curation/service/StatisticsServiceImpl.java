@@ -29,7 +29,7 @@ public class StatisticsServiceImpl implements IStatisticsService {
 
 	@Override
 	public int getLikeClickCount(int num) {
-		return statsdao.getCommentWriteCount(num);
+		return statsdao.getLikeClickCount(num);
 	}
 
 	@Override

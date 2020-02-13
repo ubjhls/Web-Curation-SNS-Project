@@ -1,6 +1,5 @@
 package com.web.curation.controller.post;
 
-import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -99,6 +97,11 @@ public class PostController {
 			if(postlikeService.checkLike(like) != 0) {
 				list.get(i).setIslike(1);
 			}
+			list.get(i).setPicture(postService.getPicture(num));
+			if(list.get(i).getType().equals("스크랩")) {
+				Post temp = postService.getPost(list.get(i).getScrapnum());
+				list.get(i).setScraptitle(temp.getTitle());
+			}
 		}
 		
 		System.out.println(list);
@@ -124,6 +127,14 @@ public class PostController {
 		if(list.size() == 0) {
 			result.data = "failed";
 			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setPicture(postService.getPicture(num));
+			if(list.get(i).getType().equals("스크랩")) {
+				Post temp = postService.getPost(list.get(i).getScrapnum());
+				list.get(i).setScraptitle(temp.getTitle());
+			}
 		}
 		
 		System.out.println(list);
@@ -157,6 +168,11 @@ public class PostController {
 			if(postlikeService.checkLike(like) != 0) {
 				list.get(i).setIslike(1);
 			}
+			list.get(i).setPicture(postService.getPicture(postAuthor));
+			if(list.get(i).getType().equals("스크랩")) {
+				Post temp = postService.getPost(list.get(i).getScrapnum());
+				list.get(i).setScraptitle(temp.getTitle());
+			}
 		}
 		
 		System.out.println(list);
@@ -181,6 +197,12 @@ public class PostController {
 			result.data = "nothing";
 			result.object = list;
 			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		for (int i = 0; i < list.size(); i++) {
+			Post temp = postService.getPost(list.get(i).getScrapnum());
+			list.get(i).setScraptitle(temp.getTitle());
+			list.get(i).setPicture(postService.getPicture(num));
 		}
 		
 		System.out.println(list);
@@ -221,6 +243,11 @@ public class PostController {
 				if(postlikeService.checkLike(like) != 0) {
 					list.get(i).setIslike(1);
 				}
+				list.get(i).setPicture(postService.getPicture(postAuthor));
+				if(list.get(i).getType().equals("스크랩")) {
+					Post ptemp = postService.getPost(list.get(i).getScrapnum());
+					list.get(i).setScraptitle(ptemp.getTitle());
+				}
 			}
 			System.out.println("모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
 		} else {
@@ -236,6 +263,11 @@ public class PostController {
 					if(postlikeService.checkLike(like) != 0) {
 						list.get(i).setIslike(1);
 					}
+					list.get(i).setPicture(postService.getPicture(postAuthor));
+					if(list.get(i).getType().equals("스크랩")) {
+						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScraptitle(ptemp.getTitle());
+					}
 				}
 				System.out.println("그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
 			} else {
@@ -249,6 +281,11 @@ public class PostController {
 					Postlike like = new Postlike(list.get(i).getNum(), num);
 					if(postlikeService.checkLike(like) != 0) {
 						list.get(i).setIslike(1);
+					}
+					list.get(i).setPicture(postService.getPicture(postAuthor));
+					if(list.get(i).getType().equals("스크랩")) {
+						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScraptitle(ptemp.getTitle());
 					}
 				}
 				System.out.println("그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))");
@@ -289,6 +326,13 @@ public class PostController {
 		
 		if(placeArr[0].equals("없음")) {
 			list = postService.getMyFollowingPost(num);
+			for (int i = 0; i < list.size(); i++) {
+				list.get(i).setPicture(postService.getPicture(list.get(i).getAuthor()));
+				if(list.get(i).getType().equals("스크랩")) {
+					Post ptemp = postService.getPost(list.get(i).getScrapnum());
+					list.get(i).setScraptitle(ptemp.getTitle());
+				}
+			}
 			result.object = list;
 			return new ResponseEntity<>(result , HttpStatus.OK);
 		} else if(placeArr[0].equals("전체")) {
@@ -301,6 +345,11 @@ public class PostController {
 				Postlike like = new Postlike(list.get(i).getNum(), num);
 				if(postlikeService.checkLike(like) != 0) {
 					list.get(i).setIslike(1);
+				}
+				list.get(i).setPicture(postService.getPicture(postAuthor));
+				if(list.get(i).getType().equals("스크랩")) {
+					Post ptemp = postService.getPost(list.get(i).getScrapnum());
+					list.get(i).setScraptitle(ptemp.getTitle());
 				}
 			}
 			System.out.println("모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
@@ -317,6 +366,11 @@ public class PostController {
 					if(postlikeService.checkLike(like) != 0) {
 						list.get(i).setIslike(1);
 					}
+					list.get(i).setPicture(postService.getPicture(postAuthor));
+					if(list.get(i).getType().equals("스크랩")) {
+						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScraptitle(ptemp.getTitle());
+					}
 				}
 				System.out.println("그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
 			} else {
@@ -330,6 +384,11 @@ public class PostController {
 					Postlike like = new Postlike(list.get(i).getNum(), num);
 					if(postlikeService.checkLike(like) != 0) {
 						list.get(i).setIslike(1);
+					}
+					list.get(i).setPicture(postService.getPicture(postAuthor));
+					if(list.get(i).getType().equals("스크랩")) {
+						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScraptitle(ptemp.getTitle());
 					}
 				}
 				System.out.println("그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))");

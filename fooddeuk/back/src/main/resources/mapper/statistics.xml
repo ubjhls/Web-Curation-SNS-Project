@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="getLikeClickCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-		select sum(liker) from postlike where liker=#{num}
+		select count(*) from postlike where liker=#{num}
 	</select>
 	
 	<select id="getCommentCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="getLikeClickCountForDate" parameterType="stats" resultType="java.lang.Integer">
-		select sum(liker) from postlike where liker=#{num} and year(date)=#{year} and month(date)=#{month}
+		select count(*) from postlike where liker=#{num} and year(date)=#{year} and month(date)=#{month}
 	</select>
 	
 	<select id="getCommentCountForDate" parameterType="stats" resultType="java.lang.Integer">

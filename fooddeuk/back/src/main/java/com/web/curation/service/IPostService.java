@@ -24,4 +24,5 @@ public interface IPostService {
 	List<Post> getMyMainPost(Curation curation);
 	int updatePost(Post post);
 	List<Post> getMyScrapPost(int num);
+	String getPicture(int num);
 }

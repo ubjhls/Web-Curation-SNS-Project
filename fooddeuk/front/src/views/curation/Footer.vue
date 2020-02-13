@@ -1,28 +1,28 @@
 <template>
-    <div>
-        <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-         <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-          <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-           <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-            <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-             <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-              <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-               <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                 <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                  <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                   <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                    <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                     <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                      <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                      <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                       <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                        <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                         <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-                          <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-
-       
+    <div class="footer">
+        <button class="footer_btn" @click="clickNavi">
+            <img v-if="!menu.isNavi" src="../../assets/images/menu.png" style="height:100%;">
+            <img v-if="menu.isNavi" src="../../assets/images/menuFill.png" style="height:100%;">
+        </button>
+        <button class="footer_btn" @click="clickHome" :disabled="menu.isNavi">
+            <img v-if="!menu.isHome" src="../../assets/images/home.png" style="height:100%;">
+            <img v-if="menu.isHome" src="../../assets/images/homeFill.png" style="height:100%;">
+        </button>
+        <button class="footer_btn" @click="clickNewFeed" :disabled="menu.isNavi">
+            <img v-if="!menu.isAdd" src="../../assets/images/Add.png" style="height:100%;">
+            <img v-if="menu.isAdd" src="../../assets/images/AddFill.png" style="height:100%;">
+        </button>
+        <button class="footer_btn" @click="clickProfile" :disabled="menu.isNavi">
+            <img v-if="!menu.isProfile" src="../../assets/images/profile.png" style="height:100%;">
+            <img v-if="menu.isProfile" src="../../assets/images/profileFill.png" style="height:100%;">
+        </button>
+        <button class="footer_btn" @click="clickAlarm" :disabled="menu.isNavi">
+            <v-chip class="alarmChip" x-small style="background-color:red;color:white;" v-if="alarm!=0">{{this.alarm}}</v-chip>
+            <img class="alarm_btn" v-if="!menu.isAlarm" src="../../assets/images/alarm.png">
+            <img class="alarm_btn" v-if="menu.isAlarm" src="../../assets/images/alarmFill.png">
+        </button>
     </div>
+
 </template>
 
 <script>
@@ -46,7 +46,13 @@
 
     export default {
         components: {
-
+            NewsFeed,
+            NavigationBar,
+            AlarmPage,
+            MyFeed,
+            AddFeed,
+            Searchname,
+            UserFeed
         },
         created() {
             this.component = this;
