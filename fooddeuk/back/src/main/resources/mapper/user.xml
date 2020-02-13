@@ -9,7 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="findUserByEmailAndPassword" parameterType="user" resultType="user">
-		select num, email, nickname, name, password, intro, auth, confirm, social from user where email=#{email} and password=#{password} and social=0
+		select num, email, nickname, name, password, intro, auth, confirm, social from user where email=#{email} and social=0
 	</select>
 	
 	<insert id="signUp" parameterType="user">
@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<update id="successJoin" parameterType="java.lang.String">
-		update user set confirm='y' where email=#{email}
+		update user set confirm='Y' where email=#{email}
 	</update>
 
 	<select id="getNumByEmail" parameterType="java.lang.String" resultType="java.lang.Integer">
