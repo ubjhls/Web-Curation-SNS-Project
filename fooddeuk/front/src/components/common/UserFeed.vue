@@ -15,7 +15,7 @@
                             <button class="profile-card__button button--orange" @click="followgo()">Follow</button>
                         </div>
                         <div class="profile-card-ctr" v-if="isfollow==1">
-
+ 
                             <button class="profile-card__button button--gray" @click="unfollowgo()">UnFollow</button>
                         </div>
 
@@ -234,7 +234,7 @@
                 Object
                 .values(this.error)
                 .map(v => {
-                    if (v) 
+                    if (v)
                         isSubmit = false;
                     }
                 )
@@ -481,11 +481,11 @@
                     .catch(Error => {
                         console.log(Error)
                     })
-
+                    
                     //댓글 초기화
                     this.newcomment=''
                 })
-
+                
             },
             removeComent(num, cmt, index){
   
@@ -495,7 +495,7 @@
                   
                     this.$delete(this.todolist[index],0);
                     this.todolist[index].push(response.data.object)
-
+                    
                     //댓글 수 갱신
                     http.get("/comment/count?postnum="+num)
                     .then(Response => {
@@ -572,7 +572,7 @@
             setAlarm(alarm) {
                 this.userAlarmCount = alarm;
             },
-            updateAlarmToFirebase() {
+            updateAlarmToFirebase() {       
                 console.log(this.email + ":" + this.userAlarmCount)
                 fireDB.collection('Alarm').doc(this.email)
                 .set({
