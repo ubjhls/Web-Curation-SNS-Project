@@ -8,13 +8,13 @@
                         <div class="profile-card__txt">{{intro}}</div>
 
 
-                        <div class="profile-card-inf">
-                            <div class="profile-card-inf__item">
-                                <div class="profile-card-inf__title">{{follower}}</div>
-                                <div class="profile-card-inf__txt">Followers</div>
-                            </div>
+                    <div class="profile-card-inf">
+                        <div class="profile-card-inf__item" @click="goFollowerPage">
+                            <div class="profile-card-inf__title">{{follower}}</div>
+                            <div class="profile-card-inf__txt">Followers</div>
+                        </div>
 
-                        <div class="profile-card-inf__item">
+                        <div class="profile-card-inf__item" @click="goFollowingPage">
                             <div class="profile-card-inf__title">{{following}}</div>
                             <div class="profile-card-inf__txt">Following</div>
                         </div>
@@ -352,6 +352,12 @@
                     })
 
                 }
+            },
+            goFollowerPage() {
+                this.$router.push({name : 'FollowPage'})
+            },
+            goFollowingPage() {
+                this.$router.push({name : 'FollowingPage'})
             },
             toggleadd(num, index) { //좋아요를 클릭할때
                this.likelist[index]++;

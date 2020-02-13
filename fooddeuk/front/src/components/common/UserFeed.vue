@@ -1,4 +1,7 @@
 <template>
+<!-- <v-app data-app> -->
+
+
     <div class="wrapC">
         <div class="wrapper">
             <div class="profile-card js-profile-card">
@@ -12,21 +15,21 @@
                             <button class="profile-card__button button--orange" @click="followgo()">Follow</button>
                         </div>
                         <div class="profile-card-ctr" v-if="isfollow==1">
-
+ 
                             <button class="profile-card__button button--gray" @click="unfollowgo()">UnFollow</button>
                         </div>
 
                         <div class="profile-card-inf">
                             <div class="profile-card-inf__item">
                                 <div class="profile-card-inf__title">{{follower}}</div>
-                                <div class="profile-card-inf__txt">Followers</div>
+                                <div class="profile-card-inf__txt" style="color:black">Followers</div>
                             </div>
 
-                        <div class="profile-card-inf__item">
-                            <div class="profile-card-inf__title">{{following}}</div>
-                            <div class="profile-card-inf__txt">Following</div>
-                        </div>
-                    </div> 
+                            <div class="profile-card-inf__item">
+                                <div class="profile-card-inf__title">{{following}}</div>
+                                <div class="profile-card-inf__txt" style="color:black">Following</div>  
+                            </div>
+                        </div> 
                 </div>
             </div>
 
@@ -36,21 +39,35 @@
             </div>
             <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
-                  <div v-for="(item,index) in post" v-bind:key="item.num">
+                  <div v-for="(item,index) in post" v-bind:key="item.num">  
                     <v-card
                             max-width="100%"
                             class="mx-auto"
-                            style="margin-bottom:100px"
+                            style="margin-bottom:100px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title class="headline">{{item.title}}
-                        <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
-                        <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                            <!-- <v-menu offset-y style="float:right;">
+                            <template v-slot:activator="{ on }">
+                                <v-btn icon v-on="on" style="float:right">
+                                    <v-icon>mdi-dots-vertical</v-icon>
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item>
+                                    <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
+                                </v-list-item>
+                                <v-list-item>
+                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                </v-list-item>
+                            </v-list>
+                            </v-menu> -->
                         </v-list-item-title>
 
-                        <v-list-item-subtitle style="width:50px">{{nickname}} <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
+                        <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
+                         <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
                         <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->
                         </v-list-item-content>
                         </v-list-item>
@@ -65,7 +82,8 @@
                             <br>
                             <v-card-text>
                                 {{item.content}}
-                                <img v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+                                
+                                <img v-if="item.image!=='null'" v-bind:src="item.image"  style="width:100%; heigh:auto; ">
                             <br>
                             <br><br><hr><br>
                             주소 : {{item.address}} 
@@ -85,7 +103,7 @@
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
                         <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
-                        <button><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
+                        <button @click="scrapfeed(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
 
                         </div>
                         <br>
@@ -113,7 +131,7 @@
 
                         <div v-if="coment[index]===true">
                             <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
-                                <div style="margin-bottom:5px" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
                                     <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
                                     <h5 style="float:left; ">{{ cmts.comment }} 
                                     </h5>
@@ -140,6 +158,7 @@
             </div>
         </div>
     </div>
+    <!-- </v-app> -->
 </template>
 
 
@@ -176,7 +195,6 @@
             }
 
             this.nickname = this.propsNickname;
-
             //포스트 불러오기
             this.getUserByNickname(this.nickname);
 
@@ -202,13 +220,14 @@
                 Object
                 .values(this.error)
                 .map(v => {
-                    if (v) 
+                    if (v)
                         isSubmit = false;
                     }
                 )
                 this.isSubmit = isSubmit;
             },
             getTime(time) {
+                moment.locale('ko')
                 return moment(time).fromNow();
             },
              getUserByNickname(nick) {
@@ -221,7 +240,6 @@
                     this.intro = Response.data.intro;
                     this.email = Response.data.email;
                     this.auth = Response.data.auth;
-                
                     //팔로잉 내역 불러오기
                     this.getFollowing(this.email);
                     //팔로워 내역 불러오기
@@ -260,8 +278,7 @@
 
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
-                   
-                    this.post = Response.data.object; 
+                    this.post = Response.data.object;
           
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
@@ -278,7 +295,7 @@
                         this.commentcount.push(this.post[index].count_comment)
                     }
 
-            
+                    
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -348,7 +365,6 @@
                     
                     http.post("/follow/nonfollow", form)
                     .then(Response => {
-                        console.log(Response)
                         if(Response.data==='success') {
                             this.updateAlarmToFirebase();
                             alert("팔로우가 요청되었습니다.")
@@ -395,16 +411,14 @@
                 })
             },
             commentview(num,index){ //댓글 버튼 누를 때
-           
             //댓글 불러오기
             if(this.coment[index]==false){
-                    http.get('/comment/comment?num='+num)
+                    http.get('/comment/comment?postnum='+num)
                 .then(response => {
-                    
                     if(response.data.object!=null){
                         this.todolist[index].push(response.data.object)
                     } 
-                    
+                
                    
                 })
                 .catch(Error => {
@@ -420,7 +434,7 @@
                 this.$set(this.coment,index,!this.coment[index])
 
                 //댓글 수 갱신
-                    http.get("/comment/count?num="+num)
+                    http.get("/comment/count?postnum="+num)
                     .then(Response => {
                         
                         this.$set(this.commentcount,index,Response.data)
@@ -429,14 +443,14 @@
                     .catch(Error => {
                         console.log(Error)
                     })
+                    
             }
             ,
             addcomment(num,index) {
-                
                 let form = new FormData()
                 form.append('comment', this.newcomment)
                 form.append('email', this.$store.state.userinfo.email)
-                form.append('num', num)
+                form.append('postnum', num)
                 http.post("/comment/comment", form)
                 .then(response => {
                    
@@ -445,31 +459,30 @@
                     this.todolist[index].push(response.data.object)
 
                     //댓글 수 갱신
-                    http.get("/comment/count?num="+num)
+                    http.get("/comment/count?postnum="+num)
                     .then(Response => {
                     
                         this.$set(this.commentcount,index,Response.data)
-       
                     })
                     .catch(Error => {
                         console.log(Error)
                     })
-
+                    
                     //댓글 초기화
                     this.newcomment=''
                 })
-
+                
             },
             removeComent(num, cmt, index){
-                
-                http.delete("/comment/comment?num=" + cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
+                console.log(this.todolist)
+                http.delete("/comment/comment?num=" + cmt.num + "&postnum=" + num)
                 .then(response => {
                     //댓글 삭제(갱신까지)
                     this.$delete(this.todolist[index],0);
                     this.todolist[index].push(response.data.object)
-
+                    
                     //댓글 수 갱신
-                    http.get("/comment/count?num="+num)
+                    http.get("/comment/count?postnum="+num)
                     .then(Response => {
                         
                         this.$set(this.commentcount,index,Response.data)
@@ -481,23 +494,39 @@
                 })
                 .catch(Error =>{
                 })
+ 
+                
             },
             
             removeFeed(num){
-                console.log(num)
-                 http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
-                .then(response => {
-                    alert('게시물이 삭제되었습니다.')
-                    console.log(response.data)
-                    this.post = response.data.object
-                    
-                })
+                 if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+                    http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
+                    .then(response => {
+                        alert('게시물이 삭제되었습니다.')
+                        console.log(response.data)
+                        this.post = response.data.object
+                        
+                    })
                 .catch(Error =>{
                 })
+
+                }else{   //취소
+
+                    return false;
+
+                }
+                //  http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
+                // .then(response => {
+                //     alert('게시물이 삭제되었습니다.')
+                //     console.log(response.data)
+                //     this.post = response.data.object
+                    
+                // })
+                // .catch(Error =>{
+                // })
             },
             updateFeed(num, title, content, count_star, address, image){
                 var router = this.$router
-                console.log(image)
                  router.push({
                     name: "UpdateFeed",
                     params: {
@@ -515,7 +544,7 @@
             setAlarm(alarm) {
                 this.userAlarmCount = alarm;
             },
-            updateAlarmToFirebase() {
+            updateAlarmToFirebase() {       
                 console.log(this.email + ":" + this.userAlarmCount)
                 fireDB.collection('Alarm').doc(this.email)
                 .set({
@@ -568,11 +597,24 @@
                 })
                 alert("댓글이 등록되었습니다.")
                
+            },
+            scrapfeed(num,idx) {
+                let form = new FormData()
+                form.append('postnum', num)
+                form.append('num',this.$store.state.userinfo.num)
+                http.post("/post/scrap", form)
+                .then(Response => {
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
             }
            
         },
         data: () => {
             return {
+                dialog: false,
+                usernum:0,
                 isSubmit: false,
                 error:{
                     comment:false
@@ -604,10 +646,14 @@
         }
     }
 </script>
-<style>
+<style lang="scss" scoped>
+#app {
+    position:relative;
+    background-color: #ffffff;
+}
 p {
-
     margin-left:5px;
+    margin-bottom:1px;
     color: gray;
     font-size:12px;
 }
