@@ -36,7 +36,9 @@
             </div>
             <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
-                  <div v-for="(item,index) in post" v-bind:key="item.num">
+            
+                  <div v-for="(item,index) in list" v-bind:key="item.num">
+                    
                     <v-card
                             max-width="100%"
                             class="mx-auto"
@@ -48,7 +50,7 @@
                         <v-list-item-title class="headline">{{item.title}}
                         <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
                         <button style="float:right" @click="removeFeed(item.num)">삭제</button>
-                        </v-list-item-title> 
+                        </v-list-item-title>
 
                         <v-list-item-subtitle style="width:50px">{{nickname}} <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
                         <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->
@@ -134,12 +136,12 @@
                             </div>
                         </div>
                     </div>
-                    
                     </v-card>
                 </div>
+                <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
             </div>
-        </div>
-    </div>
+        </div>  
+    </div> 
 </template>
 
 
@@ -156,7 +158,8 @@
     import http from '../../../http-common'
     import NavigationBar from '../../components/common/NavigationBar'
     import {fireDB} from '../../main'
-    
+    import InfiniteLoading from 'vue-infinite-loading';
+
 
     export default {
         name: 'App',
@@ -182,6 +185,7 @@
 
             //검색한 사용자와 팔로잉 체크
             this.followcheck(this.nickname);
+          
         },
         watch : {
             newcomment: function(v) {
@@ -257,12 +261,12 @@
             getPostByNum(num) { //포스트가져오기
                 let form = new FormData()
                 form.append('num', num)
-
+                
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                    
                     this.post = Response.data.object; 
-          
+               
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
                      
@@ -393,12 +397,13 @@
                 .catch(Error => {
                      console.log(Error)
                 })
+
             },
             commentview(num,index){ //댓글 버튼 누를 때
-           
+          
             //댓글 불러오기
             if(this.coment[index]==false){
-                    http.get('/comment/comment?num='+num)
+                    http.get('/comment/comment?postnum='+num )
                 .then(response => {
                     
                     if(response.data.object!=null){
@@ -407,8 +412,7 @@
                     
                    
                 })
-                .catch(Error => {
-                    console.log(Error)
+                .catch(Error =>{
                 })
 
             // //댓글 숨기기
@@ -420,7 +424,7 @@
                 this.$set(this.coment,index,!this.coment[index])
 
                 //댓글 수 갱신
-                    http.get("/comment/count?num="+num)
+                    http.get("/comment/count?postnum="+num)
                     .then(Response => {
                         
                         this.$set(this.commentcount,index,Response.data)
@@ -436,7 +440,7 @@
                 let form = new FormData()
                 form.append('comment', this.newcomment)
                 form.append('email', this.$store.state.userinfo.email)
-                form.append('num', num)
+                form.append('postnum', num)
                 http.post("/comment/comment", form)
                 .then(response => {
                    
@@ -445,7 +449,7 @@
                     this.todolist[index].push(response.data.object)
 
                     //댓글 수 갱신
-                    http.get("/comment/count?num="+num)
+                    http.get("/comment/count?postnum="+num)
                     .then(Response => {
                     
                         this.$set(this.commentcount,index,Response.data)
@@ -461,15 +465,16 @@
 
             },
             removeComent(num, cmt, index){
-                
-                http.delete("/comment/comment?num=" + cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
+  
+                http.delete("/comment/comment?postnum=" + num + "&num="+ cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
                 .then(response => {
                     //댓글 삭제(갱신까지)
+                  
                     this.$delete(this.todolist[index],0);
                     this.todolist[index].push(response.data.object)
 
                     //댓글 수 갱신
-                    http.get("/comment/count?num="+num)
+                    http.get("/comment/count?postnum="+num)
                     .then(Response => {
                         
                         this.$set(this.commentcount,index,Response.data)
@@ -510,7 +515,30 @@
                     }
                 });
             },
-
+            // //무한 스크롤 메소드
+            infiniteHandler($state){    
+               
+                setTimeout(()=>{
+                    //alert("ㅎㅇ")
+             
+                    const temp = [];
+                    const size = this.list.length;
+                    for (let i = size; i< size+3; i++) {
+                        if(this.post[i]!=null){
+                            temp.push(this.post[i]);
+                        }
+                    }
+                    this.list = this.list.concat(temp);
+                    console.log(this.list)
+                    $state.loaded();
+                 
+                    if(this.list.length==this.post.length){
+                        $state.complete();
+                  
+                    }
+                    
+                },1000)
+            },
             //밑은 알람 메소드
             setAlarm(alarm) {
                 this.userAlarmCount = alarm;
@@ -598,9 +626,16 @@
                 likelist:[],
                 mynum:0,
                 commentcount:[],
-
+                
+                //무한스크롤
+                list:[],
+                
                
             }
+        },
+        components:{
+            //무한스크롤 구현
+            InfiniteLoading
         }
     }
 </script>
@@ -611,4 +646,5 @@ p {
     color: gray;
     font-size:12px;
 }
+
 </style>
