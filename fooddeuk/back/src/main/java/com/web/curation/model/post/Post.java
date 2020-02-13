@@ -11,7 +11,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+<<<<<<< HEAD
 @NoArgsConstructor
+=======
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 @AllArgsConstructor
 public class Post {
 	@Id
@@ -29,8 +32,11 @@ public class Post {
 	private String image;
 	private String type;
 	private int scrap_author;
+<<<<<<< HEAD
+=======
 	private String nickname;
 	private int mynum;
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	private int islike;
 
 	public Post() {
@@ -164,6 +170,8 @@ public class Post {
 	public void setScrap_author(int scrap_author) {
 		this.scrap_author = scrap_author;
 	}
+<<<<<<< HEAD
+=======
 	public String getNickname() {
 		return nickname;
 	}
@@ -176,14 +184,22 @@ public class Post {
 	public void setMynum(int mynum) {
 		this.mynum = mynum;
 	}
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 
 	@Override
 	public String toString() {
 		return "Post [num=" + num + ", author=" + author + ", title=" + title + ", content=" + content + ", date="
 				+ date + ", count_like=" + count_like + ", count_comment=" + count_comment + ", count_star="
+<<<<<<< HEAD
+				+ count_star + ", address=" + address + ", image=" + image + ", islike=" + islike + "]";
+	}
+	
+
+=======
 				+ count_star + ", address=" + address + ", image=" + image + ", type=" + type + ", scrap_author="
 				+ scrap_author + ", nickname=" + nickname + ", mynum=" + mynum + ", islike=" + islike + "]";
 	}
 	
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	
 }

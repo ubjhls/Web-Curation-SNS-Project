@@ -1,4 +1,7 @@
 <template>
+<v-app data-app>
+
+
     <div class="wrapC">
         <div class="wrapper">
             <div class="profile-card js-profile-card">
@@ -28,40 +31,70 @@
             </div>
             <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
-                  <div v-for="(item,index) in post" v-bind:key="item.num">
-                    <v-card
+                 <div v-for="(item,index) in post" v-bind:key="item.num">  
+                <div v-if="item.type==='스크랩'">
+                     <v-card
                             max-width="100%"
                             class="mx-auto"
-                            style="margin-bottom:100px"
+                            style="margin-bottom:100px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title class="headline">{{item.title}}</v-list-item-title>
-                        <v-list-item-subtitle style="width:50px">{{nickname}} <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
-                        <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                            <v-menu offset-y style="float:right;">
+                            <template v-slot:activator="{ on }">
+                                <v-btn icon v-on="on" style="float:right">
+                                    <v-icon>mdi-dots-vertical</v-icon>
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item>
+                                    <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
+                                </v-list-item>
+                                <v-list-item>
+                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                </v-list-item>
+                            </v-list>
+                            </v-menu>
+                        </v-list-item-title>
+
+                        <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
+
+                         <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> 
+                         </v-list-item-subtitle>
                         </v-list-item-content>
                         </v-list-item>
-                            <v-col cols="12" sm="3">
-                                <div v-for="star in item.count_star" :key="star.num">
-                                    <v-icon style="color:red; float : left">mdi-star</v-icon>
-                                </div>
-                                <div v-for="star in (5-item.count_star)" :key="star.num">
-                                    <v-icon style="float : left">mdi-star</v-icon>
-                                </div>
-                            </v-col>
-                            <br>
-                            <v-card-text>
-                                {{item.content}}
-                                <br>
-                                <img v-bind:src="item.image"  style="width:100%; heigh:auto; ">
-        <br>
+                            <div style="margin-left:20px; margin-bottom:20px">
+                                {{ item.content }}<br>
+                            </div>
+                        <p style="text-align:center">
+                            <v-card style="margin-left:13px; width:90%; height:100%; text-align:center">
+                                <v-img 
+                                v-if="item.image!==null"
+                                style="width:100%;"
+                                :src="item.image"
+                                class="white--text align-end"
+                                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                                >
+                                <v-card-title v-text="item.scraptitle"></v-card-title>
+                                </v-img>
+                                <v-img 
+                                v-if="item.image==null"
+                                style="width:100%;"
+                                src="../../assets/images/noimage.png"  
+                                class="white--text align-end"
+                                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                                >
+                                <v-card-title v-text="item.scraptitle"></v-card-title>
+                                </v-img>
 
-                        
-                            <br><br><hr><br>
-                            주소 : {{item.address}} 
-                            </v-card-text>
-                            <hr>
+
+                                <v-card-actions>
+                                <v-spacer></v-spacer>
+                                </v-card-actions>
+                            </v-card>
+                        </p>
                         <v-spacer></v-spacer>
 
                     <div style="width:100%">
@@ -76,7 +109,7 @@
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
                         <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
-                        <button><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
+                        <button @click="scrapfeed(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
 
                         </div>
                         <br>
@@ -99,19 +132,17 @@
                         </div>
 
                         <p>
-                            {{ item.count_comment }} 개의 댓글이 있습니다.
+                            {{ commentcount[index] }} 개의 댓글이 있습니다.
                         </p>
 
                         <div v-if="coment[index]===true">
-                            <div v-for="cmt in todolist" v-bind:key="cmt.date" >
-                                <div v-if="cmt[0].num==item.num">
-                                    <div style="margin-bottom:5px" v-for="cmts in cmt" v-bind:key="cmts.date" >
-                                        <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                        <h5 style="float:left; ">{{ cmts.comment }} 
-                                        </h5>
-                                        <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
-                                        <br>
-                                    </div>                
+                            <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
+                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <h5 style="float:left; ">{{ cmts.comment }} 
+                                    </h5>
+                                    <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>                 
                                 </div>
                             </div>
                   
@@ -129,10 +160,132 @@
                     </div>
                     
                     </v-card>
+
+
+                </div>
+
+                <div v-if="item.type==='일반'">
+                    <v-card
+                            max-width="100%"
+                            class="mx-auto"
+                            style="margin-bottom:100px; position:relative"
+                    >
+                    <v-list-item>
+                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-content style="padding-left:5%">
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                            <v-menu offset-y style="float:right;">
+                            <template v-slot:activator="{ on }">
+                                <v-btn icon v-on="on" style="float:right">
+                                    <v-icon>mdi-dots-vertical</v-icon>
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item>
+                                    <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
+                                </v-list-item>
+                                <v-list-item>
+                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                </v-list-item>
+                            </v-list>
+                            </v-menu>
+                        </v-list-item-title>
+
+                        <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
+
+                         <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
+                        </v-list-item-content>
+                        </v-list-item>
+                            <v-col cols="12" sm="3">
+                                <div v-for="star in item.count_star" :key="star.num">
+                                    <v-icon style="color:red; float : left">mdi-star</v-icon>
+                                </div>
+                                <div v-for="star in (5-item.count_star)" :key="star.num">
+                                    <v-icon style="float : left">mdi-star</v-icon>
+                                </div>
+                            </v-col>
+                            <br>
+                            <v-card-text>
+                                {{item.content}}
+                                
+                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+                            <br>
+                            <br><br><hr><br>
+                            주소 : {{item.address}} 
+                            </v-card-text>
+                            <hr>
+                        <v-spacer></v-spacer>
+
+                    <div style="width:100%">
+                    <div style="margin-bottom:10px; margin-top:10px; padding-left:5px">
+                        <div style="width:33%; float:left;">
+
+                        <button class="animated rubberBand" v-if="like[index]===true" @click="toggledelete(item.num, index)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
+                        <button v-if="like[index]===false" @click="toggleadd(item.num, index)"><img class="animated rubberBand" style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
+                        </div>
+                        <div style="width:33%; float:left; text-align:center; margin-top:3px">
+
+                        <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
+                        </div>
+                        <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
+                        <button @click="scrapfeed(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
+
+                        </div>
+                        <br>
+                    </div>
+                    <br>
+                  
+                        <div v-if="like[index]===true">
+                            <p v-if="likelist[index] === 1">
+                                {{nick}}님<span>이 좋아합니다.</span>
+                            </p>
+                            <p v-else>
+                                {{nick}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
+                            </p>
+                        </div>
+
+                        <div v-if="like[index]===false">
+                            <p>
+                                {{ likelist[index] }} 명이 좋아합니다
+                            </p>
+                        </div>
+
+                        <p style="margin-bottom:3px">
+                            {{ commentcount[index] }} 개의 댓글이 있습니다.
+                        </p>
+
+                        <div v-if="coment[index]===true">
+                            <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
+                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <h5 style="float:left; ">{{ cmts.comment }} 
+                                    </h5>
+                                    <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>                 
+                                </div>
+                            </div>
+                  
+                            <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                                <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
+                                :disabled="!isSubmit"
+                                :class="{disabled : !isSubmit}"
+                                >댓글달기</button>
+                            </div>
+                            <div style="margin-left:5px; width:60%;">
+                                <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
+                                </v-text-field>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    </v-card>
+                
                 </div>
             </div>
         </div>
     </div>
+    </div>
+    </v-app>
 </template>
 
 
@@ -169,7 +322,6 @@
             }
 
             this.nickname = this.propsNickname;
-
             //포스트 불러오기
             this.getUserByNickname(this.nickname);
 
@@ -195,13 +347,14 @@
                 Object
                 .values(this.error)
                 .map(v => {
-                    if (v) 
+                    if (v)
                         isSubmit = false;
                     }
                 )
                 this.isSubmit = isSubmit;
             },
             getTime(time) {
+                moment.locale('ko')
                 return moment(time).fromNow();
             },
              getUserByNickname(nick) {
@@ -253,11 +406,11 @@
 
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
-                   
-                    this.post = Response.data.object; 
-                    console.log(this.post)
+                    this.post = Response.data.object;
+
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
+                     
                         if(this.post[index].islike==1){
                             this.like.push(true)
                         }else{
@@ -265,10 +418,12 @@
                         }
                         this.likelist.push(this.post[index].count_like);
                         this.coment.push(false)
-                        
+
+                        this.todolist.push([])
+                        this.commentcount.push(this.post[index].count_comment)
                     }
-                   
-            
+
+                    
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -338,7 +493,6 @@
                     
                     http.post("/follow/nonfollow", form)
                     .then(Response => {
-                        console.log(Response)
                         if(Response.data==='success') {
                             this.updateAlarmToFirebase();
                             alert("팔로우가 요청되었습니다.")
@@ -403,76 +557,117 @@
                     console.log(Error)
                 })
 
-            //댓글 숨기기
-            }else if(this.coment[index]==true){
-                    for (let index = 0; index < this.todolist.length; index++) {
-                        if(this.todolist[index][0].num==num){
-                            this.$delete(this.todolist,index);
-                        }   
-                    }
+            // //댓글 숨기기
+             }
+            else if(this.coment[index]==true){
+                 
+                    this.$delete(this.todolist[index],0);
                 }
-
                 this.$set(this.coment,index,!this.coment[index])
+
+                //댓글 수 갱신
+                    http.get("/comment/count?postnum="+num)
+                    .then(Response => {
+                        
+                        this.$set(this.commentcount,index,Response.data)
+                        
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+                    
             }
             ,
             addcomment(num,index) {
+
                 let form = new FormData()
                 form.append('comment', this.newcomment)
                 form.append('email', this.$store.state.userinfo.email)
-                form.append('num', num)
+                form.append('postnum', num)
                 http.post("/comment/comment", form)
                 .then(response => {
                    
-                    //댓글 재등록
-                    this.commentview(num, index);
-                    this.commentview(num, index);
-                   
+                    //댓글 등록
+                    this.$delete(this.todolist[index],0);
+                    this.todolist[index].push(response.data.object)
+
+                    //댓글 수 갱신
+                    http.get("/comment/count?postnum="+num)
+                    .then(Response => {
+                    
+                        this.$set(this.commentcount,index,Response.data)
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+                    
                     //댓글 초기화
                     this.newcomment=''
-
-                    //댓글 수 갱신하기
-                    this.refresh();
-
                 })
-
-            },
-            refresh(){ //댓글 수 갱신하기
-
-                http.get("/post/post/{num}?num="+this.num + '&email=' + this.$store.state.userinfo.email)
-                .then(Response => {
-                   
-                    this.post = Response.data.object; 
-    
-            
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
+                
             },
             removeComent(num, cmt, index){
-                
-                http.delete("/comment/comment?num=" + cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
+                http.delete("/comment/comment?num=" + cmt.num + "&postnum=" + num)
                 .then(response => {
-
-                    //삭제 완료시 댓글창, 댓글수 바로 갱신
-     
-                    this.commentview(num, index);
-                    this.commentview(num, index);
-                
-
-                    this.refresh();
+                    //댓글 삭제(갱신까지)
+                    this.$delete(this.todolist[index],0);
+                    this.todolist[index].push(response.data.object)
                     
+                    //댓글 수 갱신
+                    http.get("/comment/count?postnum="+num)
+                    .then(Response => {
+                        
+                        this.$set(this.commentcount,index,Response.data)
+                        
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
                 })
                 .catch(Error =>{
                 })
+ 
+                
+            },
+            
+            removeFeed(num){
+                 if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+                    http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
+                    .then(response => {
+                        alert('게시물이 삭제되었습니다.')
+                        this.post = response.data.object
+                        
+                    })
+                .catch(Error =>{
+                })
+
+                }else{   //취소
+
+                    return false;
+
+                }
+
+            },
+            updateFeed(num, title, content, count_star, address, image){
+                var router = this.$router
+                 router.push({
+                    name: "UpdateFeed",
+                    params: {
+                        "num": num,
+                        "title": title,
+                        "content": content,
+                        "address": address,
+                        "count_star": count_star,
+                        "image": image
+                    }
+                });
             },
 
             //밑은 알람 메소드
             setAlarm(alarm) {
                 this.userAlarmCount = alarm;
             },
-            updateAlarmToFirebase() {
-                console.log(this.email + ":" + this.userAlarmCount)
+            updateAlarmToFirebase() {       
                 fireDB.collection('Alarm').doc(this.email)
                 .set({
                     count : this.userAlarmCount + 1
@@ -511,12 +706,6 @@
                 http.get("/comment/comment?num=" + num)
                 .then(response => {
                     this.comment = response.data.object
-                    // for(this.i=0; this.i< this.comment.length; this.i++){
-                    //     if (this.comment[this.i].num==num){
-                    //         alert('asd')
-                    //         this.comments.push(this.comment[this.i].comment)
-                    //     }
-                    // }
                     
                 })
                 .catch(Error => {
@@ -524,11 +713,23 @@
                 })
                 alert("댓글이 등록되었습니다.")
                
+            },
+            scrapfeed(num,idx) {
+                let form = new FormData()
+                form.append('postnum', num)
+                form.append('num',this.$store.state.userinfo.num)
+                http.post("/post/scrap", form)
+                .then(Response => {
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
             }
            
         },
         data: () => {
             return {
+                usernum:0,
                 isSubmit: false,
                 error:{
                     comment:false
@@ -553,14 +754,17 @@
                 userAlarmCount: 0,
                 likelist:[],
                 mynum:0,
-                
+                commentcount:[],
+
+               
             }
         }
     }
 </script>
-<style>
-p {
+<style lang="scss" scoped>
+#app p {
     margin-left:5px;
+    margin-bottom: 1px;
     color: gray;
     font-size:12px;
 }

@@ -23,12 +23,19 @@ public class CommentDaoImpl {
 		return sqlSession.insert(ns+"insertComment", comment);
 	}
 	
+<<<<<<< HEAD
 	public int deleteComment(Comment comment) {
 		return sqlSession.delete(ns+"deleteComment", comment);
+	}
+
+=======
+	public int deleteComment(int num) {
+		return sqlSession.delete(ns+"deleteComment", num);
 	}
 
 	public int getCommentCount(int num) {
 		return sqlSession.selectOne(ns+"getCommentCount", num);
 	}
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	
 }

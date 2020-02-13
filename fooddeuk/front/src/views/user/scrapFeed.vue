@@ -1,117 +1,19 @@
 <template>
-    <div class="wrapC">
-        <div class="wrapper">
-            <div class="header" style="width:100%; height:40px">
-                <div style="float:left;">
-                <button v-on:click="goBack">
-                    <img src="../../assets/images/backIcon.png" style="width:35px;">
-                </button>
-                </div>
-                <p style="vertical-align: middle;padding: 8px 5px;float:left;">내가 스크랩 한 피드</p>
-            </div>
-                <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
-                  <div style="margin-top:50px" v-for="(item,index) in post" v-bind:key="item.num">
-                    <v-card
-                            max-width="100%"
-                            class="mx-auto"
-                            style="margin-bottom:100px"
-                    >
-                    <v-list-item>
-                        <v-list-item-avatar><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
-                        <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title class="headline">{{item.title}}</v-list-item-title>
-                        <v-list-item-subtitle style="width:50px">{{item.nickname}} <div style="float:right"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
-                        <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->
-                        </v-list-item-content>
-                        </v-list-item>
-                            <v-col cols="12" sm="3">
-                                <div v-for="star in item.count_star" :key="star.num">
-                                    <v-icon style="color:red; float : left">mdi-star</v-icon>
-                                </div>
-                                <div v-for="star in (5-item.count_star)" :key="star.num">
-                                    <v-icon style="float : left">mdi-star</v-icon>
-                                </div>
-                            </v-col>
-                            <br>
-                            <v-card-text>
-                                {{item.content}}
-                                <img v-bind:src="item.image"  style="width:100%; heigh:auto; ">
-                            <br>
-                            <br><br><hr><br>
-                            주소 : {{item.address}} 
-                            </v-card-text>
-                            <hr>
-                        <v-spacer></v-spacer>
 
-                    <div style="width:100%">
-                    <div style="margin-bottom:10px; margin-top:10px; padding-left:5px">
-                        <div style="width:33%; float:left;">
-
-                        <button class="animated rubberBand" v-if="like[index]===true" @click="toggledelete(item.num, index)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
-                        <button v-if="like[index]===false" @click="toggleadd(item.num, index)"><img class="animated rubberBand" style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
-                        </div>
-                        <div style="width:33%; float:left; text-align:center; margin-top:3px">
-
-                        <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
-                        </div>
-                        <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
-                        <button><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
-
-                        </div>
-                        <br>
-                    </div>
-                    <br>
-                  
-                        <div v-if="like[index]===true">
-                            <p v-if="likelist[index] === 1">
-                                {{nick}}님<span>이 좋아합니다.</span>
-                            </p>
-                            <p v-else>
-                                {{nick}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
-                            </p>
-                        </div>
-
-                        <div v-if="like[index]===false">
-                            <p>
-                                {{ likelist[index] }} 명이 좋아합니다
-                            </p>
-                        </div>
-
-                        <p>
-                            {{ item.count_comment }} 개의 댓글이 있습니다.
-                        </p>
-
-                        <div v-if="coment[index]===true">
-                            <div v-for="cmt in todolist" v-bind:key="cmt.date" >
-                                <div v-if="cmt[0].num==item.num">
-                                    <div style="margin-bottom:5px" v-for="cmts in cmt" v-bind:key="cmts.date" >
-                                        <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                        <h5 style="float:left; ">{{ cmts.comment }} 
-                                        </h5>
-                                        <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
-                                        <br>
-                                    </div>                
-                                </div>
-                            </div>
-                  
-                            <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
-                                <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
-                                :disabled="!isSubmit"
-                                :class="{disabled : !isSubmit}"
-                                >댓글달기</button>
-                            </div>
-                            <div style="margin-left:5px; width:60%;">
-                                <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
-                                </v-text-field>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    </v-card>
-                </div>
-            
+         <div style="margin-top:200px; float:right; height:30px; position:relaive; z-index:10" class="mynum">
+            <dropdown>
+            <input id="toggle2" type="checkbox">
+            <label for="toggle2" class="animate"><i class="fa fa-bars float-right"></i></label>
+            <ul class="animate">
+                <li class="animate">수정</li>
+                <li class="animate">삭제</li>
+                
+            </ul>
+            </dropdown>
+        <!-- <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
+        <button style="float:right" @click="removeFeed(item.num)">삭제</button> -->
         </div>
-    </div>
+
 </template>
 
 
@@ -388,11 +290,54 @@
         }
     }
 </script>
-<style>
-p {
+<style lang="scss" scoped>
 
+p {
     margin-left:5px;
     color: gray;
     font-size:12px;
+}
+
+.fa{
+ font-size: .8em;
+  line-height: 22px !important;
+}
+
+dropdown label, dropdown ul li{
+  display: block;
+  width: 60px;
+  background: #ECF0F1;
+  padding: 15px 20px;
+}
+
+dropdown input{
+  display: none;
+}
+dropdown input ~ ul{
+  position: relative;
+  visibility: hidden;
+  opacity: 0;
+  top: -20px;
+  z-index: 1;
+}
+dropdown input:checked + label{
+  background: rgb(0, 0, 0);
+  color: white;
+}
+
+dropdown input:checked ~ ul{
+  visibility: visible;
+  opacity: 1;
+  top: 0;
+}
+
+.animate{
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -ms-transition: all .3s;
+  transition: all .3s;  
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden; /* Chrome and Safari */
 }
 </style>

@@ -5,6 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="follow">
 
 	<select id="countFollower" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+<<<<<<< HEAD
 		SELECT COUNT_FOLLOWER FROM PROFILE WHERE NUM=#{num}
 	</select>
 	
@@ -39,6 +40,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<update id="followingDown" parameterType="java.lang.Integer">
 		UPDATE PROFILE SET COUNT_FOLLOWING=COUNT_FOLLOWING-1 WHERE NUM=#{num} 
+=======
+		select count_follower from profile where num=#{num}
+	</select>
+	
+	<select id="countFollowing" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count_following from profile where num=#{num}
+	</select>
+	
+	<select id="checkFollow" parameterType="follow" resultType="java.lang.Integer">
+		select count(*) from follow where follower=#{follower} and following=#{following}
+	</select>
+	
+	<insert id="follow" parameterType="follow">
+		insert into follow(follower, following, date)
+		values(#{follower}, #{following}, now())
+	</insert>
+	
+	<delete id="unFollow" parameterType="follow">
+		delete from follow where follower=#{follower} and following=#{following}
+	</delete>
+	
+	<update id="followerUp" parameterType="java.lang.Integer">
+		update profile set count_follower=count_follower+1 where num=#{num} 
+	</update>
+	
+	<update id="followerDown" parameterType="java.lang.Integer">
+		update profile set count_follower=count_follower-1 where num=#{num} 
+	</update>
+	
+	<update id="followingUp" parameterType="java.lang.Integer">
+		update profile set count_following=count_following+1 where num=#{num} 
+	</update>
+	
+	<update id="followingDown" parameterType="java.lang.Integer">
+		update profile set count_following=count_following-1 where num=#{num} 
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	</update>
 	<select id="getFollower" parameterType="java.lang.Integer" resultType="user">
 		select * from user where num in (select follower from follow where `following`=#{num});

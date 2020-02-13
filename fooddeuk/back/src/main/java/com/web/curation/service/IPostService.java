@@ -20,7 +20,10 @@ public interface IPostService {
 	Post getPost(Post post);
 	int scrapPost(Post post);
 	int deletePost(int num);
+<<<<<<< HEAD
+=======
 	List<Post> getMyFollowingPost(int num);
 	List<Post> getMyMainPost(Curation curation);
 	int updatePost(Post post);
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 }

@@ -5,6 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="user">
  
     <select id="getUserByEmail" parameterType="java.lang.String" resultType="user">
+<<<<<<< HEAD
 		SELECT NUM, EMAIL, NICKNAME, NAME, PASSWORD, INTRO, AUTH, CONFIRM, SOCIAL FROM USER WHERE EMAIL=#{email}
 	</select>
 	
@@ -75,6 +76,78 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getNickname" parameterType="java.lang.Integer" resultType="java.lang.String">
 		SELECT NICKNAME FROM USER WHERE NUM=#{num}
+=======
+		select num, email, nickname, name, password, intro, auth, confirm, social from user where email=#{email}
+	</select>
+	
+	<select id="findUserByEmailAndPassword" parameterType="user" resultType="user">
+		select num, email, nickname, name, password, intro, auth, confirm, social from user where email=#{email} and social=0
+	</select>
+	
+	<insert id="signUp" parameterType="user">
+		insert into user(email, nickname, name, password, intro, confirm, social, date)
+		values(#{email}, #{nickname}, #{name}, #{password}, #{intro}, #{confirm}, #{social}, now())
+	</insert>
+	
+	<select id="checkNick" parameterType="java.lang.String" resultType="java.lang.String">
+		select nickname from user where nickname=#{nickname}
+	</select>
+	
+	<select id="checkEmail" parameterType="java.lang.String" resultType="java.lang.String">
+		select email from user where email=#{email}
+	</select>
+	
+	<select id="getConfirm" parameterType="java.lang.String" resultType="java.lang.String">
+		select confirm from user where email=#{email}
+	</select>
+	
+	<update id="updateConfirm" parameterType="user">
+		update user set confirm=#{confirm} where email=#{email}
+	</update>
+	
+	<select id="getKey" parameterType="java.lang.String" resultType="java.lang.String">
+		select temp from user where email=#{email}
+	</select>
+	
+	<update id="updateKey" parameterType="user">
+		update user set temp=#{temp} where email=#{email}
+	</update>
+	
+	<update id="updatePassword" parameterType="user">
+		update user set password=#{password} where email=#{email}
+	</update>
+	
+	<select id="getSocial" parameterType="java.lang.String">
+		select social from user where email=#{email}
+	</select>
+	
+	<update id="successJoin" parameterType="java.lang.String">
+		update user set confirm='Y' where email=#{email}
+	</update>
+
+	<select id="getNumByEmail" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select num from user where email=#{email}
+	</select>
+	
+	<select id="getNumByNickname" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select num from user where nickname=#{nickname}
+	</select>
+	
+	<update id="updateUser" parameterType="user">
+		update user set nickname=#{nickname}, intro=#{intro}, auth=#{auth} where email=#{email}
+	</update>
+
+	<select id="getUserByNickname" parameterType="java.lang.String" resultType="user">
+		select num, email, nickname, name, password, intro, auth, confirm, social from user where nickname=#{nickname}
+	</select>
+	
+	<select id="getAuth" parameterType="java.lang.Integer">
+		select auth from user where num=#{num}
+	</select>
+	
+	<select id="getNickname" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select nickname from user where num=#{num}
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	</select>
 
  </mapper>

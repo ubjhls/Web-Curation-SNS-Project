@@ -1,5 +1,5 @@
 <template>
-<!-- <v-app data-app> -->
+<v-app data-app>
 
 
     <div class="wrapC">
@@ -39,7 +39,7 @@
             </div>
             <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
-                  <div v-for="(item,index) in post" v-bind:key="item.num">  
+                  <div v-for="(item,index) in list" v-bind:key="item.num">  
                     <v-card
                             max-width="100%"
                             class="mx-auto"
@@ -49,7 +49,7 @@
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
-                            <!-- <v-menu offset-y style="float:right;">
+                            <v-menu offset-y style="float:right;">
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">
                                     <v-icon>mdi-dots-vertical</v-icon>
@@ -63,7 +63,7 @@
                                     <button style="float:right" @click="removeFeed(item.num)">삭제</button>
                                 </v-list-item>
                             </v-list>
-                            </v-menu> -->
+                            </v-menu>
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
@@ -103,8 +103,18 @@
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
                         <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
-                        <button @click="scrapfeed(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
+                        <a href="#open-modal"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></a>
+                        </div>
 
+                        <div id="open-modal" class="modal-window">
+                            <div style="height:250px; background-image: linear-gradient(to right,#7f53ac 0,#657ced 100%);">
+                                <h1 style="margin-top:20px">스크랩</h1>
+                                <v-text-field style="color:blue; width:90%" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
+                                <v-text-field style="color:blue; width:90%" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
+                                <a href="#">
+                                <button class="close-modal" style="margin-top:20px" @click="scrapfeed(item.num, scraptitle, scrapcontent); href='#'">제출</button>
+                                </a>    
+                            </div>
                         </div>
                         <br>
                     </div>
@@ -152,13 +162,13 @@
                             </div>
                         </div>
                     </div>
-                    
                     </v-card>
                 </div>
+                <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
             </div>
-        </div>
-    </div>
-    <!-- </v-app> -->
+        </div>  
+    </div> 
+    </v-app>
 </template>
 
 
@@ -175,7 +185,8 @@
     import http from '../../../http-common'
     import NavigationBar from '../../components/common/NavigationBar'
     import {fireDB} from '../../main'
-    
+    import InfiniteLoading from 'vue-infinite-loading';
+
 
     export default {
         name: 'App',
@@ -200,6 +211,7 @@
 
             //검색한 사용자와 팔로잉 체크
             this.followcheck(this.nickname);
+          
         },
         watch : {
             newcomment: function(v) {
@@ -474,10 +486,11 @@
                 
             },
             removeComent(num, cmt, index){
-                console.log(this.todolist)
-                http.delete("/comment/comment?num=" + cmt.num + "&postnum=" + num)
+  
+                http.delete("/comment/comment?postnum=" + num + "&num="+ cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
                 .then(response => {
                     //댓글 삭제(갱신까지)
+                  
                     this.$delete(this.todolist[index],0);
                     this.todolist[index].push(response.data.object)
                     
@@ -505,7 +518,6 @@
                         alert('게시물이 삭제되었습니다.')
                         console.log(response.data)
                         this.post = response.data.object
-                        
                     })
                 .catch(Error =>{
                 })
@@ -515,15 +527,6 @@
                     return false;
 
                 }
-                //  http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
-                // .then(response => {
-                //     alert('게시물이 삭제되었습니다.')
-                //     console.log(response.data)
-                //     this.post = response.data.object
-                    
-                // })
-                // .catch(Error =>{
-                // })
             },
             updateFeed(num, title, content, count_star, address, image){
                 var router = this.$router
@@ -539,7 +542,30 @@
                     }
                 });
             },
-
+            // //무한 스크롤 메소드
+            infiniteHandler($state){    
+               
+                setTimeout(()=>{
+                    //alert("ㅎㅇ")
+             
+                    const temp = [];
+                    const size = this.list.length;
+                    for (let i = size; i< size+3; i++) {
+                        if(this.post[i]!=null){
+                            temp.push(this.post[i]);
+                        }
+                    }
+                    this.list = this.list.concat(temp);
+                    console.log(this.list)
+                    $state.loaded();
+                 
+                    if(this.list.length==this.post.length){
+                        $state.complete();
+                  
+                    }
+                    
+                },1000)
+            },
             //밑은 알람 메소드
             setAlarm(alarm) {
                 this.userAlarmCount = alarm;
@@ -598,9 +624,11 @@
                 alert("댓글이 등록되었습니다.")
                
             },
-            scrapfeed(num,idx) {
+            scrapfeed(num,title,content) {
                 let form = new FormData()
                 form.append('postnum', num)
+                form.append('title',title)
+                form.append('content',content)
                 form.append('num',this.$store.state.userinfo.num)
                 http.post("/post/scrap", form)
                 .then(Response => {
@@ -619,6 +647,8 @@
                 error:{
                     comment:false
                 },
+                scraptitle:'',
+                scrapcontent:'',
                 nick:'',
                 nickname : '',
                 num:0,
@@ -639,17 +669,22 @@
                 userAlarmCount: 0,
                 likelist:[],
                 mynum:0,
-                commentcount:[],
-
-               
+                commentcount:[],         
+                //무한스크롤
+                list:[],
             }
+        },
+        components:{
+            //무한스크롤 구현
+            InfiniteLoading
         }
     }
 </script>
 <style lang="scss" scoped>
 #app {
+
     position:relative;
-    background-color: #ffffff;
+    z-index:3
 }
 p {
     margin-left:5px;
@@ -657,4 +692,69 @@ p {
     color: gray;
     font-size:12px;
 }
+.modal-window {
+  text-align: center;
+  box-shadow: #aaa;
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.25);
+  top: 0;
+  right:0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s;
+  &:target {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  &>div {
+    background-color: ivory;
+    width: 300px;
+    position: absolute;
+    top: 50%;
+
+    background: #ffffff;
+  }
+  h1 {
+    font-size: 150%;
+    margin: 0 0 15px;
+  }
+}
+
+.modal-close {
+  color: rgb(0, 0, 0);
+  line-height: 50px;
+  font-size: 100%;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
+  width: 70px;
+  text-decoration: none;
+  &:hover {
+    color: black;
+  }
+}
+.modal-window div:not(:last-of-type) {
+  margin-bottom: 15px;
+}
+
+small {
+  color: #aaa;
+}
+
+.btn {
+  background-color: #fff;
+  padding: 1em 1.5em;
+  border-radius: 3px;
+  text-decoration: none;
+  i {
+    padding-right: 0.3em;
+  }
+}
+
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <header class="headMenu" style="text-align:center">
+        <header class="headMenu" style="text-align:center; z-index:6">
             <div style="height:40px; margin-top:px; text-align:center">
             <img src="../../assets/images/fooddeuk_logoo.png" style="height:60px; margin-left:37px">
             <button style="float:right;" @click="searchName" :disabled="menu.isNavi">
@@ -8,8 +8,9 @@
             </button>
             </div>
         </header>
-
-        <NavigationBar class="navi" :drawer="menu.isNavi" @child="updateNaviValue" v-if="menu.isNavi"></NavigationBar>
+        <div style="position:relative; z-index:1005">
+        <NavigationBar style="overflow:visible" class="navi" :drawer="menu.isNavi" @child="updateNaviValue" v-if="menu.isNavi"></NavigationBar>
+        </div>
         <NewsFeed v-if="menu.isHome"></NewsFeed>
         <AlarmPage v-if="menu.isAlarm"></Alarmpage>      
         <MyFeed v-if="menu.isProfile" :propsNickname="nickname"></MyFeed>
@@ -18,7 +19,7 @@
         <UserFeed v-if="menu.isUserProfile" :propsNickname="propsNickname"></UserFeed>
 
 
-        <div class="footer">
+        <div class="footer" style="z-index:6;">
             <button class="footer_btn" @click="clickNavi">
                 <img v-if="!menu.isNavi" src="../../assets/images/menu.png" style="height:100%;">
                 <img v-if="menu.isNavi" src="../../assets/images/menuFill.png" style="height:100%;">

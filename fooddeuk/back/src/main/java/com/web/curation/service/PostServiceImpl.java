@@ -85,6 +85,8 @@ public class PostServiceImpl implements IPostService {
 		return postdao.deletePost(num);
 	}
 
+<<<<<<< HEAD
+=======
 	@Override
 	public List<Post> getMyFollowingPost(int num) {
 		return postdao.getMyFollowingPost(num);
@@ -100,4 +102,5 @@ public class PostServiceImpl implements IPostService {
 		return postdao.updatePost(post);
 	}
 
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 }

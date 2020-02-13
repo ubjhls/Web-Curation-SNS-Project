@@ -11,8 +11,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+<<<<<<< HEAD
 @NoArgsConstructor
 @AllArgsConstructor
+=======
+
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 public class Search {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
