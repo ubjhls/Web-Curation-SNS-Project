@@ -18,7 +18,7 @@
         <UserFeed v-if="menu.isUserProfile" :propsNickname="propsNickname"></UserFeed>
 
 
-        <div class="footer">
+        <div class="footer" style="float:left">
             <button class="footer_btn" @click="clickNavi">
                 <img v-if="!menu.isNavi" src="../../assets/images/menu.png" style="height:100%;">
                 <img v-if="menu.isNavi" src="../../assets/images/menuFill.png" style="height:100%;">
