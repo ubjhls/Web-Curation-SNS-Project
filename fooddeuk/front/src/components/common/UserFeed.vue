@@ -105,10 +105,12 @@
                         <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
                         <a href="#open-modal"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></a>
                         </div>
-
                         <div id="open-modal" class="modal-window">
                             <div style="height:250px; background-image: linear-gradient(to right,#7f53ac 0,#657ced 100%);">
+                        <a href="#">XXXXXX
+                        </a>
                                 <h1 style="margin-top:20px">스크랩</h1>
+                                
                                 <v-text-field style="color:blue; width:90%" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
                                 <v-text-field style="color:blue; width:90%" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
                                 <a href="#">
