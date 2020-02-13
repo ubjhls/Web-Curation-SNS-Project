@@ -62,24 +62,24 @@
       single-line
     ></v-textarea>
 
-<div style="margin-bottom: 90px">
-    <v-text-field style="font-size:13px; margin-top: 10px; margin-left:20px; margin-right:5px; width:70%; float:left" disabled="disabled"
-      v-model="address"
-      label="주소"
-      value=""
-      single-line
-      full-width
-      hide-details
-    ></v-text-field>
-    <div style="width:20%; float:left; margin-top:40px">
-        <button style="height:30px" class="check-button" @click="addressgo()">주소검색</button>
+  <div style="margin-bottom: 90px">
+      <v-text-field style="font-size:13px; margin-top: 10px; margin-left:20px; margin-right:5px; width:70%; float:left" disabled="disabled"
+        v-model="address"
+        label="주소"
+        value=""
+        single-line
+        full-width
+        hide-details
+      ></v-text-field>
+      <div style="width:20%; float:left; margin-top:40px">
+          <button style="height:30px" class="check-button" @click="addressgo()">주소검색</button>
+      </div>
+      <div v-if="open">
+      <DaumPostcode style="height:400px"
+        :on-complete=handleAddress
+      />
     </div>
-    <div v-if="open">
-    <DaumPostcode style="height:400px"
-      :on-complete=handleAddress
-    />
-   </div>
-</div>
+  </div>
     <v-file-input style="width:80%; margin-left:15px"
       input-type="file"
       @change="processFile($event)"

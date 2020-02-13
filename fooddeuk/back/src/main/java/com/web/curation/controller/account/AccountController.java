@@ -28,7 +28,10 @@ import com.web.curation.jwt.JwtService;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
+<<<<<<< HEAD
+=======
 import com.web.curation.security.PasswordEncoding;
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
 
@@ -56,31 +59,51 @@ public class AccountController {
 	@PostMapping("/account/login")
 	@ApiOperation(value = "로그인")
 	public Object login(@RequestParam(required = true) String email, @RequestParam(required = true) String password) {
+<<<<<<< HEAD
+
+=======
 		PasswordEncoding passwordEncoding = new PasswordEncoding();
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		System.out.println("-----------------/account/login-----------------");
 		System.out.println("email : " + email);
 		System.out.println("password : " + password);
 
 		User user = userService.findUserByEmailAndPassword(new User(email, password));
+<<<<<<< HEAD
+		
+=======
 	    
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		BasicResponse result = new BasicResponse();
 		result.status = true;
 		
 		if (user == null) {
+<<<<<<< HEAD
+			System.out.println("로그인 실패");
+=======
 			System.out.println("로그인 실패1");
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 			result.data = "failed";
 		} else if (!user.getConfirm().equals("Y")) {
 			System.out.println("이메일 미 인증 사용자");
 			result.data = "noemailcheck";
 		} else {
+<<<<<<< HEAD
+			if (user.getEmail().equalsIgnoreCase(email) && user.getPassword().equalsIgnoreCase(password)) {
+=======
 			if (user.getEmail().equalsIgnoreCase(email) && passwordEncoding.matches(password, user.getPassword())) {
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 				System.out.println("로그인 성공");
 				// 우영이형 소스
 				String token = jwtService.create("member", user, "user");
 				System.out.println(token);
 				result.data = token;
 			} else {
+<<<<<<< HEAD
+				System.out.println("로그인 실패");
+=======
 				System.out.println("로그인 실패2");
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 				result.data = "failed";
 				return new ResponseEntity<>(result, HttpStatus.OK);
 			}
@@ -95,12 +118,18 @@ public class AccountController {
 	public Object signUp(@Valid @RequestBody SignupRequest request) throws Exception {
 		
 		System.out.println("-----------------/account/user-----------------");
+<<<<<<< HEAD
+=======
 		PasswordEncoding passwordEncoding = new PasswordEncoding();
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		String email = request.getEmail();
 		String nickname = request.getNickname();
 		String name = request.getName();
 		String password = request.getPassword();
+<<<<<<< HEAD
+=======
 		password = passwordEncoding.encode(password);
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		String intro = request.getIntro();
 		System.out.println("email : " + email);
 		System.out.println("nickname : " + nickname);

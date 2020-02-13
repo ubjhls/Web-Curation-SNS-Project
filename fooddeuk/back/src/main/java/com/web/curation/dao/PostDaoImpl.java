@@ -72,6 +72,8 @@ public class PostDaoImpl {
 		return sqlSession.delete(ns+"deletePost", num);
 	}
 	
+<<<<<<< HEAD
+=======
 	public List<Post> getMyFollowingPost(int num){
 		return sqlSession.selectList(ns+"getMyFollowingPost", num);
 	}
@@ -84,4 +86,5 @@ public class PostDaoImpl {
 		return sqlSession.update(ns+"updatePost", post);
 	}
 	
+>>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 }
