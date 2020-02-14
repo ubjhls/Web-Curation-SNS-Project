@@ -13,11 +13,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-<<<<<<< HEAD
 @NoArgsConstructor
-=======
-
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 @AllArgsConstructor
 public class Profile {
 	@Id

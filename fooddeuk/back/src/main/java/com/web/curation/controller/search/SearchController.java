@@ -66,11 +66,7 @@ public class SearchController {
 		System.out.println(list);
 		
 		if(list.size() == 0) {
-<<<<<<< HEAD
-			result.data = "failed";
-=======
 			result.data = "empty";
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		

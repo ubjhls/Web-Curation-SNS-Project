@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="post">
+
+	<insert id="insertPost" parameterType="post">
+		insert into post(author, title, content, date, count_star, address, image)
+		values(#{author}, #{title}, #{content}, now(), #{count_star}, #{address}, #{image})
+	</insert>
+	
+	<select id="getAllPost" parameterType="java.lang.Integer" resultType="post">
+		select * from post where author=#{num} order by date desc
+	</select>
+	
+	<update id="likeCountUp" parameterType="java.lang.Integer">
+		update post set count_like = count_like+1 where num=#{num}
+	</update>
+	
+	<update id="likeCountDown" parameterType="java.lang.Integer">
+		update post set count_like = count_like-1 where num=#{num}
+	</update>
+	
+	<update id="commentCountUp" parameterType="java.lang.Integer">
+		update post set count_comment=count_comment+1 where num=#{postnum}
+	</update>
+	
+	<update id="commentCountDown" parameterType="java.lang.Integer">
+		update post set count_comment=count_comment-1 where num=#{postnum}
+	</update>
+	
+	<select id="getAuthor" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select author from post where num=#{num}
+	</select>
+	
+	<select id="getMyPost" parameterType="java.lang.Integer" resultType="post">
+		select * from post where author=#{num} and type='일반' order by date desc
+	</select>
+	
+	<select id="getMyLikePost" parameterType="java.lang.Integer" resultType="post">
+		select * from post
+		where num in (select postnum from postlike where liker=#{num})
+		and (author in (select following from follow where follower=#{num})
+		or author in (select num from user where auth=0))
+		order by date desc;
+	</select>
+	
+	<select id="getMyScrapPost" parameterType="java.lang.Integer" resultType="post">
+		select * from post where author=#{num} and type='스크랩' order by date desc
+	</select>
+	
+	<select id="getMyCurationPost" parameterType="curation" resultType="post">
+		select * from post 
+		where num in (select num from post where substring_index(address, ' ', 3) like concat(#{place}, '%'))
+        and (author in (select following from follow where follower=#{num})
+		or author in (select num from user where auth=0))
+		order by date desc;
+	</select>
+	
+	<select id="getAllUserPost" parameterType="java.lang.Integer" resultType="post">
+		select * from post
+		where address != ''
+		and (author in (select following from follow where follower=#{num})
+		or author in (select num from user where auth=0))
+		order by date desc;
+	</select>
+	
+	<select id="getPost" parameterType="java.lang.Integer" resultType="post">
+		select * from post where num=#{num};
+	</select>
+	
+	<insert id="scrapPost" parameterType="post">
+		insert into post(author, title, content, date, count_like, count_comment, count_star, address, image, type, scrapnum)
+		values(#{author}, #{title}, #{content}, now(), 0, 0, 0, #{address}, #{image}, '스크랩', #{scrapnum})
+	</insert>
+	
+	<delete id="deletePost" parameterType="java.lang.Integer">
+		delete from post where num=#{num}
+	</delete>
+	
+	<select id="getMyFollowingPost" parameterType="java.lang.Integer" resultType="post">
+		select * from post where author in (select following from follow where follower=#{num});
+	</select>
+	
+	<select id="getMyMainPost" parameterType="post" resultType="curation">
+		select * from post 
+		where num in (select num from post where substring_index(address, ' ', 3) like concat(#{address}, '%'))
+        and (author in (select following from follow where follower=#{num})
+		or author in (select num from user where auth=0)) or author in (select following from follow where follower=#{num})
+        order by date desc;
+	</select>
+	
+	<update id="updatePost" parameterType="post">
+		update post set title=#{title}, content=#{content}, count_star=#{count_star}, address=#{address}, image=#{image}
+		where num=#{num}
+	</update>
+	
+	<select id="getPicture" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select picture from profile where num=#{num};
+	</select>
+	
+ </mapper>

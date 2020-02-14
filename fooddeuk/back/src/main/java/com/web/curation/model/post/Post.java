@@ -35,7 +35,6 @@ public class Post {
 	private String nickname;
 	private String picture; // 사용자 사진
 	private String scraptitle;
-	private int scrap_author;
 
 	public Post() {
 		super();
@@ -183,6 +182,7 @@ public class Post {
 	public void setScrapnum(int scrapnum) {
 		this.scrapnum = scrapnum;
 	}
+
 	public String getNickname() {
 		return nickname;
 	}
@@ -224,4 +224,5 @@ public class Post {
 				+ scraptitle + "]";
 	}
 
+	
 }

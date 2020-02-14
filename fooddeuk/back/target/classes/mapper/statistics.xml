@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="statistics">
+	
+	<select id="getPostCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*) from post where author=#{num}
+	</select>
+	
+	<select id="getScrapCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*) from post where type='스크랩' and author=#{num}
+	</select>
+	
+	<select id="getLikeCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select sum(count_like) from post where author=#{num}
+	</select>
+	
+	<select id="getLikeClickCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*) from postlike where liker=#{num}
+	</select>
+	
+	<select id="getCommentCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select sum(count_comment) from post where author=#{num}
+	</select>
+	
+	<select id="getCommentWriteCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*) from comment where author=#{num}
+	</select>
+	
+	
+	<select id="getPostCountForDate" parameterType="stats" resultType="java.lang.Integer">
+		select count(*) from post where author=#{num} and year(date)=#{year} and month(date)=#{month}
+	</select>
+	
+	<select id="getScrapCountForDate" parameterType="stats" resultType="java.lang.Integer">
+		select count(*) from post where type='스크랩' and author=#{num} and year(date)=#{year} and month(date)=#{month}
+	</select>
+	
+	<select id="getLikeCountForDate" parameterType="stats" resultType="java.lang.Integer">
+		select sum(count_like) from post where author=#{num} and year(date)=#{year} and month(date)=#{month}
+	</select>
+	
+	<select id="getLikeClickCountForDate" parameterType="stats" resultType="java.lang.Integer">
+		select count(*) from postlike where liker=#{num} and year(date)=#{year} and month(date)=#{month}
+	</select>
+	
+	<select id="getCommentCountForDate" parameterType="stats" resultType="java.lang.Integer">
+		select sum(count_comment) from post where author=#{num} and year(date)=#{year} and month(date)=#{month}
+	</select>
+	
+	<select id="getCommentWriteCountForDate" parameterType="stats" resultType="java.lang.Integer">
+		select count(*) from comment where author=#{num} and year(date)=#{year} and month(date)=#{month}
+	</select>
+	
+ </mapper>
