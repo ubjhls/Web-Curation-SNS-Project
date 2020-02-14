@@ -1,48 +1,28 @@
 <template>
-    <div>
-        <header class="headMenu" style="text-align:center; z-index:6">
-            <div style="height:40px; margin-top:px; text-align:center">
-            <img src="../../assets/images/fooddeuk_logoo.png" style="height:60px; margin-left:37px">
-            <button style="float:right;" @click="searchName" :disabled="menu.isNavi">
-                <img src="../../assets/images/search.png" style="height:30px; margin-right:15px; margin-top:15px">
-            </button>
-            </div>
-        </header>
-        <div style="position:relative; z-index:1005">
-        <NavigationBar style="overflow:visible" class="navi" :drawer="menu.isNavi" @child="updateNaviValue" v-if="menu.isNavi"></NavigationBar>
-        </div>
-        <NewsFeed v-if="menu.isHome"></NewsFeed>
-        <AlarmPage v-if="menu.isAlarm"></Alarmpage>      
-        <MyFeed v-if="menu.isProfile" :propsNickname="nickname"></MyFeed>
-        <AddFeed v-if="menu.isAdd" @child="updateAddFeedvalue"></AddFeed>
-        <Searchname v-if="menu.isSearch" @child="getPropsNick"></Searchname>
-        <UserFeed v-if="menu.isUserProfile" :propsNickname="propsNickname"></UserFeed>
-
-
-        <div class="footer" style="z-index:6;">
-            <button class="footer_btn" @click="clickNavi">
-                <img v-if="!menu.isNavi" src="../../assets/images/menu.png" style="height:100%;">
-                <img v-if="menu.isNavi" src="../../assets/images/menuFill.png" style="height:100%;">
-            </button>
-            <button class="footer_btn" @click="clickHome" :disabled="menu.isNavi">
-                <img v-if="!menu.isHome" src="../../assets/images/home.png" style="height:100%;">
-                <img v-if="menu.isHome" src="../../assets/images/homeFill.png" style="height:100%;">
-            </button>
-            <button class="footer_btn" @click="clickNewFeed" :disabled="menu.isNavi">
-                <img v-if="!menu.isAdd" src="../../assets/images/Add.png" style="height:100%;">
-                <img v-if="menu.isAdd" src="../../assets/images/AddFill.png" style="height:100%;">
-            </button>
-            <button class="footer_btn" @click="clickProfile" :disabled="menu.isNavi">
-                <img v-if="!menu.isProfile" src="../../assets/images/profile.png" style="height:100%;">
-                <img v-if="menu.isProfile" src="../../assets/images/profileFill.png" style="height:100%;">
-            </button>
-            <button class="footer_btn" @click="clickAlarm" :disabled="menu.isNavi">
-                <v-chip class="alarmChip" x-small style="background-color:red;color:white;" v-if="alarm!=0">{{this.alarm}}</v-chip>
-                <img class="alarm_btn" v-if="!menu.isAlarm" src="../../assets/images/alarm.png">
-                <img class="alarm_btn" v-if="menu.isAlarm" src="../../assets/images/alarmFill.png">
-            </button>
-        </div>
+    <div class="footer">
+        <button class="footer_btn" @click="clickNavi">
+            <img v-if="!menu.isNavi" src="../../assets/images/menu.png" style="height:100%;">
+            <img v-if="menu.isNavi" src="../../assets/images/menuFill.png" style="height:100%;">
+        </button>
+        <button class="footer_btn" @click="clickHome" :disabled="menu.isNavi">
+            <img v-if="!menu.isHome" src="../../assets/images/home.png" style="height:100%;">
+            <img v-if="menu.isHome" src="../../assets/images/homeFill.png" style="height:100%;">
+        </button>
+        <button class="footer_btn" @click="clickNewFeed" :disabled="menu.isNavi">
+            <img v-if="!menu.isAdd" src="../../assets/images/Add.png" style="height:100%;">
+            <img v-if="menu.isAdd" src="../../assets/images/AddFill.png" style="height:100%;">
+        </button>
+        <button class="footer_btn" @click="clickProfile" :disabled="menu.isNavi">
+            <img v-if="!menu.isProfile" src="../../assets/images/profile.png" style="height:100%;">
+            <img v-if="menu.isProfile" src="../../assets/images/profileFill.png" style="height:100%;">
+        </button>
+        <button class="footer_btn" @click="clickAlarm" :disabled="menu.isNavi">
+            <v-chip class="alarmChip" x-small style="background-color:red;color:white;" v-if="alarm!=0">{{this.alarm}}</v-chip>
+            <img class="alarm_btn" v-if="!menu.isAlarm" src="../../assets/images/alarm.png">
+            <img class="alarm_btn" v-if="menu.isAlarm" src="../../assets/images/alarmFill.png">
+        </button>
     </div>
+
 </template>
 
 <script>
@@ -66,7 +46,13 @@
 
     export default {
         components: {
-
+            NewsFeed,
+            NavigationBar,
+            AlarmPage,
+            MyFeed,
+            AddFeed,
+            Searchname,
+            UserFeed
         },
         created() {
             this.component = this;
@@ -98,21 +84,16 @@
             },
             getPropsNick(propsNick) {
                 if(this.$store.state.userinfo!=null){
-                    this.nickname = this.$store.state.userinfo.nickName;
-                }
-                if(propsNick===this.nickname) {
-                    this.clickProfile();
-                }
-                else {
-                    this.propsNickname = propsNick
-                    this.menu.isNavi = false;
-                    this.menu.isHome = false;
-                    this.menu.isAdd = false;
-                    this.menu.isProfile = false;
-                    this.menu.isAlarm = false;
-                    this.menu.isSearch = false;
-                    this.menu.isUserProfile = true;
-                }
+                this.nickname = this.$store.state.userinfo.nickName;
+            }
+                this.propsNickname = propsNick
+                this.menu.isNavi = false;
+                this.menu.isHome = false;
+                this.menu.isAdd = false;
+                this.menu.isProfile = false;
+                this.menu.isAlarm = false;
+                this.menu.isSearch = false;
+                this.menu.isUserProfile = true;
             },
             clickNavi() {
                 if(this.$store.state.userinfo!=null){

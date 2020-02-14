@@ -7,14 +7,13 @@ import javax.persistence.Id;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Data
-<<<<<<< HEAD
 @NoArgsConstructor
-=======
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 @AllArgsConstructor
 public class Post {
 	@Id
@@ -29,15 +28,13 @@ public class Post {
 	private int count_comment;
 	private int count_star;
 	private String address;
-	private String image;
-	private String type;
-	private int scrap_author;
-<<<<<<< HEAD
-=======
-	private String nickname;
-	private int mynum;
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
+	private String image; // 게시물 사진
 	private int islike;
+	private String type;
+	private int scrapnum;
+	private String nickname;
+	private String picture; // 사용자 사진
+	private String scraptitle;
 
 	public Post() {
 		super();
@@ -89,117 +86,143 @@ public class Post {
 		this.count_star = count_star;
 		this.address = address;
 	}
-	
-	
 
 	public int getNum() {
 		return num;
 	}
+
 	public void setNum(int num) {
 		this.num = num;
 	}
+
 	public int getAuthor() {
 		return author;
 	}
+
 	public void setAuthor(int author) {
 		this.author = author;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public int getCount_like() {
-		return count_like;
-	}
-	public void setCount_like(int count_like) {
-		this.count_like = count_like;
-	}
-	public int getCount_comment() {
-		return count_comment;
-	}
-	public void setCount_comment(int count_comment) {
-		this.count_comment = count_comment;
-	}
-	public int getCount_star() {
-		return count_star;
-	}
-	public void setCount_star(int count_star) {
-		this.count_star = count_star;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
+
 	public String getDate() {
 		return date;
 	}
+
 	public void setDate(String date) {
 		this.date = date;
 	}
+
+	public int getCount_like() {
+		return count_like;
+	}
+
+	public void setCount_like(int count_like) {
+		this.count_like = count_like;
+	}
+
+	public int getCount_comment() {
+		return count_comment;
+	}
+
+	public void setCount_comment(int count_comment) {
+		this.count_comment = count_comment;
+	}
+
+	public int getCount_star() {
+		return count_star;
+	}
+
+	public void setCount_star(int count_star) {
+		this.count_star = count_star;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	public String getImage() {
 		return image;
 	}
+
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public int getIslike() {
-		return islike;
-	}
-	public void setIslike(int islike) {
-		this.islike = islike;
-	}
+
 	public String getType() {
 		return type;
 	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
-	public int getScrap_author() {
-		return scrap_author;
+
+	public int getScrapnum() {
+		return scrapnum;
 	}
-	public void setScrap_author(int scrap_author) {
-		this.scrap_author = scrap_author;
+
+	public void setScrapnum(int scrapnum) {
+		this.scrapnum = scrapnum;
 	}
-<<<<<<< HEAD
-=======
+
 	public String getNickname() {
 		return nickname;
 	}
+
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	public int getMynum() {
-		return mynum;
+
+	public int getIslike() {
+		return islike;
 	}
-	public void setMynum(int mynum) {
-		this.mynum = mynum;
+
+	public void setIslike(int islike) {
+		this.islike = islike;
 	}
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+
+	public String getScraptitle() {
+		return scraptitle;
+	}
+
+	public void setScraptitle(String scraptitle) {
+		this.scraptitle = scraptitle;
+	}
 
 	@Override
 	public String toString() {
 		return "Post [num=" + num + ", author=" + author + ", title=" + title + ", content=" + content + ", date="
 				+ date + ", count_like=" + count_like + ", count_comment=" + count_comment + ", count_star="
-<<<<<<< HEAD
-				+ count_star + ", address=" + address + ", image=" + image + ", islike=" + islike + "]";
+				+ count_star + ", address=" + address + ", image=" + image + ", islike=" + islike + ", type=" + type
+				+ ", scrapnum=" + scrapnum + ", nickname=" + nickname + ", picture=" + picture + ", scraptitle="
+				+ scraptitle + "]";
 	}
-	
 
-=======
-				+ count_star + ", address=" + address + ", image=" + image + ", type=" + type + ", scrap_author="
-				+ scrap_author + ", nickname=" + nickname + ", mynum=" + mynum + ", islike=" + islike + "]";
-	}
-	
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	
 }

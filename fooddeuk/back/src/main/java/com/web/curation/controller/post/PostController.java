@@ -1,6 +1,5 @@
 package com.web.curation.controller.post;
 
-import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-<<<<<<< HEAD
-=======
 import org.springframework.web.bind.annotation.PatchMapping;
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +42,7 @@ public class PostController {
 
 	@PostMapping("/post/post")
 	@ApiOperation(value = "게시물 작성")
+	
 	public String insertPost(@RequestParam(required = true) String email,
 							@RequestParam(required = true) String title,
 							@RequestParam(required = true) String content,
@@ -62,16 +59,11 @@ public class PostController {
 		
 		int author = userService.getNumByEmail(email);
 		int star = Integer.parseInt(count_star);
-<<<<<<< HEAD
-		Post post = new Post(author, title, content, star, address);
-		post.setImage(image);
-=======
 		
 		Post post = new Post(author, title, content, star, address);
 		if(!image.equals("null")) {
 			post.setImage(image);
 		}
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		
 		if(postService.insertPost(post) != 1) {
 			return "failed";
@@ -105,6 +97,11 @@ public class PostController {
 			if(postlikeService.checkLike(like) != 0) {
 				list.get(i).setIslike(1);
 			}
+			list.get(i).setPicture(postService.getPicture(num));
+			if(list.get(i).getType().equals("스크랩")) {
+				Post temp = postService.getPost(list.get(i).getScrapnum());
+				list.get(i).setScraptitle(temp.getTitle());
+			}
 		}
 		
 		System.out.println(list);
@@ -116,17 +113,11 @@ public class PostController {
 	
 	@GetMapping("/post/mypost")
 	@ApiOperation(value = "내가 게시한 게시물 가져오기")
-<<<<<<< HEAD
-	public Object getMyPost(@RequestParam(required = true) int num) throws Exception {
-		System.out.println("-----------------/post/mypost-----------------");
-		System.out.println("num : " + num);
-=======
 	public Object getMyPost(@RequestParam(required = true) String nickname) throws Exception {
 		System.out.println("-----------------/post/mypost-----------------");
 		System.out.println("nickname : " + nickname);
 		
 		int num = userService.getNumByNickname(nickname);
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		
 		BasicResponse result = new BasicResponse();
 		result.data="success";
@@ -138,6 +129,14 @@ public class PostController {
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setPicture(postService.getPicture(num));
+			if(list.get(i).getType().equals("스크랩")) {
+				Post temp = postService.getPost(list.get(i).getScrapnum());
+				list.get(i).setScraptitle(temp.getTitle());
+			}
+		}
+		
 		System.out.println(list);
 		result.status=true;
 		result.object = list;
@@ -146,33 +145,20 @@ public class PostController {
 	
 	@GetMapping("/post/mylikepost")
 	@ApiOperation(value = "내가 좋아요 누른 게시물 가져오기")
-<<<<<<< HEAD
-	public Object getMyLikePost(@RequestParam(required = true) int num) throws Exception {
-		System.out.println("-----------------/post/mylikepost-----------------");
-		System.out.println("num : " + num);
-=======
 	public Object getMyLikePost(@RequestParam(required = true) String nickname) throws Exception {
 		System.out.println("-----------------/post/mylikepost-----------------");
 		System.out.println("nickname : " + nickname);
 		
 		int num = userService.getNumByNickname(nickname);
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		
 		BasicResponse result = new BasicResponse();
 		result.data="success";
 		
 		List<Post> list = postService.getMyLikePost(num);
-<<<<<<< HEAD
-		
-=======
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		if(list.size() == 0) {
 			result.data = "nothing";
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
-<<<<<<< HEAD
-		     
-=======
 		
 		for (int i = 0; i < list.size(); i++) {
 			int postAuthor = list.get(i).getAuthor();
@@ -182,9 +168,43 @@ public class PostController {
 			if(postlikeService.checkLike(like) != 0) {
 				list.get(i).setIslike(1);
 			}
+			list.get(i).setPicture(postService.getPicture(postAuthor));
+			if(list.get(i).getType().equals("스크랩")) {
+				Post temp = postService.getPost(list.get(i).getScrapnum());
+				list.get(i).setScraptitle(temp.getTitle());
+			}
 		}
 		
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
+		System.out.println(list);
+		result.status=true;
+		result.object = list;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("/post/myscrappost")
+	@ApiOperation(value = "내가 스크랩한 게시물 가져오기")
+	public Object getMyScrapPost(@RequestParam(required = true) String nickname) throws Exception {
+		System.out.println("-----------------/post/myscrappost-----------------");
+		System.out.println("nickname : " + nickname);
+		
+		int num = userService.getNumByNickname(nickname);
+		
+		BasicResponse result = new BasicResponse();
+		result.data="success";
+		
+		List<Post> list = postService.getMyScrapPost(num);
+		if(list.size() == 0) {
+			result.data = "nothing";
+			result.object = list;
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		for (int i = 0; i < list.size(); i++) {
+			Post temp = postService.getPost(list.get(i).getScrapnum());
+			list.get(i).setScraptitle(temp.getTitle());
+			list.get(i).setPicture(postService.getPicture(num));
+		}
+		
 		System.out.println(list);
 		result.status=true;
 		result.object = list;
@@ -193,17 +213,11 @@ public class PostController {
 	
 	@GetMapping("/post/mycurationpost")
 	@ApiOperation(value = "내 큐레이션 지역 게시물 가져오기")
-<<<<<<< HEAD
-	public Object getMyCurationPost(@RequestParam(required = true) int num) throws Exception {
-		System.out.println("-----------------/post/mycurationpost-----------------");
-		System.out.println("num : " + num);
-=======
 	public Object getMyCurationPost(@RequestParam(required = true) String nickname) throws Exception {
 		System.out.println("-----------------/post/mycurationpost-----------------");
 		System.out.println("nickname : " + nickname);
 		
 		int num = userService.getNumByNickname(nickname);
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		
 		BasicResponse result = new BasicResponse();
 		result.data="success";
@@ -221,8 +235,6 @@ public class PostController {
 		} else if(placeArr[0].equals("전체")) {
 			// 모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
 			list = postService.getAllUserPost(num);
-<<<<<<< HEAD
-=======
 			for (int i = 0; i < list.size(); i++) {
 				int postAuthor = list.get(i).getAuthor();
 				String postNick = userService.getNickname(postAuthor);
@@ -231,16 +243,18 @@ public class PostController {
 				if(postlikeService.checkLike(like) != 0) {
 					list.get(i).setIslike(1);
 				}
+				list.get(i).setPicture(postService.getPicture(postAuthor));
+				if(list.get(i).getType().equals("스크랩")) {
+					Post ptemp = postService.getPost(list.get(i).getScrapnum());
+					list.get(i).setScraptitle(ptemp.getTitle());
+				}
 			}
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 			System.out.println("모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
 		} else {
 			if(placeArr[1].equals("전체")) {
 				// 그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
 				Curation curation = new Curation(num, placeArr[0]);
 				list = postService.getMyCurationPost(curation);
-<<<<<<< HEAD
-=======
 				for (int i = 0; i < list.size(); i++) {
 					int postAuthor = list.get(i).getAuthor();
 					String postNick = userService.getNickname(postAuthor);
@@ -249,15 +263,17 @@ public class PostController {
 					if(postlikeService.checkLike(like) != 0) {
 						list.get(i).setIslike(1);
 					}
+					list.get(i).setPicture(postService.getPicture(postAuthor));
+					if(list.get(i).getType().equals("스크랩")) {
+						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScraptitle(ptemp.getTitle());
+					}
 				}
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 				System.out.println("그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
 			} else {
 				// 그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))
 				Curation curation = new Curation(num, place);
 				list = postService.getMyCurationPost(curation);
-<<<<<<< HEAD
-=======
 				for (int i = 0; i < list.size(); i++) {
 					int postAuthor = list.get(i).getAuthor();
 					String postNick = userService.getNickname(postAuthor);
@@ -265,6 +281,11 @@ public class PostController {
 					Postlike like = new Postlike(list.get(i).getNum(), num);
 					if(postlikeService.checkLike(like) != 0) {
 						list.get(i).setIslike(1);
+					}
+					list.get(i).setPicture(postService.getPicture(postAuthor));
+					if(list.get(i).getType().equals("스크랩")) {
+						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScraptitle(ptemp.getTitle());
 					}
 				}
 				System.out.println("그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))");
@@ -302,10 +323,16 @@ public class PostController {
 		
 		Post post = new Post();
 		post.setAddress(place);
-		post.setMynum(num);
 		
 		if(placeArr[0].equals("없음")) {
 			list = postService.getMyFollowingPost(num);
+			for (int i = 0; i < list.size(); i++) {
+				list.get(i).setPicture(postService.getPicture(list.get(i).getAuthor()));
+				if(list.get(i).getType().equals("스크랩")) {
+					Post ptemp = postService.getPost(list.get(i).getScrapnum());
+					list.get(i).setScraptitle(ptemp.getTitle());
+				}
+			}
 			result.object = list;
 			return new ResponseEntity<>(result , HttpStatus.OK);
 		} else if(placeArr[0].equals("전체")) {
@@ -318,6 +345,11 @@ public class PostController {
 				Postlike like = new Postlike(list.get(i).getNum(), num);
 				if(postlikeService.checkLike(like) != 0) {
 					list.get(i).setIslike(1);
+				}
+				list.get(i).setPicture(postService.getPicture(postAuthor));
+				if(list.get(i).getType().equals("스크랩")) {
+					Post ptemp = postService.getPost(list.get(i).getScrapnum());
+					list.get(i).setScraptitle(ptemp.getTitle());
 				}
 			}
 			System.out.println("모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
@@ -334,6 +366,11 @@ public class PostController {
 					if(postlikeService.checkLike(like) != 0) {
 						list.get(i).setIslike(1);
 					}
+					list.get(i).setPicture(postService.getPicture(postAuthor));
+					if(list.get(i).getType().equals("스크랩")) {
+						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScraptitle(ptemp.getTitle());
+					}
 				}
 				System.out.println("그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
 			} else {
@@ -348,18 +385,19 @@ public class PostController {
 					if(postlikeService.checkLike(like) != 0) {
 						list.get(i).setIslike(1);
 					}
+					list.get(i).setPicture(postService.getPicture(postAuthor));
+					if(list.get(i).getType().equals("스크랩")) {
+						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScraptitle(ptemp.getTitle());
+					}
 				}
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 				System.out.println("그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))");
 			}
 		}
 		
 		if(list.size() == 0) {
 			result.data = "nothing";
-<<<<<<< HEAD
-=======
 			result.object = list; 
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		     
@@ -373,18 +411,18 @@ public class PostController {
 	@ApiOperation(value = "게시물 스크랩하기")
 	public String scrapPost(@RequestParam(required = true) int num,
 							@RequestParam(required = true) int postnum,
-							@RequestParam(required = true) int author,
-							@RequestParam(required = true) String date) throws Exception {
+							@RequestParam(required = true) String title,
+							@RequestParam(required = true) String content) throws Exception {
 		System.out.println("-----------------/post/scrap-----------------");
-		System.out.println("num : " + num);
-		System.out.println("postnum : " + postnum);
-		System.out.println("author : " + author);
-		System.out.println("date : " + date);
+		System.out.println("num : " + num); // user.num
+		System.out.println("postnum : " + postnum); // post.num
 		
-		Post temp = new Post(postnum, author, date);
-		Post scrapPost = postService.getPost(temp); // 해당 포스트를 찾음
-		scrapPost.setScrap_author(author);
+		Post scrapPost = postService.getPost(postnum); // 해당 포스트를 찾음
+		
+		scrapPost.setTitle(title);
+		scrapPost.setContent(content);
 		scrapPost.setAuthor(num);
+		scrapPost.setScrapnum(postnum);
 		
 		if(postService.scrapPost(scrapPost) == 0) {
 			return "failed";
@@ -395,20 +433,11 @@ public class PostController {
 	
 	@DeleteMapping("/post/post")
 	@ApiOperation(value = "게시물 삭제하기")
-<<<<<<< HEAD
-	public Object deletePost(@RequestParam(required = true) int post,
-							@RequestParam(required = true) int num) throws Exception {
-		
-		System.out.println("-----------------/post/post-----------------");
-		System.out.println("post : " + post);
-		System.out.println("num : " + num);
-=======
 	public Object deletePost(@RequestParam(required = true) int num,
 							@RequestParam(required = true) int mynum) throws Exception {
 		System.out.println("-----------------/post/post-----------------");;
 		System.out.println("num : " + num);
 		System.out.println("myNum : " + mynum);
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		
 		BasicResponse result = new BasicResponse();
 		
@@ -417,11 +446,7 @@ public class PostController {
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		
-<<<<<<< HEAD
-		List<Post> list = postService.getAllPost(num);
-=======
 		List<Post> list = postService.getAllPost(mynum);
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		
 		if(list.size() == 0) {
 			result.data = "nothing";
@@ -434,8 +459,6 @@ public class PostController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-<<<<<<< HEAD
-=======
 	@PatchMapping("/post/post")
 	@ApiOperation(value = "게시물 수정하기")
 	public String updatePost(@RequestParam(required = true) int num, 
@@ -467,5 +490,4 @@ public class PostController {
 		return "success";
 	}
 	
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 }

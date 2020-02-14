@@ -60,8 +60,8 @@ public class PostDaoImpl {
 		return sqlSession.selectList(ns+"getAllUserPost", num);
 	}
 	
-	public Post getPost(Post post) {
-		return sqlSession.selectOne(ns+"getPost", post);
+	public Post getPost(int num) {
+		return sqlSession.selectOne(ns+"getPost", num);
 	}
 	
 	public int scrapPost(Post post) {
@@ -72,8 +72,6 @@ public class PostDaoImpl {
 		return sqlSession.delete(ns+"deletePost", num);
 	}
 	
-<<<<<<< HEAD
-=======
 	public List<Post> getMyFollowingPost(int num){
 		return sqlSession.selectList(ns+"getMyFollowingPost", num);
 	}
@@ -85,6 +83,13 @@ public class PostDaoImpl {
 	public int updatePost(Post post) {
 		return sqlSession.update(ns+"updatePost", post);
 	}
+
+	public List<Post> getMyScrapPost(int num) {
+		return sqlSession.selectList(ns+"getMyScrapPost", num);
+	}
 	
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
+	public String getPicture(int num) {
+		return sqlSession.selectOne(ns+"getPicture", num);
+	}
+	
 }
