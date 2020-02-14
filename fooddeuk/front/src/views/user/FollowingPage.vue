@@ -5,7 +5,7 @@
 
         <div class="header" style="width:100%; height:auto">
             <div style="width:35px; float:left;">
-            <button v-on:click="goNewsFeeds">
+            <button v-on:click="goBack">
                 <img src="../../assets/images/backIcon.png" style="width:100%;">
             </button>
             </div>
@@ -34,7 +34,7 @@
         </div>
         <div class="profile-card-ctr" v-if="isfollow[index]==1">
           
-            <button class="profile-card__button button--gray" @click="unfollowgo(index)">UnFollow</button>
+            <button class="profile-card__button button--orange" style="background:gray" @click="unfollowgo(index)">UnFollow</button>
         </div>
       </v-list-item>
     </v-list>
@@ -70,6 +70,9 @@
                 router.push({
                     name: "MainPage"
                 });
+            },
+            goBack() {
+                this.$router.go(-1);
             },
             getFollowing(num){
               http.get("follow/getFollowing/{num}?num="+ num)

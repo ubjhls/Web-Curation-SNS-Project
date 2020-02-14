@@ -29,13 +29,10 @@
         </v-list-item-content>
 
         <div class="profile-card-ctr" v-if="isfollow[index]==0">
-          {{isfollow[index]}}
-          
             <button class="profile-card__button button--orange" @click="followgo(index)">Follow</button>
         </div>
         <div class="profile-card-ctr" v-if="isfollow[index]==1">
-          {{isfollow[index]}}
-            <button class="profile-card__button button--gray" @click="unfollowgo(index)">UnFollow</button>
+            <button class="profile-card__button button--orange" style="background:gray" @click="unfollowgo(index)">UnFollow</button>
         </div>
       </v-list-item>
     </v-list>

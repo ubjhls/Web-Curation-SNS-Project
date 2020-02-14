@@ -17,10 +17,12 @@ public interface IPostService {
 	List<Post> getMyLikePost(int num);
 	List<Post> getMyCurationPost(Curation curation);
 	List<Post> getAllUserPost(int num);
-	Post getPost(Post post);
+	Post getPost(int num);
 	int scrapPost(Post post);
 	int deletePost(int num);
 	List<Post> getMyFollowingPost(int num);
 	List<Post> getMyMainPost(Curation curation);
 	int updatePost(Post post);
+	List<Post> getMyScrapPost(int num);
+	String getPicture(int num);
 }

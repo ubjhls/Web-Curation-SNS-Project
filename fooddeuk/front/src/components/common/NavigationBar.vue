@@ -56,7 +56,7 @@
       <v-divider style="margin-left:10%; width:80%"></v-divider>
 
       <v-list dense>
-        <div style="padding-top:5%; padding-bottom:5%; padding-left:10%">
+        <div style="padding-top:5%; padding-bottom:5%; padding-left:10%" @click="statistics">
           통계
         </div>
       </v-list>
@@ -111,6 +111,9 @@ import http from '../../../http-common'
       
       Address() {
         this.$router.push({name:"Address"})
+      },
+      statistics() {
+        this.$router.push({name : "Statistics"})
       },
       updateParentNavi() {
         this.$emit('child', this.propDrawer)

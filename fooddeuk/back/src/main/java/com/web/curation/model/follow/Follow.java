@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-
 public class Follow {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

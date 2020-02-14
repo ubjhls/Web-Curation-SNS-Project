@@ -13,14 +13,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-
 @AllArgsConstructor
 public class Profile {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int num;
 
-	private int count_like;
 	private int count_follower;
 	private int count_following;
 	private String place;
@@ -38,19 +36,17 @@ public class Profile {
 		this.place = interest;
 	}
 
-	public Profile(int num, int count_like, int count_follower, int count_following, String interest) {
+	public Profile(int num, int count_follower, int count_following, String interest) {
 		super();
 		this.num = num;
-		this.count_like = count_like;
 		this.count_follower = count_follower;
 		this.count_following = count_following;
 		this.place = interest;
 	}
 
-	public Profile(int num, int count_like, int count_follower, int count_following) {
+	public Profile(int num, int count_follower, int count_following) {
 		super();
 		this.num = num;
-		this.count_like = count_like;
 		this.count_follower = count_follower;
 		this.count_following = count_following;
 	}
@@ -58,7 +54,6 @@ public class Profile {
 	public Profile(int num, int count_like, int count_follower, int count_following, String interest, String picture) {
 		super();
 		this.num = num;
-		this.count_like = count_like;
 		this.count_follower = count_follower;
 		this.count_following = count_following;
 		this.place = interest;
@@ -71,14 +66,6 @@ public class Profile {
 
 	public void setNum(int num) {
 		this.num = num;
-	}
-
-	public int getCount_like() {
-		return count_like;
-	}
-
-	public void setCount_like(int count_like) {
-		this.count_like = count_like;
 	}
 
 	public int getCount_follower() {
@@ -127,8 +114,9 @@ public class Profile {
 
 	@Override
 	public String toString() {
-		return "Profile [num=" + num + ", count_like=" + count_like + ", count_follower=" + count_follower
-				+ ", count_following=" + count_following + ", place=" + place + ", picture=" + picture + "]";
+		return "Profile [num=" + num + ", count_follower=" + count_follower + ", count_following=" + count_following
+				+ ", place=" + place + ", picture=" + picture + ", placeFirst=" + placeFirst + ", placeSecond="
+				+ placeSecond + "]";
 	}
 
 	
