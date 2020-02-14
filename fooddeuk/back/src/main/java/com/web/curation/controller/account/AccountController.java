@@ -28,6 +28,7 @@ import com.web.curation.jwt.JwtService;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
+import com.web.curation.security.PasswordEncoding;
 import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
 
@@ -55,31 +56,31 @@ public class AccountController {
 	@PostMapping("/account/login")
 	@ApiOperation(value = "로그인")
 	public Object login(@RequestParam(required = true) String email, @RequestParam(required = true) String password) {
-
+		PasswordEncoding passwordEncoding = new PasswordEncoding();
 		System.out.println("-----------------/account/login-----------------");
 		System.out.println("email : " + email);
 		System.out.println("password : " + password);
 
 		User user = userService.findUserByEmailAndPassword(new User(email, password));
-		
+	    
 		BasicResponse result = new BasicResponse();
 		result.status = true;
 		
 		if (user == null) {
-			System.out.println("로그인 실패");
+			System.out.println("로그인 실패1");
 			result.data = "failed";
 		} else if (!user.getConfirm().equals("Y")) {
 			System.out.println("이메일 미 인증 사용자");
 			result.data = "noemailcheck";
 		} else {
-			if (user.getEmail().equalsIgnoreCase(email) && user.getPassword().equalsIgnoreCase(password)) {
+			if (user.getEmail().equalsIgnoreCase(email) && passwordEncoding.matches(password, user.getPassword())) {
 				System.out.println("로그인 성공");
 				// 우영이형 소스
 				String token = jwtService.create("member", user, "user");
 				System.out.println(token);
 				result.data = token;
 			} else {
-				System.out.println("로그인 실패");
+				System.out.println("로그인 실패2");
 				result.data = "failed";
 				return new ResponseEntity<>(result, HttpStatus.OK);
 			}
@@ -94,10 +95,12 @@ public class AccountController {
 	public Object signUp(@Valid @RequestBody SignupRequest request) throws Exception {
 		
 		System.out.println("-----------------/account/user-----------------");
+		PasswordEncoding passwordEncoding = new PasswordEncoding();
 		String email = request.getEmail();
 		String nickname = request.getNickname();
 		String name = request.getName();
 		String password = request.getPassword();
+		password = passwordEncoding.encode(password);
 		String intro = request.getIntro();
 		System.out.println("email : " + email);
 		System.out.println("nickname : " + nickname);

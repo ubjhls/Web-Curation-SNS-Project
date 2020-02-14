@@ -66,7 +66,13 @@
 
     export default {
         components: {
-
+            NavigationBar,
+            NewsFeed,
+            AlarmPage,
+            MyFeed,
+            UserFeed,
+            AddFeed,
+            Searchname,
         },
         created() {
             this.component = this;

@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Curation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
