@@ -119,23 +119,10 @@
 
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
-                          <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
-                            <v-dialog v-model="dialog" persistent max-width="290">
-                            <template v-slot:activator="{ on }">
-                                <v-btn depressed color="white" v-on="on" @click="modal(item.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
-                            </template>
-                            <v-card>
-                                <v-card-title class="headline">{{nickname}}님의 게시물</v-card-title>
-                                 <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
-                                <v-text-field style="color:blue; width:90%; margin-left:10px" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
-                                <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" text @click="dialog = false">취소</v-btn>
-                                <v-btn color="green darken-1" text @click="scrapfeed(modalnum, scraptitle, scrapcontent);">스크랩</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                            </v-dialog>
-                        </v-row>
+                           <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
+                        <button @click="noscrap()"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
+
+                        </div>
                         <br>
                     </div>
                     <br>
@@ -249,10 +236,23 @@
 
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
-                        <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
-                        <button @click="scrapfeed(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
-
-                        </div>
+                         <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
+                            <v-dialog v-model="dialog" persistent max-width="290">
+                            <template v-slot:activator="{ on }">
+                                <v-btn depressed color="white" v-on="on" @click="modal(item.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
+                            </template>
+                            <v-card>
+                                <v-card-title class="headline">{{nickname}}님의 게시물</v-card-title>
+                                 <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
+                                <v-text-field style="color:blue; width:90%; margin-left:10px" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
+                                <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="green darken-1" text @click="dialog = false">취소</v-btn>
+                                <v-btn color="green darken-1" text @click="scrapfeed(modalnum, scraptitle, scrapcontent);">스크랩</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                            </v-dialog>
+                        </v-row>
                         <br>
                     </div>
                     <br>
@@ -781,6 +781,9 @@
             modal(num){
                 this.modalnum = num
             },
+            noscrap(){
+                alert('이미 스크랩 된 게시물입니다')
+            }
            
         },
         data: () => {
