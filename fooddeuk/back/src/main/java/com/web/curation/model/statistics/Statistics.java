@@ -24,6 +24,8 @@ public class Statistics {
 	private int likeClick_count;
 	private int comment_count;
 	private int commentWrite_count;
+	private String year;
+	private String month;
 	
 	public int getNum() {
 		return num;
@@ -67,13 +69,27 @@ public class Statistics {
 	public void setCommentWrite_count(int commentWrite_count) {
 		this.commentWrite_count = commentWrite_count;
 	}
-	
+	public String getYear() {
+		return year;
+	}
+	public void setYear(String year) {
+		this.year = year;
+	}
+	public String getMonth() {
+		return month;
+	}
+	public void setMonth(String month) {
+		this.month = month;
+	}
 	@Override
 	public String toString() {
 		return "Statistics [num=" + num + ", post_count=" + post_count + ", scrap_count=" + scrap_count
 				+ ", like_count=" + like_count + ", likeClick_count=" + likeClick_count + ", comment_count="
-				+ comment_count + ", commentWrite_count=" + commentWrite_count + "]";
+				+ comment_count + ", commentWrite_count=" + commentWrite_count + ", year=" + year + ", month=" + month
+				+ "]";
 	}
+	
+	
 	
 	
 }

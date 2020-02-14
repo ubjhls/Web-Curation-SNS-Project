@@ -5,22 +5,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="profile">
 
 	<insert id="createProfile" parameterType="java.lang.Integer">
-<<<<<<< HEAD
-		INSERT INTO PROFILE(NUM)
-		VALUES(#{num})
-	</insert>
-	
-	<select id="getProfile" parameterType="java.lang.Integer" resultType="profile">
-		SELECT * FROM PROFILE WHERE NUM=#{num}
-	</select>
-	
-	<select id="getMyPlace" parameterType="java.lang.Integer" resultType="java.lang.String">
-		SELECT PLACE FROM PROFILE WHERE NUM=#{num}
-	</select>
-	
-	<update id="updatePlace" parameterType="profile">
-		UPDATE PROFILE SET PLACE=#{place} WHERE NUM=#{num}
-=======
 		insert into profile(num)
 		values(#{num})
 	</insert>
@@ -35,7 +19,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<update id="updatePlace" parameterType="profile">
 		update profile set place=#{place} where num=#{num}
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	</update>
 	
  </mapper>
