@@ -31,9 +31,9 @@
             </div>
             <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
-                 <div v-for="(item,index) in post" v-bind:key="item.num">  
+                 <div v-for="(item,index) in list" v-bind:key="item.num">  
                 <div v-if="item.type==='스크랩'">
-                     <v-card
+                    <v-card
                             max-width="100%"
                             class="mx-auto"
                             style="margin-bottom:100px; position:relative"
@@ -41,13 +41,18 @@
                     <v-list-item>
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
-                            <v-menu offset-y style="float:right;">
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; float:left;">
+                            <div style="float:left; font-size:20px">
+                            {{item.title}}
+                            </div>
+                            <div v-if="item.author === mynum">
+                            <v-menu offset-y style="float:right;">         
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">
-                                    <v-icon>mdi-dots-vertical</v-icon>
+                                    <v-icon style="float:right">mdi-dots-vertical</v-icon>
                                 </v-btn>
                             </template>
+                            
                             <v-list>
                                 <v-list-item>
                                     <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
@@ -57,15 +62,15 @@
                                 </v-list-item>
                             </v-list>
                             </v-menu>
+                            </div>
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
-
-                         <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> 
-                         </v-list-item-subtitle>
+                         <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
+                        <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->
                         </v-list-item-content>
                         </v-list-item>
-                            <div style="margin-left:20px; margin-bottom:20px">
+                           <div style="margin-left:20px; margin-bottom:20px">
                                 {{ item.content }}<br>
                             </div>
                         <p style="text-align:center">
@@ -97,8 +102,9 @@
                         </p>
                         <v-spacer></v-spacer>
 
+
                     <div style="width:100%">
-                    <div style="margin-bottom:10px; margin-top:10px; padding-left:5px">
+                    <div style="margin-bottom:10px; margin-top:15px; padding-left:5px">
                         <div style="width:33%; float:left;">
 
                         <button class="animated rubberBand" v-if="like[index]===true" @click="toggledelete(item.num, index)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
@@ -108,10 +114,23 @@
 
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
-                        <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
-                        <button @click="scrapfeed(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
-
-                        </div>
+                          <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
+                            <v-dialog v-model="dialog" persistent max-width="290">
+                            <template v-slot:activator="{ on }">
+                                <v-btn depressed color="white" v-on="on" @click="modal(item.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
+                            </template>
+                            <v-card>
+                                <v-card-title class="headline">{{nickname}}님의 게시물</v-card-title>
+                                 <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
+                                <v-text-field style="color:blue; width:90%; margin-left:10px" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
+                                <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="green darken-1" text @click="dialog = false">취소</v-btn>
+                                <v-btn color="green darken-1" text @click="scrapfeed(modalnum, scraptitle, scrapcontent);">스크랩</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                            </v-dialog>
+                        </v-row>
                         <br>
                     </div>
                     <br>
@@ -158,9 +177,7 @@
                             </div>
                         </div>
                     </div>
-                    
                     </v-card>
-
 
                 </div>
 
@@ -173,7 +190,10 @@
                     <v-list-item>
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:10px;">
+                            <div style="float:left; font-size:20px">
+                            {{item.title}}
+                            </div>
                             <v-menu offset-y style="float:right;">
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">
@@ -282,6 +302,7 @@
                 
                 </div>
             </div>
+             <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
         </div>
     </div>
     </div>
@@ -302,6 +323,7 @@
     import http from '../../../http-common'
     import NavigationBar from '../../components/common/NavigationBar'
     import {fireDB} from '../../main'
+    import InfiniteLoading from 'vue-infinite-loading';
     
 
     export default {
@@ -547,10 +569,10 @@
             commentview(num,index){ //댓글 버튼 누를 때
             //댓글 불러오기
             if(this.coment[index]==false){
-                    http.get('/comment/comment?num='+num)
+                    http.get('/comment/comment?postnum='+num)
                 .then(response => {
                     if(response.data.object!=null){
-                        this.todolist.push(response.data.object)
+                        this.todolist[index].push(response.data.object)
                     } 
                 })
                 .catch(Error => {
@@ -714,26 +736,61 @@
                 alert("댓글이 등록되었습니다.")
                
             },
-            scrapfeed(num,idx) {
+            scrapfeed(num,title,content) {
+                this.dialog= false
                 let form = new FormData()
                 form.append('postnum', num)
+                form.append('title',title)
+                form.append('content',content)
                 form.append('num',this.$store.state.userinfo.num)
                 http.post("/post/scrap", form)
+                console.log(num)
                 .then(Response => {
                 })
                 .catch(Error => {
                     console.log(Error)
                 })
-            }
+            },
+            modal(num){
+                this.modalnum = num
+            },
+            // //무한 스크롤 메소드
+            infiniteHandler($state){    
+               
+                setTimeout(()=>{
+                    //alert("ㅎㅇ")
+             
+                    const temp = [];
+                    const size = this.list.length;
+                    for (let i = size; i< size+3; i++) {
+                        if(this.post[i]!=null){
+                            temp.push(this.post[i]);
+                        }
+                    }
+                    this.list = this.list.concat(temp);
+                    console.log(this.list)
+                    $state.loaded();
+                 
+                    if(this.list.length==this.post.length){
+                        $state.complete();
+                  
+                    }
+                    
+                },1000)
+            },
            
         },
         data: () => {
             return {
+                modalnum:0,
+                dialog: false,
                 usernum:0,
                 isSubmit: false,
                 error:{
                     comment:false
                 },
+                scraptitle:'',
+                scrapcontent:'',
                 nick:'',
                 nickname : '',
                 num:0,
@@ -755,9 +812,12 @@
                 likelist:[],
                 mynum:0,
                 commentcount:[],
-
+                list:[],
                
             }
+        },
+        components:{
+            InfiniteLoading
         }
     }
 </script>
@@ -768,4 +828,5 @@
     color: gray;
     font-size:12px;
 }
+
 </style>
