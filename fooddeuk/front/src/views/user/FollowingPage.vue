@@ -89,6 +89,7 @@
                 http.get("/user/userinfo/{nickname}?nickname=" + nick)
                 .then(Response => {
                     this.num = Response.data.num;
+                    this.email = Response.data.email;
                     this.getFollowing(this.num);
                 })
                 .catch(Error => {

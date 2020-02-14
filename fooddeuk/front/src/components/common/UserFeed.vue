@@ -185,6 +185,7 @@
     import http from '../../../http-common'
     import NavigationBar from '../../components/common/NavigationBar'
     import {fireDB} from '../../main'
+    import firebase from 'firebase'
     import InfiniteLoading from 'vue-infinite-loading';
 
 
@@ -363,7 +364,7 @@
                         this.isfollow = 1;
                         this.getFollower();
                         this.getFollowing();
-                        this.updateAlarmToFirebase();
+                        this.updateAlarmToFirebase(this.email);
                     })
                     .catch(Error => {
                         console.log(Error)
@@ -567,44 +568,27 @@
                 },1000)
             },
             //밑은 알람 메소드
-            setAlarm(alarm) {
-                this.userAlarmCount = alarm;
-            },
-            updateAlarmToFirebase() {       
-                console.log(this.email + ":" + this.userAlarmCount)
-                fireDB.collection('Alarm').doc(this.email)
-                .set({
-                    count : this.userAlarmCount + 1
+            updateAlarmToFirebase(email) {       
+                // console.log(this.email + ":" + this.userAlarmCount)
+                fireDB.collection('Alarm').doc(email)
+                .update({
+                    count : firebase.firestore.FieldValue.increment(1)
                 })
             },
-            getAlarmFromFirebase() {
-                let whoami = this;
-                let count = 0;
-                fireDB.collection('Alarm').doc(this.email).get().then(function(doc) {
-                if(doc.data()==undefined) {
-                    count = 0;
-                } else {
-                    count = doc.data().count;
-                }
-                whoami.setAlarm(count);
-                }).catch(function(error) {
-                    console.log(error)
-                })
-            },
-            watchAlarmFromFirebase() {
-                let whoami = this;
-                let count=0;
-                fireDB.collection('Alarm').doc(this.email).onSnapshot( {
-                    includeMetadataChanges: true    
-                },function(doc) {
-                    if(doc.data()==undefined) {
-                        count = 0;
-                    } else {
-                        count = doc.data().count;
-                    }
-                    whoami.setAlarm(count);
-                })
-            },
+            // getAlarmFromFirebase() {
+            //     let whoami = this;
+            //     let count = 0;
+            //     fireDB.collection('Alarm').doc(this.email).get().then(function(doc) {
+            //     if(doc.data()==undefined) {
+            //         count = 0;
+            //     } else {
+            //         count = doc.data().count;
+            //     }
+            //     whoami.setAlarm(count);
+            //     }).catch(function(error) {
+            //         console.log(error)
+            //     })
+            // },
             togglecomment(num) {
                 this.commenttoggle = !this.commenttoggle
                 http.get("/comment/comment?num=" + num)
@@ -666,7 +650,6 @@
                 feeds: 0,
                 post : [],
                 commentNum:'',
-                userAlarmCount: 0,
                 likelist:[],
                 mynum:0,
                 commentcount:[],         
