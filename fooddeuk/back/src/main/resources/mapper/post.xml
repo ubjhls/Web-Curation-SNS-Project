@@ -34,14 +34,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="getMyPost" parameterType="java.lang.Integer" resultType="post">
-		select * from post where author=#{num} and type='일반' order by date desc
+		select * from post where author=#{num} order by date desc
 	</select>
 	
 	<select id="getMyLikePost" parameterType="java.lang.Integer" resultType="post">
 		select * from post
 		where num in (select postnum from postlike where liker=#{num})
-		and (author in (select following from follow where follower=#{num})
-		or author in (select num from user where auth=0))
+		and ((author in (select following from follow where follower=#{num})
+		or author in (select num from user where auth=0)) or author=#{num})
 		order by date desc;
 	</select>
 	
@@ -52,8 +52,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getMyCurationPost" parameterType="curation" resultType="post">
 		select * from post 
 		where num in (select num from post where substring_index(address, ' ', 3) like concat(#{place}, '%'))
-        and (author in (select following from follow where follower=#{num})
-		or author in (select num from user where auth=0))
+        and ((author in (select following from follow where follower=#{num})
+		or author in (select num from user where auth=0)) or author=#{num})
 		order by date desc;
 	</select>
 	

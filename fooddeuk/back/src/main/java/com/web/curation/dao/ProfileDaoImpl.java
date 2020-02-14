@@ -29,4 +29,8 @@ public class ProfileDaoImpl {
 		return sqlSession.update(ns+"updatePlace", profile);
 	}
 	
+	public String getPicture(int num) {
+		return sqlSession.selectOne(ns+"getPicture", num);
+	}
+	
 }

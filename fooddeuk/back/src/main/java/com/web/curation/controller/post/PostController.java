@@ -150,7 +150,6 @@ public class PostController {
 		System.out.println("nickname : " + nickname);
 		
 		int num = userService.getNumByNickname(nickname);
-		
 		BasicResponse result = new BasicResponse();
 		result.data="success";
 		

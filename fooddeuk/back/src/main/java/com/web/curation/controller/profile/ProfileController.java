@@ -83,5 +83,14 @@ public class ProfileController {
 		return profile;
 	}
 	
+	@GetMapping("/profile/picture")
+	@ApiOperation(value = "회원 사진 가져오기")
+	public String getPicture(@RequestParam(required = true) int num) throws Exception {
+		System.out.println("-----------------/profile/picture-----------------");
+		System.out.println("num : " + num);
+		
+		return profileService.getPicture(num);
+	}
+	
 	
 }

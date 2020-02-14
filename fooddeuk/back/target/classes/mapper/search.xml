@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="search">
 
 	<select id="getAllSearch" parameterType="java.lang.Integer" resultType="search">
-		select who from search where num=#{num} order by date desc
+		select who from search where num=#{num} order by date desc limit 5
 	</select>
 	
 	<select id="getNickname" parameterType="java.lang.Integer" resultType="java.lang.String">

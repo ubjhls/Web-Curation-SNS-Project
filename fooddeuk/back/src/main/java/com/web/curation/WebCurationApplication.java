@@ -10,4 +10,4 @@ public class WebCurationApplication {
 		SpringApplication.run(WebCurationApplication.class, args);
 	}
 
-}
+}	
