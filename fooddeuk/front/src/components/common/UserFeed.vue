@@ -49,6 +49,7 @@
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                            <div v-if="item.author === mynum">
                             <v-menu offset-y style="float:right;">
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">
@@ -64,6 +65,7 @@
                                 </v-list-item>
                             </v-list>
                             </v-menu>
+                            </div>
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
@@ -92,7 +94,7 @@
                         <v-spacer></v-spacer>
 
                     <div style="width:100%">
-                    <div style="margin-bottom:10px; margin-top:10px; padding-left:5px">
+                    <div style="margin-bottom:10px; margin-top:15px; padding-left:5px">
                         <div style="width:33%; float:left;">
 
                         <button class="animated rubberBand" v-if="like[index]===true" @click="toggledelete(item.num, index)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
@@ -102,22 +104,23 @@
 
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
-                        <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
-                        <a href="#open-modal"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></a>
-                        </div>
-                        <div id="open-modal" class="modal-window">
-                            <div style="height:250px; background-image: linear-gradient(to right,#7f53ac 0,#657ced 100%);">
-                        <a href="#">XXXXXX
-                        </a>
-                                <h1 style="margin-top:20px">스크랩</h1>
-                                
-                                <v-text-field style="color:blue; width:90%" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
-                                <v-text-field style="color:blue; width:90%" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
-                                <a href="#">
-                                <button class="close-modal" style="margin-top:20px" @click="scrapfeed(item.num, scraptitle, scrapcontent); href='#'">제출</button>
-                                </a>    
-                            </div>
-                        </div>
+                          <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
+                            <v-dialog v-model="dialog" persistent max-width="290">
+                            <template v-slot:activator="{ on }">
+                                <v-btn depressed color="white" v-on="on" @click="modal(item.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
+                            </template>
+                            <v-card>
+                                <v-card-title class="headline">{{nickname}}님의 게시물</v-card-title>
+                                 <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
+                                <v-text-field style="color:blue; width:90%; margin-left:10px" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
+                                <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="green darken-1" text @click="dialog = false">취소</v-btn>
+                                <v-btn color="green darken-1" text @click="scrapfeed(modalnum, scraptitle, scrapcontent);">스크랩</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                            </v-dialog>
+                        </v-row>
                         <br>
                     </div>
                     <br>
@@ -197,7 +200,6 @@
             if(this.$store.state.userinfo!=null) {
                 this.myEmail = this.$store.state.userinfo.email
                 this.nick = this.$store.state.userinfo.nickName
-
                  http.get("/user/userinfo/{nickname}?nickname="+this.nick)
                 .then(Response => {
                     this.mynum = Response.data.num;
@@ -293,7 +295,7 @@
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                     this.post = Response.data.object;
-          
+                    console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
                      
@@ -627,22 +629,28 @@
                
             },
             scrapfeed(num,title,content) {
+                this.dialog= false
                 let form = new FormData()
                 form.append('postnum', num)
                 form.append('title',title)
                 form.append('content',content)
                 form.append('num',this.$store.state.userinfo.num)
                 http.post("/post/scrap", form)
+                console.log(num)
                 .then(Response => {
                 })
                 .catch(Error => {
                     console.log(Error)
                 })
-            }
+            },
+            modal(num){
+                this.modalnum = num
+            },
            
         },
         data: () => {
             return {
+                modalnum:0,
                 dialog: false,
                 usernum:0,
                 isSubmit: false,
@@ -688,75 +696,11 @@
     position:relative;
     z-index:3
 }
-p {
+#app p {
     margin-left:5px;
     margin-bottom:1px;
     color: gray;
     font-size:12px;
-}
-.modal-window {
-  text-align: center;
-  box-shadow: #aaa;
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.25);
-  top: 0;
-  right:0;
-  bottom: 0;
-  left: 0;
-  z-index: 999;
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s;
-  &:target {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: auto;
-  }
-  &>div {
-    background-color: ivory;
-    width: 300px;
-    position: absolute;
-    top: 50%;
-
-    background: #ffffff;
-  }
-  h1 {
-    font-size: 150%;
-    margin: 0 0 15px;
-  }
-}
-
-.modal-close {
-  color: rgb(0, 0, 0);
-  line-height: 50px;
-  font-size: 100%;
-  position: absolute;
-  right: 0;
-  text-align: center;
-  top: 0;
-  width: 70px;
-  text-decoration: none;
-  &:hover {
-    color: black;
-  }
-}
-.modal-window div:not(:last-of-type) {
-  margin-bottom: 15px;
-}
-
-small {
-  color: #aaa;
-}
-
-.btn {
-  background-color: #fff;
-  padding: 1em 1.5em;
-  border-radius: 3px;
-  text-decoration: none;
-  i {
-    padding-right: 0.3em;
-  }
 }
 
 </style>

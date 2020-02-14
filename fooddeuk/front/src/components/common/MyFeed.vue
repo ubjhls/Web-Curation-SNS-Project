@@ -407,7 +407,7 @@
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                     this.post = Response.data.object;
-
+                    console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
                      
