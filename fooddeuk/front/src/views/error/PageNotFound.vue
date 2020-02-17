@@ -5,11 +5,9 @@
                 <h1>404</h1>
                 <h1>Not Found</h1>
                 <h2>해당 페이지를 찾을 수 없습니다.</h2>
-                <router-link v-bind:to="{name:'Login'}">
-                <button class="btn btn--cancel" style="background-color: green; margin-top: 50px">
-                    메인 화면으로 이동
+                <button @click="backgo" class="btn btn--cancel" style="background-color: black;">
+                    뒤로가기
                 </button>
-            </router-link>
         </div>
     </div>
 </template>
@@ -18,24 +16,23 @@
     export default {
         data: () => {
             return {
-
+                name:"",
+                intro:"",
+                nickName:"",
+                email:"",
+                password:"",
             }
         },
         created(){
-
         },
         watch: {
           
         },
         methods: {
-          
-            homego(){
+            backgo(){
                 var router = this.$router;
-                router.push("/");
+                router.go(-1);
             }
-            
-
         }
-
     }
 </script>

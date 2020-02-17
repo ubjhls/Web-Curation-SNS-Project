@@ -25,13 +25,13 @@
        <v-divider style="margin-left:10%; width:80%"></v-divider>
 
       <v-list dense>
-        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="likeFeed">
+        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="LikeFeed">
           내가 좋아한 피드
         </div>
-        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="scrapFeed">
+        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="ScrapFeed">
           내가 스크랩 한 피드
         </div>
-        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="curationFeed">
+        <div style="padding-top:3%; padding-bottom:3%; padding-left:10%" @click="CurationFeed">
           나의 큐레이션 피드
         </div>
       </v-list>
@@ -99,14 +99,14 @@ import http from '../../../http-common'
       }
     },
     methods : {
-      likeFeed() {
-        this.$router.push({name:"likeFeed"})
+      LikeFeed() {
+        this.$router.push({name:"LikeFeed"})
       },
-      scrapFeed() {
-        this.$router.push({name:"scrapFeed"})
+      ScrapFeed() {
+        this.$router.push({name:"ScrapFeed"})
       },
-      curationFeed() {
-        this.$router.push({name:"curationFeed"})
+      CurationFeed() {
+        this.$router.push({name:"CurationFeed"})
       },
       
       Address() {

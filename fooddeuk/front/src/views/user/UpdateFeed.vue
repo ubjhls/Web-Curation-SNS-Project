@@ -1,5 +1,13 @@
 <template>
 <div>
+  <div class="header" style="width:100%; height:40px">
+            <div style="float:left;">
+            <button v-on:click="goBack">
+                <img src="../../assets/images/backIcon.png" style="width:35px;">
+            </button>
+            </div>
+            <p style="vertical-align: middle;padding: 8px 5px;float:left;">내 정보 수정</p>
+        </div>
     <v-text-field style="margin-top: 40px; margin-left:20px; margin-right:20px"
       v-model="subject"
       label="제목"
