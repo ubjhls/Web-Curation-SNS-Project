@@ -8,7 +8,7 @@
     </v-tabs>
     <br>
     <div v-if="!check">
-        <div class="field" style="float:left; width:80%; height:100%">
+        <div class="field" style="float:left; width:80%;">
             <input v-model="NewName" type="text" class="input-search" @keyup.enter="AddName">
             <label for="input-search">닉네임 검색</label>
         </div>
