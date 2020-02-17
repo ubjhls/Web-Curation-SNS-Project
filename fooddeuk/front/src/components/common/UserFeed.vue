@@ -304,7 +304,9 @@
                 
                 </div>
             </div>
-             <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+             <div v-if="post">
+                <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+                </div>
         </div>
         </div>  
     </div> 
@@ -426,7 +428,7 @@
             getPostByNum(num) { //포스트가져오기
                 let form = new FormData()
                 form.append('num', num)
-
+                
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                     this.post = Response.data.object;
@@ -441,15 +443,13 @@
                         }
                         this.likelist.push(this.post[index].count_like);
                         this.coment.push(false)
-
                         this.todolist.push([])
                         this.commentcount.push(this.post[index].count_comment)
                     }
-
+                    if(this.post.length!=0){
+                        this.infiniteHandler(this.state);
+                    }
                     
-                })
-                .catch(Error => {
-                    console.log(Error)
                 })
             },
             followcheck(nick) { //보는 유저와 팔로우 되어 있는지 확인하기
@@ -683,7 +683,8 @@
             },
             // //무한 스크롤 메소드
             infiniteHandler($state){    
-               
+                this.state = $state
+               if(this.post.length!=0){
                 setTimeout(()=>{
                     //alert("ㅎㅇ")
              
@@ -704,6 +705,7 @@
                     }
                     
                 },1000)
+               }
             },
             //밑은 알람 메소드
             setAlarm(alarm) {
