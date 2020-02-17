@@ -1,4 +1,5 @@
 <template>
+<v-app>
     <div>
         <header class="headMenu" style="text-align:center; z-index:6">
             <div style="height:40px; margin-top:px; text-align:center">
@@ -43,6 +44,7 @@
             </button>
         </div>
     </div>
+</v-app>
 </template>
 
 <script>
