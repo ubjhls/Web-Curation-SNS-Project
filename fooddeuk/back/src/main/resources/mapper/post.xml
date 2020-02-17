@@ -13,6 +13,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from post where author=#{num} order by date desc
 	</select>
 	
+	<select id="getPostByPostnum" parameterType="java.lang.Integer" resultType="post">
+		select * from post where num=#{num};
+	</select>
+	
 	<update id="likeCountUp" parameterType="java.lang.Integer">
 		update post set count_like = count_like+1 where num=#{num}
 	</update>
@@ -52,9 +56,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getMyCurationPost" parameterType="curation" resultType="post">
 		select * from post 
 		where num in (select num from post where substring_index(address, ' ', 3) like concat(#{place}, '%'))
-        and ((author in (select following from follow where follower=#{num})
-		or author in (select num from user where auth=0)) or author=#{num})
-		order by date desc;
+        and (author in (select following from follow where follower=#{num})
+		or author in (select num from user where auth=0))
+		order by date desc
 	</select>
 	
 	<select id="getAllUserPost" parameterType="java.lang.Integer" resultType="post">
@@ -62,11 +66,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where address != ''
 		and (author in (select following from follow where follower=#{num})
 		or author in (select num from user where auth=0))
+		order by date desc
+	</select>
+	
+	<select id="getAllUserPostAndAllCuration" parameterType="java.lang.Integer" resultType="post">
+		select * from post
+		where address != '' and num in (select num from post where substring_index(address, ' ', 3) like concat(#{place}, '%'))
+		or (author in (select following from follow where follower=#{num})
+		or author in (select num from user where auth=0))
 		order by date desc;
 	</select>
 	
 	<select id="getPost" parameterType="java.lang.Integer" resultType="post">
-		select * from post where num=#{num};
+		select * from post where num=#{num}
 	</select>
 	
 	<insert id="scrapPost" parameterType="post">
@@ -79,15 +91,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 	
 	<select id="getMyFollowingPost" parameterType="java.lang.Integer" resultType="post">
-		select * from post where author in (select following from follow where follower=#{num});
+		select * from post where author in (select following from follow where follower=#{num})
+		order by date desc
 	</select>
 	
-	<select id="getMyMainPost" parameterType="post" resultType="curation">
+	<select id="getMyMainPost" parameterType="curation" resultType="post">
 		select * from post 
-		where num in (select num from post where substring_index(address, ' ', 3) like concat(#{address}, '%'))
+		where num in (select num from post where substring_index(address, ' ', 3) like concat(#{place}, '%'))
         and (author in (select following from follow where follower=#{num})
 		or author in (select num from user where auth=0)) or author in (select following from follow where follower=#{num})
-        order by date desc;
+        order by date desc
 	</select>
 	
 	<update id="updatePost" parameterType="post">
@@ -96,7 +109,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 	
 	<select id="getPicture" parameterType="java.lang.Integer" resultType="java.lang.String">
-		select picture from profile where num=#{num};
+		select picture from profile where num=#{num}
 	</select>
 	
  </mapper>

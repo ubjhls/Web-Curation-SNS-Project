@@ -32,4 +32,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		update search set date=now() where num=#{num} and who=#{who}
 	</update>
 	
+	<select id="searchFeed" parameterType="java.lang.String" resultType="post">
+		select * from post
+		where num in ((select num from post where content like concat('%', #{keyword}, '%') or address like concat('%', #{keyword}, '%')))
+		and author in (select num from user where auth=0) and type='일반';
+	</select>
+	
  </mapper>

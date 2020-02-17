@@ -14,6 +14,7 @@ import com.web.curation.model.BasicResponse;
 import com.web.curation.model.profile.Profile;
 import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
+import com.web.curation.service.UserServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 

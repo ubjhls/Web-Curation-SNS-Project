@@ -93,6 +93,8 @@ public class PostController {
 		int myNum = userService.getNumByEmail(email);
 		
 		for (int i = 0; i < list.size(); i++) {
+			String nickname = userService.getNickname(list.get(i).getAuthor());
+			list.get(i).setNickname(nickname);
 			Postlike like = new Postlike(list.get(i).getNum(), myNum);
 			if(postlikeService.checkLike(like) != 0) {
 				list.get(i).setIslike(1);
@@ -100,7 +102,10 @@ public class PostController {
 			list.get(i).setPicture(postService.getPicture(num));
 			if(list.get(i).getType().equals("스크랩")) {
 				Post temp = postService.getPost(list.get(i).getScrapnum());
+				list.get(i).setScarpnick(userService.getNickname(temp.getAuthor()));
 				list.get(i).setScraptitle(temp.getTitle());
+				list.get(i).setScrapcontent(temp.getContent());
+				list.get(i).setScrappicture(profileService.getPicture(temp.getAuthor()));
 			}
 		}
 		
@@ -133,7 +138,10 @@ public class PostController {
 			list.get(i).setPicture(postService.getPicture(num));
 			if(list.get(i).getType().equals("스크랩")) {
 				Post temp = postService.getPost(list.get(i).getScrapnum());
+				list.get(i).setScarpnick(userService.getNickname(temp.getAuthor()));
 				list.get(i).setScraptitle(temp.getTitle());
+				list.get(i).setScrapcontent(temp.getContent());
+				list.get(i).setScrappicture(profileService.getPicture(temp.getAuthor()));
 			}
 		}
 		
@@ -170,7 +178,10 @@ public class PostController {
 			list.get(i).setPicture(postService.getPicture(postAuthor));
 			if(list.get(i).getType().equals("스크랩")) {
 				Post temp = postService.getPost(list.get(i).getScrapnum());
+				list.get(i).setScarpnick(userService.getNickname(temp.getAuthor()));
 				list.get(i).setScraptitle(temp.getTitle());
+				list.get(i).setScrapcontent(temp.getContent());
+				list.get(i).setScrappicture(profileService.getPicture(temp.getAuthor()));
 			}
 		}
 		
@@ -194,14 +205,15 @@ public class PostController {
 		List<Post> list = postService.getMyScrapPost(num);
 		if(list.size() == 0) {
 			result.data = "nothing";
-			result.object = list;
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		
 		for (int i = 0; i < list.size(); i++) {
 			Post temp = postService.getPost(list.get(i).getScrapnum());
+			list.get(i).setScarpnick(userService.getNickname(temp.getAuthor()));
 			list.get(i).setScraptitle(temp.getTitle());
-			list.get(i).setPicture(postService.getPicture(num));
+			list.get(i).setScrapcontent(temp.getContent());
+			list.get(i).setScrappicture(profileService.getPicture(temp.getAuthor()));
 		}
 		
 		System.out.println(list);
@@ -219,7 +231,6 @@ public class PostController {
 		int num = userService.getNumByNickname(nickname);
 		
 		BasicResponse result = new BasicResponse();
-		result.data="success";
 		
 		String temp = profileService.getMyPlace(num);
 		String[] placeArr = temp.split("/");
@@ -234,6 +245,10 @@ public class PostController {
 		} else if(placeArr[0].equals("전체")) {
 			// 모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
 			list = postService.getAllUserPost(num);
+			if(list.size() == 0) {
+				result.data = "nothing";
+				return new ResponseEntity<>(result , HttpStatus.OK);
+			}
 			for (int i = 0; i < list.size(); i++) {
 				int postAuthor = list.get(i).getAuthor();
 				String postNick = userService.getNickname(postAuthor);
@@ -245,7 +260,10 @@ public class PostController {
 				list.get(i).setPicture(postService.getPicture(postAuthor));
 				if(list.get(i).getType().equals("스크랩")) {
 					Post ptemp = postService.getPost(list.get(i).getScrapnum());
+					list.get(i).setScarpnick(userService.getNickname(ptemp.getAuthor()));
 					list.get(i).setScraptitle(ptemp.getTitle());
+					list.get(i).setScrapcontent(ptemp.getContent());
+					list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 				}
 			}
 			System.out.println("모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
@@ -254,6 +272,10 @@ public class PostController {
 				// 그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
 				Curation curation = new Curation(num, placeArr[0]);
 				list = postService.getMyCurationPost(curation);
+				if(list.size() == 0) {
+					result.data = "nothing";
+					return new ResponseEntity<>(result , HttpStatus.OK);
+				}
 				for (int i = 0; i < list.size(); i++) {
 					int postAuthor = list.get(i).getAuthor();
 					String postNick = userService.getNickname(postAuthor);
@@ -265,7 +287,10 @@ public class PostController {
 					list.get(i).setPicture(postService.getPicture(postAuthor));
 					if(list.get(i).getType().equals("스크랩")) {
 						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScarpnick(userService.getNickname(ptemp.getAuthor()));
 						list.get(i).setScraptitle(ptemp.getTitle());
+						list.get(i).setScrapcontent(ptemp.getContent());
+						list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 					}
 				}
 				System.out.println("그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
@@ -273,6 +298,10 @@ public class PostController {
 				// 그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))
 				Curation curation = new Curation(num, place);
 				list = postService.getMyCurationPost(curation);
+				if(list.size() == 0) {
+					result.data = "nothing";
+					return new ResponseEntity<>(result , HttpStatus.OK);
+				}
 				for (int i = 0; i < list.size(); i++) {
 					int postAuthor = list.get(i).getAuthor();
 					String postNick = userService.getNickname(postAuthor);
@@ -284,7 +313,10 @@ public class PostController {
 					list.get(i).setPicture(postService.getPicture(postAuthor));
 					if(list.get(i).getType().equals("스크랩")) {
 						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScarpnick(userService.getNickname(ptemp.getAuthor()));
 						list.get(i).setScraptitle(ptemp.getTitle());
+						list.get(i).setScrapcontent(ptemp.getContent());
+						list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 					}
 				}
 				System.out.println("그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))");
@@ -325,22 +357,31 @@ public class PostController {
 		
 		if(placeArr[0].equals("없음")) {
 			list = postService.getMyFollowingPost(num);
+			if(list.size() == 0) {
+				result.data = "nothing";
+				return new ResponseEntity<>(result , HttpStatus.OK);
+			}
 			for (int i = 0; i < list.size(); i++) {
 				list.get(i).setPicture(postService.getPicture(list.get(i).getAuthor()));
 				if(list.get(i).getType().equals("스크랩")) {
 					Post ptemp = postService.getPost(list.get(i).getScrapnum());
+					list.get(i).setScarpnick(userService.getNickname(ptemp.getAuthor()));
 					list.get(i).setScraptitle(ptemp.getTitle());
+					list.get(i).setScrapcontent(ptemp.getContent());
+					list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 				}
 			}
-			result.object = list;
-			return new ResponseEntity<>(result , HttpStatus.OK);
 		} else if(placeArr[0].equals("전체")) {
 			// 모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
-			list = postService.getAllUserPost(num);
+			Curation curation = new Curation(num, place);
+			list = postService.getAllUserPostAndAllCuration(curation);
+			if(list.size() == 0) {
+				result.data = "nothing";
+				return new ResponseEntity<>(result , HttpStatus.OK);
+			}
 			for (int i = 0; i < list.size(); i++) {
 				int postAuthor = list.get(i).getAuthor();
-				String postNick = userService.getNickname(postAuthor);
-				list.get(i).setNickname(postNick);
+				list.get(i).setNickname(userService.getNickname(postAuthor));
 				Postlike like = new Postlike(list.get(i).getNum(), num);
 				if(postlikeService.checkLike(like) != 0) {
 					list.get(i).setIslike(1);
@@ -348,7 +389,10 @@ public class PostController {
 				list.get(i).setPicture(postService.getPicture(postAuthor));
 				if(list.get(i).getType().equals("스크랩")) {
 					Post ptemp = postService.getPost(list.get(i).getScrapnum());
+					list.get(i).setScarpnick(userService.getNickname(ptemp.getAuthor()));
 					list.get(i).setScraptitle(ptemp.getTitle());
+					list.get(i).setScrapcontent(ptemp.getContent());
+					list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 				}
 			}
 			System.out.println("모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
@@ -357,10 +401,13 @@ public class PostController {
 				// 그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
 				Curation curation = new Curation(num, placeArr[0]);
 				list = postService.getMyMainPost(curation);
+				if(list.size() == 0) {
+					result.data = "nothing";
+					return new ResponseEntity<>(result , HttpStatus.OK);
+				}
 				for (int i = 0; i < list.size(); i++) {
 					int postAuthor = list.get(i).getAuthor();
-					String postNick = userService.getNickname(postAuthor);
-					list.get(i).setNickname(postNick);
+					list.get(i).setNickname(userService.getNickname(postAuthor));
 					Postlike like = new Postlike(list.get(i).getNum(), num);
 					if(postlikeService.checkLike(like) != 0) {
 						list.get(i).setIslike(1);
@@ -368,7 +415,10 @@ public class PostController {
 					list.get(i).setPicture(postService.getPicture(postAuthor));
 					if(list.get(i).getType().equals("스크랩")) {
 						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScarpnick(userService.getNickname(ptemp.getAuthor()));
 						list.get(i).setScraptitle(ptemp.getTitle());
+						list.get(i).setScrapcontent(ptemp.getContent());
+						list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 					}
 				}
 				System.out.println("그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
@@ -376,10 +426,13 @@ public class PostController {
 				// 그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))
 				Curation curation = new Curation(num, place);
 				list = postService.getMyMainPost(curation);
+				if(list.size() == 0) {
+					result.data = "nothing";
+					return new ResponseEntity<>(result , HttpStatus.OK);
+				}
 				for (int i = 0; i < list.size(); i++) {
 					int postAuthor = list.get(i).getAuthor();
-					String postNick = userService.getNickname(postAuthor);
-					list.get(i).setNickname(postNick);
+					list.get(i).setNickname(userService.getNickname(postAuthor));
 					Postlike like = new Postlike(list.get(i).getNum(), num);
 					if(postlikeService.checkLike(like) != 0) {
 						list.get(i).setIslike(1);
@@ -387,7 +440,10 @@ public class PostController {
 					list.get(i).setPicture(postService.getPicture(postAuthor));
 					if(list.get(i).getType().equals("스크랩")) {
 						Post ptemp = postService.getPost(list.get(i).getScrapnum());
+						list.get(i).setScarpnick(userService.getNickname(ptemp.getAuthor()));
 						list.get(i).setScraptitle(ptemp.getTitle());
+						list.get(i).setScrapcontent(ptemp.getContent());
+						list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 					}
 				}
 				System.out.println("그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))");
@@ -396,11 +452,11 @@ public class PostController {
 		
 		if(list.size() == 0) {
 			result.data = "nothing";
-			result.object = list; 
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		     
-		result.status=true;
+		result.data="success";
+		result.status = true;
 		result.object = list;
 		System.out.println(list);
 		return new ResponseEntity<>(result, HttpStatus.OK);
@@ -488,5 +544,27 @@ public class PostController {
 		
 		return "success";
 	}
+	
+	@GetMapping("/post/post/{postnum}")
+	@ApiOperation(value = "게시물 삭제하기")
+	public Object deletePost(@RequestParam(required = true) int num) throws Exception {
+		System.out.println("-----------------post/post/{postnum}-----------------");;
+		System.out.println("num : " + num);
+		
+		BasicResponse result = new BasicResponse();
+		
+		Post post = postService.getPostByPostnum(num);
+		
+		if(post == null) {
+			result.data = "nothing";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		     
+		result.status=true;
+		result.object = post;
+		System.out.println(post.toString());
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}	
+	
 	
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.curation.dao.SearchDaoImpl;
+import com.web.curation.model.post.Post;
 import com.web.curation.model.search.Search;
 import com.web.curation.model.user.User;
 
@@ -49,9 +50,9 @@ public class SearchServiceImpl implements ISearchService {
 		return searchdao.updateSearch(search);
 	}
 
-	
-
-
-
+	@Override
+	public List<Post> searchFeed(String keyword) {
+		return searchdao.searchFeed(keyword);
+	}
 
 }
