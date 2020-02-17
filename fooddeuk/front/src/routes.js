@@ -18,9 +18,9 @@ import FollowingPage from './views/user/FollowingPage.vue'
 import EmailConfirm from './views/user/EmailConfirm.vue'
 import Address from './views/curation/Address.vue'
 import ModifyPassword from './views/user/ModifyPassword.vue'
-import curationFeed from './views/user/curationFeed.vue'
-import scrapFeed from './views/user/scrapFeed.vue'
-import likeFeed from './views/user/likeFeed.vue'
+import CurationFeed from './views/user/CurationFeed.vue'
+import ScrapFeed from './views/user/ScrapFeed.vue'
+import LikeFeed from './views/user/LikeFeed.vue'
 import Statistics from './views/user/Statistics.vue'
 import UpdateFeed from './views/user/UpdateFeed.vue'
 
@@ -109,12 +109,13 @@ const onlyAuthUser = (to, from, next) =>{
     },
     {
         path:'*',
-        redirect:'/404'
-    
+        redirect:'/404',
+        props:true
     },
     {
         path:'/404',
-        component : PageNotFound
+        component : PageNotFound,
+        props:true
     },
     {
         path : '/error/ErrorPage',
@@ -187,23 +188,23 @@ const onlyAuthUser = (to, from, next) =>{
         props: true
     },
     {
-        path : '/user/curationFeed',
-        name : 'curationFeed',
-        component : curationFeed,
+        path : '/user/CurationFeed',
+        name : 'CurationFeed',
+        component : CurationFeed,
         beforeEnter : onlyAuthUser,
         props: true
     },
     {
-        path : '/user/likeFeed',
-        name : 'likeFeed',
-        component : likeFeed,
+        path : '/user/LikeFeed',
+        name : 'LikeFeed',
+        component : LikeFeed,
         beforeEnter : onlyAuthUser,
         props: true
     },
     {
-        path : '/user/scrapFeed',
-        name : 'scrapFeed',
-        component : scrapFeed,
+        path : '/user/ScrapFeed',
+        name : 'ScrapFeed',
+        component : ScrapFeed,
         beforeEnter : onlyAuthUser,
         props: true,
     },

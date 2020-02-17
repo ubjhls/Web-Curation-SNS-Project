@@ -13,7 +13,6 @@ import lombok.Setter;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class Post {
 	@Id

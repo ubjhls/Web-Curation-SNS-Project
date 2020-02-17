@@ -10,7 +10,6 @@
         </div>
         <div class="wrapC">
             <h1>인증이 완료되지 않은 이메일입니다.</h1>
-            <h1 style="margin-top:10%">가입하신 이메일을 입력해주세요</h1>
             <h1>이메일로 인증 이메일을 발송해드립니다</h1>
             <br/>
             <div>
@@ -22,6 +21,7 @@
                     id="email"></v-text-field>
                 </div>
             </div>
+            <br><br>
             <div class="btn_wrap">
                 <button
                     class="btn btn--back btn--ok"
@@ -53,6 +53,7 @@
     import * as EmailValidator from 'email-validator';
     import UserApi from '../../apis/UserApi'
     import axios from "axios"
+    import {fireDB} from '../../main'
 
     export default {
         data: () => {
@@ -102,6 +103,11 @@
                                 name: "Login"
                             });
                             alert("이메일 인증이 완료되었습니다.")
+                            //파이어베이스 등록
+                            fireDB.collection('Alarm').doc(this.email)
+                            .set({
+                                count : 0
+                            })
                         } else {
                             alert("키 값이 일치하지 않습니다.");
                         }
@@ -118,7 +124,7 @@
             },
             goBack() {
                 var router = this.$router;
-                router.go(-1)
+                router.push({name : "Login"})
             },
             sendEmail() {
                 var router = this.$router;

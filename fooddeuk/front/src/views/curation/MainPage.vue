@@ -1,4 +1,5 @@
 <template>
+<v-app>
     <div>
         <header class="headMenu" style="text-align:center; z-index:6">
             <div style="height:40px; margin-top:px; text-align:center">
@@ -9,7 +10,7 @@
             </div>
         </header>
         <div style="position:relative; z-index:1005">
-        <NavigationBar style="overflow:visible" class="navi" :drawer="menu.isNavi" @child="updateNaviValue" v-if="menu.isNavi"></NavigationBar>
+        <NavigationBar class="navi" :drawer="menu.isNavi" @child="updateNaviValue" v-if="menu.isNavi"></NavigationBar>
         </div>
         <NewsFeed v-if="menu.isHome"></NewsFeed>
         <AlarmPage v-if="menu.isAlarm"></Alarmpage>      
@@ -43,6 +44,7 @@
             </button>
         </div>
     </div>
+</v-app>
 </template>
 
 <script>
@@ -66,7 +68,13 @@
 
     export default {
         components: {
-
+            NavigationBar,
+            NewsFeed,
+            AlarmPage,
+            MyFeed,
+            UserFeed,
+            AddFeed,
+            Searchname,
         },
         created() {
             this.component = this;
