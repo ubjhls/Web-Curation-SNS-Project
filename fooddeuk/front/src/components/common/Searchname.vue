@@ -1,6 +1,6 @@
 <template>
 <div class="wrapC">
-    <div class="container">
+    <div>
     <div action="" class="search">
     <v-tabs style="margin-top:100px">
         <v-tab @click="checkchange()">검색 엔진</v-tab>
@@ -10,7 +10,6 @@
     <div v-if="!check">
         <div class="field" style="float:left; width:80%;">
             <input v-model="NewName" type="text" class="input-search" @keyup.enter="AddName">
-            <label for="input-search">닉네임 검색</label>
         </div>
             <div style="width:20%; float:left">
                 <button class="check-button" @click="AddName" :disabled="!canClick">검색</button>

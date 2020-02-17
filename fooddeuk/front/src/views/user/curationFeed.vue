@@ -6,7 +6,7 @@
                 <img src="../../assets/images/backIcon.png" style="width:35px;">
             </button>
             </div>
-            <p style="vertical-align: middle;padding: 8px 5px;float:left;">비밀번호 수정</p>
+            <p style="vertical-align: middle;padding: 8px 5px;float:left;">내 큐레이션 피드</p>
         </div>
     <div class="wrapC">
         <div class="wrapper">
@@ -56,7 +56,7 @@
                             <v-card style="margin-left:13px; width:90%; height:100%; text-align:center">
                                 <v-img 
                                 v-if="item.image!==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px;"
                                 :src="item.image"
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -65,12 +65,11 @@
                                 </v-img>
                                 <v-img 
                                 v-if="item.image==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px"
                                 src="../../assets/images/noimage.png"  
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                                 >
-                                <v-card-title v-text="item.scraptitle"></v-card-title>
                                 </v-img>
 
 
@@ -135,7 +134,7 @@
                                 <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
                                 :disabled="!isSubmit"
                                 :class="{disabled : !isSubmit}"
-                                >댓글달기</button>
+                                >게시</button>
                             </div>
                             <div style="margin-left:5px; width:60%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
@@ -265,7 +264,7 @@
                                 <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
                                 :disabled="!isSubmit"
                                 :class="{disabled : !isSubmit}"
-                                >댓글달기</button>
+                                >게시</button>
                             </div>
                             <div style="margin-left:5px; width:60%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
