@@ -78,11 +78,13 @@
         },
         created() {
             this.component = this;
-            if(this.$store.state.userinfo!=null){
-                this.email = this.$store.state.userinfo.email;
-                this.nickname = this.$store.state.userinfo.nickName;
-            }
-            this.watchAlarmFromFirebase();
+            setTimeout(() => {      
+                if(this.$store.state.userinfo!=null){
+                    this.email = this.$store.state.userinfo.email;
+                    this.nickname = this.$store.state.userinfo.nickName;
+                }
+                this.watchAlarmFromFirebase();
+            }, 200);
         },
         watch: {
         },

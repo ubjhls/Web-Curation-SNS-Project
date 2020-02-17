@@ -10,7 +10,8 @@
         </div>
     <div class="wrapC">
         <div class="wrapper">
-                <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
+                <div v-if="post===null" style="margin-top:60px; text-align:center"> 게시물이 없습니다.</div>
+                <div v-else> 
                 <div v-for="(item,index) in list" v-bind:key="item.num">  
                 <div style="margin-top:40px">
                 </div>
@@ -279,7 +280,8 @@
                 
                 </div>
             </div>
-             <infinite-loading style="margin-top:30%" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+                <infinite-loading  style="margin-top:20px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+            </div>
         </div>  
     </div> 
     </v-app>
@@ -317,7 +319,7 @@
                     console.log(Error)
                 })
             }
-            console.log(this.propsNickname)
+           
             this.nickname = this.propsNickname;
             //포스트 불러오기
             this.getUserByNickname(this.nickname);
@@ -376,25 +378,32 @@
                 })
             },
             getPostByNum(num) { //포스트가져오기
-                console.log('')
+              
                 http.get("/post/mylikepost?nickname="+this.$store.state.userinfo.nickName)
                 .then(Response => {
                     this.post = Response.data.object;
+                    console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
-                    for (let index = 0; index < this.post.length; index++) {
-                     
-                        if(this.post[index].islike==1){
-                            this.like.push(true)
-                        }else{
-                            this.like.push(false)
+                    if(this.post!=null){
+
+                        for (let index = 0; index < this.post.length; index++) {
+      
+                            if(this.post[index].islike==1){
+                                this.like.push(true)
+                            }else{
+                                this.like.push(false)
+                            }
+                            this.likelist.push(this.post[index].count_like);
+                            this.coment.push(false)
+    
+                            this.todolist.push([])
+                            this.commentcount.push(this.post[index].count_comment)
                         }
-                        this.likelist.push(this.post[index].count_like);
-                        this.coment.push(false)
-
-                        this.todolist.push([])
-                        this.commentcount.push(this.post[index].count_comment)
+                       
+                        if(this.post.length!=0){
+                            this.infiniteHandler(this.state);
+                        }
                     }
-
                     
                 })
                 .catch(Error => {
@@ -554,7 +563,8 @@
             },
             // //무한 스크롤 메소드
             infiniteHandler($state){    
-               
+                this.state = $state
+               if(this.post.length!=0){
                 setTimeout(()=>{
                     //alert("ㅎㅇ")
              
@@ -575,6 +585,7 @@
                     }
                     
                 },1000)
+               }
             },
             //밑은 알람 메소드
             setAlarm(alarm) {
