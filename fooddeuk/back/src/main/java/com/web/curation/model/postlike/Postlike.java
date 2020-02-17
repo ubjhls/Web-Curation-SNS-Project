@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-
 public class Postlike {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

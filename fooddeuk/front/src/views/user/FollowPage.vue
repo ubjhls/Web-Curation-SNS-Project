@@ -75,6 +75,7 @@
     import UserApi from '../../apis/UserApi'
     import http from '../../../http-common'
     import {fireDB} from '../../main'
+    import firebase from 'firebase'
 
 
     export default {
@@ -88,39 +89,10 @@
             setAlarm(alarm) {
                 this.alarmCount.push(alarm);
             },
-            updateAlarmToFirebase(email, index) {
-                console.log(email + ":" + this.alarmCount[index])
+            updateAlarmToFirebase(email) {
                 fireDB.collection('Alarm').doc(email)
-                .set({
-                    count : this.alarmCount[index] + 1
-                })
-            },
-            getAlarmFromFirebase(email) {
-                let whoami = this;
-                let count = 0;
-                fireDB.collection('Alarm').doc(email).get().then(function(doc) {
-                if(doc.data()==undefined) {
-                    count = 0;
-                } else {
-                    count = doc.data().count;
-                }
-                whoami.setAlarm(count);
-                }).catch(function(error) {
-                    console.log(error)
-                })
-            },
-            watchAlarmFromFirebase(email) {
-                let whoami = this;
-                let count=0;
-                fireDB.collection('Alarm').doc(email).onSnapshot( {
-                    includeMetadataChanges: true    
-                },function(doc) {
-                    if(doc.data()==undefined) {
-                        count = 0;
-                    } else {
-                        count = doc.data().count;
-                    }
-                    whoami.setAlarm(count);
+                .update({
+                    count : firebase.firestore.FieldValue.increment(1)
                 })
             },
             goNewsFeeds() {
@@ -146,8 +118,8 @@
                 .then(Response => {
                     // console.log(Response)
                     this.num = Response.data.num;
+                    this.email = Response.data.email;
                     this.getFollower(this.num);
-                    this.getAlarmFromFirebase();
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -162,7 +134,7 @@
                     http.post("/follow/follow", form)
                     .then(Response => {
                         this.$set(this.isfollow,index,1)
-                        this.updateAlarmToFirebase(this.items[index].email, index);
+                        this.updateAlarmToFirebase(this.items[index].email);
                         // console.log(Response.data)
                     })
                     .catch(Error => {
@@ -178,7 +150,7 @@
                     http.post("/follow/nonfollow", form)
                     .then(Response => {
                         console.log(Response)
-                        this.updateAlarmToFirebase(this.items[index].email, index);
+                        this.updateAlarmToFirebase(this.items[index].email);
                         if(Response.data==='success') {
                             alert("팔로우가 요청되었습니다.")
                         }

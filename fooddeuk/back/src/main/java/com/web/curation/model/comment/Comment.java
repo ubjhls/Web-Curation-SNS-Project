@@ -11,21 +11,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-<<<<<<< HEAD
-@NoArgsConstructor
-@AllArgsConstructor
-=======
-
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int num;
 	
-<<<<<<< HEAD
-=======
 	private int postnum;
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	private int author;
 	private String comment;
 	private String date; // DB에서 now()로 대체
@@ -36,16 +27,6 @@ public class Comment {
 		super();
 	}
 	
-<<<<<<< HEAD
-	public Comment(int num, int author) {
-		super();
-		this.num = num;
-		this.author = author;
-	}
-	public Comment(int num, int author, String comment) {
-		super();
-		this.num = num;
-=======
 	public Comment(int num, int postnum, int author) {
 		super();
 		this.num = num;
@@ -64,19 +45,10 @@ public class Comment {
 		super();
 		this.num = num;
 		this.postnum = postnum;
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 		this.author = author;
 		this.comment = comment;
 	}
 	
-<<<<<<< HEAD
-	public Comment(int num, int author, String comment, String date) {
-		super();
-		this.num = num;
-		this.author = author;
-		this.comment = comment;
-		this.date = date;
-=======
 	public Comment(int num, int postnum, int author, String comment, String date, String nickname, boolean iscomment) {
 		super();
 		this.num = num;
@@ -86,7 +58,6 @@ public class Comment {
 		this.date = date;
 		this.nickname = nickname;
 		this.iscomment = iscomment;
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	}
 
 	public int getNum() {
@@ -95,15 +66,12 @@ public class Comment {
 	public void setNum(int num) {
 		this.num = num;
 	}
-<<<<<<< HEAD
-=======
 	public int getPostnum() {
 		return postnum;
 	}
 	public void setPostnum(int postnum) {
 		this.postnum = postnum;
 	}
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	public int getAuthor() {
 		return author;
 	}
@@ -134,21 +102,11 @@ public class Comment {
 	public void setIscomment(boolean iscomment) {
 		this.iscomment = iscomment;
 	}
-<<<<<<< HEAD
-
-	@Override
-	public String toString() {
-		return "Comment [num=" + num + ", author=" + author + ", comment=" + comment + ", date=" + date + ", nickname="
-				+ nickname + ", iscomment=" + iscomment + "]";
-	}
-
-=======
 	
 	@Override
 	public String toString() {
 		return "Comment [num=" + num + ", postnum=" + postnum + ", author=" + author + ", comment=" + comment
 				+ ", date=" + date + ", nickname=" + nickname + ", iscomment=" + iscomment + "]";
 	}
->>>>>>> 9cf119a9e5d843d95f5b5df0997a4d5e97091c0c
 	
 }

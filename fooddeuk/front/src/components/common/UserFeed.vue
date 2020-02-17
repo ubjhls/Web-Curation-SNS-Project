@@ -327,6 +327,7 @@
     import http from '../../../http-common'
     import NavigationBar from '../../components/common/NavigationBar'
     import {fireDB} from '../../main'
+    import firebase from 'firebase'
     import InfiniteLoading from 'vue-infinite-loading';
 
 
@@ -502,7 +503,7 @@
                         this.isfollow = 1;
                         this.getFollower();
                         this.getFollowing();
-                        this.updateAlarmToFirebase();
+                        this.updateAlarmToFirebase(this.email);
                     })
                     .catch(Error => {
                         console.log(Error)
@@ -517,7 +518,7 @@
                     http.post("/follow/nonfollow", form)
                     .then(Response => {
                         if(Response.data==='success') {
-                            this.updateAlarmToFirebase();
+                            this.updateAlarmToFirebase(this.email);
                             alert("팔로우가 요청되었습니다.")
                         }
                         else if(Response.data==='failed') {
@@ -625,7 +626,6 @@
                 
             },
             removeComent(num, cmt, index){
-  
                 http.delete("/comment/comment?postnum=" + num + "&num="+ cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
                 .then(response => {
                     //댓글 삭제(갱신까지)
@@ -651,20 +651,17 @@
             },
             
             removeFeed(num){
-                 if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+                if(confirm("정말 삭제하시겠습니까??") == true){    //확인
                     http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
                     .then(response => {
                         alert('게시물이 삭제되었습니다.')
                         console.log(response.data)
                         this.post = response.data.object
                     })
-                .catch(Error =>{
-                })
-
+                    .catch(Error =>{
+                    })
                 }else{   //취소
-
                     return false;
-
                 }
             },
             updateFeed(num, title, content, count_star, address, image){
@@ -708,44 +705,27 @@
                }
             },
             //밑은 알람 메소드
-            setAlarm(alarm) {
-                this.userAlarmCount = alarm;
-            },
-            updateAlarmToFirebase() {       
-                console.log(this.email + ":" + this.userAlarmCount)
-                fireDB.collection('Alarm').doc(this.email)
-                .set({
-                    count : this.userAlarmCount + 1
+            updateAlarmToFirebase(email) {       
+                // console.log(this.email + ":" + this.userAlarmCount)
+                fireDB.collection('Alarm').doc(email)
+                .update({
+                    count : firebase.firestore.FieldValue.increment(1)
                 })
             },
-            getAlarmFromFirebase() {
-                let whoami = this;
-                let count = 0;
-                fireDB.collection('Alarm').doc(this.email).get().then(function(doc) {
-                if(doc.data()==undefined) {
-                    count = 0;
-                } else {
-                    count = doc.data().count;
-                }
-                whoami.setAlarm(count);
-                }).catch(function(error) {
-                    console.log(error)
-                })
-            },
-            watchAlarmFromFirebase() {
-                let whoami = this;
-                let count=0;
-                fireDB.collection('Alarm').doc(this.email).onSnapshot( {
-                    includeMetadataChanges: true    
-                },function(doc) {
-                    if(doc.data()==undefined) {
-                        count = 0;
-                    } else {
-                        count = doc.data().count;
-                    }
-                    whoami.setAlarm(count);
-                })
-            },
+            // getAlarmFromFirebase() {
+            //     let whoami = this;
+            //     let count = 0;
+            //     fireDB.collection('Alarm').doc(this.email).get().then(function(doc) {
+            //     if(doc.data()==undefined) {
+            //         count = 0;
+            //     } else {
+            //         count = doc.data().count;
+            //     }
+            //     whoami.setAlarm(count);
+            //     }).catch(function(error) {
+            //         console.log(error)
+            //     })
+            // },
             togglecomment(num) {
                 this.commenttoggle = !this.commenttoggle
                 http.get("/comment/comment?num=" + num)
@@ -816,7 +796,6 @@
                 feeds: 0,
                 post : [],
                 commentNum:'',
-                userAlarmCount: 0,
                 likelist:[],
                 mynum:0,
                 commentcount:[],         

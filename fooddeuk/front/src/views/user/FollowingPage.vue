@@ -56,6 +56,9 @@
     import '../../assets/css/user.scss'
     import UserApi from '../../apis/UserApi'
     import http from '../../../http-common'
+    import {fireDB} from '../../main'
+    import firebase from 'firebase'
+    
     export default {
         components: {},
         created() {
@@ -89,10 +92,17 @@
                 http.get("/user/userinfo/{nickname}?nickname=" + nick)
                 .then(Response => {
                     this.num = Response.data.num;
+                    this.email = Response.data.email;
                     this.getFollowing(this.num);
                 })
                 .catch(Error => {
                     console.log(Error)
+                })
+            },
+            updateAlarmToFirebase(email) {
+                fireDB.collection('Alarm').doc(email)
+                .update({
+                    count : firebase.firestore.FieldValue.increment(1)
                 })
             },
             followgo(index){
@@ -104,7 +114,7 @@
                     http.post("/follow/follow", form)
                     .then(Response => {
                         this.$set(this.isfollow,index,1)
-                        this.updateAlarmToFirebase(this.items[index].email, index);
+                        this.updateAlarmToFirebase(this.items[index].email);
                         // console.log(Response.data)
                     })
                     .catch(Error => {
@@ -120,7 +130,7 @@
                     http.post("/follow/nonfollow", form)
                     .then(Response => {
                         console.log(Response)
-                        this.updateAlarmToFirebase(this.items[index].email, index);
+                        this.updateAlarmToFirebase(this.items[index].email);
                         if(Response.data==='success') {
                             alert("팔로우가 요청되었습니다.")
                         }
