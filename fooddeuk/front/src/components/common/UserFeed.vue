@@ -164,12 +164,15 @@
                     </div>
                     </v-card>
                 </div>
+                <div v-if="post">
                 <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+                </div>
             </div>
         </div>  
     </div> 
     </v-app>
 </template>
+<script async src="https://cse.google.com/cse.js?cx=008967271945365734974:dm2tpmlenan"></script>
 
 
 <script>
@@ -287,11 +290,11 @@
             getPostByNum(num) { //포스트가져오기
                 let form = new FormData()
                 form.append('num', num)
-
+                
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                     this.post = Response.data.object;
-          
+                    console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
                     for (let index = 0; index < this.post.length; index++) {
                      
@@ -306,7 +309,9 @@
                         this.todolist.push([])
                         this.commentcount.push(this.post[index].count_comment)
                     }
-
+                    if(this.post.length!=0){
+                        this.infiniteHandler(this.state);
+                    }
                     
                 })
                 .catch(Error => {
@@ -544,7 +549,9 @@
             },
             // //무한 스크롤 메소드
             infiniteHandler($state){    
-               
+                this.state = $state
+               if(this.post.length!=0){
+
                 setTimeout(()=>{
                     //alert("ㅎㅇ")
              
@@ -565,6 +572,7 @@
                     }
                     
                 },1000)
+               }
             },
             //밑은 알람 메소드
             setAlarm(alarm) {
@@ -672,6 +680,8 @@
                 commentcount:[],         
                 //무한스크롤
                 list:[],
+                state:'',
+
             }
         },
         components:{

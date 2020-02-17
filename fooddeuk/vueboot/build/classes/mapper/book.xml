@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssafy.book"> 
+
+	
+    <select id="getBookList"
+	resultType="com.ssafy.edu.vue.dto.Book">
+			SELECT  ISBN, TITLE, CATALOGUE, AUTHOR FROM CHI_BOOK ORDER BY ISBN 
+	</select>
+	
+	<select id="getBook"
+	parameterType="java.lang.String"
+	resultType="com.ssafy.edu.vue.dto.Book">
+			SELECT ISBN,TITLE,CATALOGUE,NATION,PUBLISH_DATE AS PUBLISHDATE,
+			PUBLISHER,AUTHOR,PRICE,CURRENCY,DESCRIPTION FROM CHI_BOOK
+			WHERE ISBN=#{isbn}
+	</select>
+	<update id="updatebook"
+	parameterType="com.ssafy.edu.vue.dto.Book">
+				UPDATE CHI_BOOK SET 
+				TITLE=#{title},CATALOGUE=#{catalogue},
+				NATION=#{nation},PUBLISH_DATE=#{publishDate},
+				publisher=#{publisher},author=#{author},
+				price=#{price},currency=#{currency},
+				description=#{description}
+				WHERE ISBN=#{isbn}
+	</update>
+	
+	<insert id="savebook"
+	parameterType="com.ssafy.edu.vue.dto.Book">
+	INSERT INTO chi_book(isbn,title,catalogue,nation,publish_date,
+    publisher,author,price,currency,description)
+	VALUES(#{isbn},#{title},#{catalogue},
+	#{nation},#{publishDate},#{publisher},#{author},#{price},#{currency},#{description})
+	</insert>
+
+	
+	<delete id="deletebook"
+	parameterType="java.lang.String"
+	>
+		delete from chi_book where isbn = #{isbn}
+		
+	</delete>
+
+ </mapper>

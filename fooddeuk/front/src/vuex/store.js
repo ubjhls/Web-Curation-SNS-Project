@@ -97,7 +97,6 @@ export default new Vuex.Store({
                           nickName : response.data.object.nickname,
                           intro : response.data.object.intro,
                         }
-                    
                     commit('loginsuccess',userinfo);
                     
                     if(router.history.current.name=='Login'){
