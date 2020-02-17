@@ -28,9 +28,15 @@ public class ProfileDaoImpl {
 	public int updatePlace(Profile profile) {
 		return sqlSession.update(ns+"updatePlace", profile);
 	}
+<<<<<<< HEAD
 	
 	public String getPicture(int num) {
 		return sqlSession.selectOne(ns+"getPicture", num);
 	}
 	
+=======
+	public int insertPicture(String picture) {
+		return sqlSession.selectOne(ns+"insertPicture", picture);
+	}
+>>>>>>> 97fe6e73d471b79ce126300c043d228c5906bf4f
 }

@@ -131,7 +131,12 @@
 			<artifactId>spring-security-web</artifactId> 
 			<version>4.0.0.RELEASE</version> 
 		</dependency>
-		
+		<!-- reload -->
+		<dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-devtools</artifactId>
+	        <optional>true</optional>
+    	</dependency>
 
 	</dependencies>
 

@@ -3,10 +3,38 @@
 
 
     <div class="wrapC">
-        <div class="wrapper">
-            <div class="profile-card js-profile-card">
+        <div class="wrapper" >
+            <div class="profile-card js-profile-card" >
                 <div class="profile-card__cnt js-profile-cnt">
-                    <img src="../../assets/images/profile_default.png" style="margin-bottom:10px;">
+                    <div class="my-3">
+            <v-btn @click="fileInputClick()" color="warning" fab x-large dark>
+              <v-icon>mdi-account-circle</v-icon>
+            </v-btn>
+          </div>
+  <v-row justify="center">
+    <v-dialog
+      v-model="dialog"
+      max-width="290"
+    >
+    <v-card>
+<v-card-title>
+  <v-file-input 
+  v-model="chosenFile"
+  @change="updatePicture($event)"
+  label="File input"
+  ></v-file-input>
+</v-card-title>
+<v-card-actions>
+              <v-btn btn btn--ok color="green darken-1" text @click="submit" :disabled="dialogResult===false" :class="{disabled : !dialog}">Agree</v-btn>
+              <v-btn color="green darken-1" text @click="dialog = false">Disagree</v-btn>
+              <v-btn color="green darken-1" text @click="deletePicture">삭제</v-btn>
+
+            
+</v-card-actions>
+
+    </v-card>
+    </v-dialog>
+  </v-row>
                         <div class="profile-card__name">{{nickname}}</div>
                         <div class="profile-card__txt">{{intro}}</div>
 
@@ -340,7 +368,8 @@
         watch : {
             newcomment: function(v) {
                 this.checkForm();
-            }
+            },
+ 
         },
         computed : {
             ...mapState(['userinfo']),
@@ -738,6 +767,19 @@
                     console.log(Error)
                 })
             },
+            updatePicture(event){
+                this.dialog = event
+                let formdata = new FormData
+                formdata.append('image', this.dialog)
+                Axios.post('https://api.imgur.com/3/image',formdata, {headers:{Authorization: 'Client-ID d15c5b033075c6e'}})
+                .then(Response => {
+                    this.dialogResult = Response.data.data.link
+                    
+                })
+                .catch(Error =>{
+
+                })
+            },
             modal(num){
                 this.modalnum = num
             },
@@ -767,8 +809,25 @@
             },
             noscrap() {
                 alert("이미 스크랩 된 게시물입니다.")
+            },
+            submit(){
+                let form = new FormData()
+                form.append('picture', this.dialogResult)
+                http.post('profile/insertPicture', form)
+                .then(Response => {
+                    console.log(Response)
+                })
+            },
+            fileInputClick(){
+                this.dialog = true;
+                this.chosenFile = null;
+                this.dialogResult = false;
+            },
+            deletePicture(){
+                alert('정말 삭제하시겠습니까?')
+                
             }
-           
+            
         },
         data: () => {
             return {
@@ -802,7 +861,15 @@
                 likelist:[],
                 mynum:0,
                 commentcount:[],
+<<<<<<< fooddeuk/front/src/components/common/MyFeed.vue
+                dialog: false,
+                dialogResult: false,
+                chosenFile:null
+
+
+=======
                 list:[],
+>>>>>>> fooddeuk/front/src/components/common/MyFeed.vue
                
             }
         },

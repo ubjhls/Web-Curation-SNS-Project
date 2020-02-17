@@ -25,4 +25,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select picture from profile where num=#{num}
 	</select>
 	
+	<insert id="insertPicture" parameterType="java.lang.String">
+		insert into profile(picture)
+		values(#{picture})
+	</insert>
  </mapper>

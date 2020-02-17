@@ -30,10 +30,17 @@ public class ProfileServiceImpl implements IProfileService{
 	public int updatePlace(Profile profile) {
 		return profiledao.updatePlace(profile);
 	}
+<<<<<<< HEAD
 
 	@Override
 	public String getPicture(int num) {
 		return profiledao.getPicture(num);
 	}
 	
+=======
+	@Override
+	public int insertPicture(String picture) {
+		return profiledao.insertPicture(picture);
+	}
+>>>>>>> 97fe6e73d471b79ce126300c043d228c5906bf4f
 }

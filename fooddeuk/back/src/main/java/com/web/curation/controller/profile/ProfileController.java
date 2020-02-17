@@ -93,4 +93,18 @@ public class ProfileController {
 	}
 	
 	
+	@PostMapping("/profile/insertPicture")
+	@ApiOperation(value = "프로필사진 등록하기")
+	public Object insertPicture(@RequestParam(required = true) String picture) throws Exception {
+		System.out.println("-----------------/profile/insertPicture-----------------");
+		System.out.println("picture : " + picture);
+		
+		int num = profileService.insertPicture(picture);
+		Profile profile = profileService.getProfile(num);
+		
+		BasicResponse result = new BasicResponse();
+		result.data="success";
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }

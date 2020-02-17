@@ -2,13 +2,13 @@ package com.web.curation.controller.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.model.user.User;
+import com.web.curation.security.PasswordEncoding;
 import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
 
@@ -138,9 +138,10 @@ public class MailController {
 		if(email == null) {
 			return "failed";
 		}
-		
+		PasswordEncoding passwordEncoding = new PasswordEncoding();
 		String newPwd = MailUtil.getNewPwd();
-		User user = new User(email, newPwd);
+		String encodePwd = passwordEncoding.encode(newPwd);
+		User user = new User(email, encodePwd);
 		if(userService.updatePassword(user) != 1) {
 			return "failed";
 		}
