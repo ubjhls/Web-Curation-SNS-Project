@@ -2,14 +2,20 @@
 <div class="wrapC">
     <div class="container">
     <div action="" class="search">
-        <div class="field" style="float:left; width:80%">
+    <v-tabs style="margin-top:100px">
+        <v-tab @click="checkchange()">검색 엔진</v-tab>
+        <v-tab @click="checkchange()">닉네임 검색</v-tab> 
+    </v-tabs>
+    <br>
+    <div v-if="!check">
+        <div class="field" style="float:left; width:80%;">
             <input v-model="NewName" type="text" class="input-search" @keyup.enter="AddName">
             <label for="input-search">닉네임 검색</label>
         </div>
             <div style="width:20%; float:left">
                 <button class="check-button" @click="AddName" :disabled="!canClick">검색</button>
             </div>
-    </div>
+
     <br>
     <h1 style="margin-top:60px" v-if="isSearch=='history'">최근 검색</h1>
     <h1 style="margin-top:60px" v-if="isSearch=='search'">검색 결과</h1>
@@ -40,6 +46,12 @@
                 </li>
             </ul>
         </div>
+    </div>
+    <div v-else>
+      
+    </div>
+    
+    </div>
     </div>
 </div>
 
@@ -168,8 +180,6 @@
                         }
                     });
                 })
-
-                
             },
             goBack() {
                 var router = this.$router;
@@ -178,7 +188,11 @@
             goProfileByNickname(nick) {
                 this.getUserInfoByNickname(nick);
                 this.$emit('child', nick)
+            },
+            checkchange(){
+                this.check = !this.check;
             }
+
         },
 
         data: () => {
@@ -197,7 +211,8 @@
                     intro:null,
                     auth:null,
                     post:[],
-                }
+                },
+                check:true
             }
         },
         

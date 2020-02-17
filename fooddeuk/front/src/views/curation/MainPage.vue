@@ -10,7 +10,7 @@
             </div>
         </header>
         <div style="position:relative; z-index:1005">
-        <NavigationBar style="overflow:visible" class="navi" :drawer="menu.isNavi" @child="updateNaviValue" v-if="menu.isNavi"></NavigationBar>
+        <NavigationBar class="navi" :drawer="menu.isNavi" @child="updateNaviValue" v-if="menu.isNavi"></NavigationBar>
         </div>
         <NewsFeed v-if="menu.isHome"></NewsFeed>
         <AlarmPage v-if="menu.isAlarm"></Alarmpage>      
