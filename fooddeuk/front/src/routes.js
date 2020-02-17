@@ -109,12 +109,13 @@ const onlyAuthUser = (to, from, next) =>{
     },
     {
         path:'*',
-        redirect:'/404'
-    
+        redirect:'/404',
+        props:true
     },
     {
         path:'/404',
-        component : PageNotFound
+        component : PageNotFound,
+        props:true
     },
     {
         path : '/error/ErrorPage',

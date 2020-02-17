@@ -95,34 +95,6 @@
                     count : firebase.firestore.FieldValue.increment(1)
                 })
             },
-            getAlarmFromFirebase(email) {
-                let whoami = this;
-                let count = 0;
-                fireDB.collection('Alarm').doc(email).get().then(function(doc) {
-                if(doc.data()==undefined) {
-                    count = 0;
-                } else {
-                    count = doc.data().count;
-                }
-                whoami.setAlarm(count);
-                }).catch(function(error) {
-                    console.log(error)
-                })
-            },
-            watchAlarmFromFirebase(email) {
-                let whoami = this;
-                let count=0;
-                fireDB.collection('Alarm').doc(email).onSnapshot( {
-                    includeMetadataChanges: true
-                },function(doc) {
-                    if(doc.data()==undefined) {
-                        count = 0;
-                    } else {
-                        count = doc.data().count;
-                    }
-                    whoami.setAlarm(count);
-                })
-            },
             goNewsFeeds() {
                 var router = this.$router;
                 router.push({
@@ -148,7 +120,6 @@
                     this.num = Response.data.num;
                     this.email = Response.data.email;
                     this.getFollower(this.num);
-                    this.getAlarmFromFirebase();
                 })
                 .catch(Error => {
                     console.log(Error)

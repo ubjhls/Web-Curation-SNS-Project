@@ -95,9 +95,9 @@
               includeMetadataChanges: true    
           },function(doc) {
               count = doc.data().count;
+              whoami.getAlarms();
+              whoami.setAlarm(count);
           })
-          whoami.setAlarm(count);
-          whoami.getAlarms();
       },
       getTime(time) {
         return moment(time).fromNow();
@@ -150,7 +150,8 @@
         .then(Response => {
           // console.log(Response.data)
           this.getAlarms();
-          this.downAlarmToFirebase(otherEmail);
+          this.downAlarmToFirebase(this.email);
+          this.upAlarmToFirebase(otherEmail);
         })
         .catch(Error => {
             console.log(Error)

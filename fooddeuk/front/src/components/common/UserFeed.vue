@@ -379,7 +379,7 @@
                     http.post("/follow/nonfollow", form)
                     .then(Response => {
                         if(Response.data==='success') {
-                            this.updateAlarmToFirebase();
+                            this.updateAlarmToFirebase(this.email);
                             alert("팔로우가 요청되었습니다.")
                         }
                         else if(Response.data==='failed') {
@@ -487,7 +487,6 @@
                 
             },
             removeComent(num, cmt, index){
-  
                 http.delete("/comment/comment?postnum=" + num + "&num="+ cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
                 .then(response => {
                     //댓글 삭제(갱신까지)
@@ -513,20 +512,17 @@
             },
             
             removeFeed(num){
-                 if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+                if(confirm("정말 삭제하시겠습니까??") == true){    //확인
                     http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
                     .then(response => {
                         alert('게시물이 삭제되었습니다.')
                         console.log(response.data)
                         this.post = response.data.object
                     })
-                .catch(Error =>{
-                })
-
+                    .catch(Error =>{
+                    })
                 }else{   //취소
-
                     return false;
-
                 }
             },
             updateFeed(num, title, content, count_star, address, image){
