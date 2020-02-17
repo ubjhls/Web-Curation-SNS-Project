@@ -12,6 +12,8 @@
         <div class="wrapper">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
                 <div v-for="(item,index) in list" v-bind:key="item.num">  
+                <div style="margin-top:40px">
+                </div>
                 <div v-if="item.type==='스크랩'">
                     <v-card
                             max-width="100%"
@@ -150,12 +152,12 @@
                     <v-card
                             max-width="100%"
                             class="mx-auto"
-                            style="margin-bottom:100px; position:relative"
+                            style="margin-bottom:100px; position:relative;"                   
                     >
                     <v-list-item>
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px; float:left">{{item.title}}
                             <v-menu offset-y style="float:right;">
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">

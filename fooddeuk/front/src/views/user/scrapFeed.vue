@@ -12,6 +12,8 @@
         <div class="wrapper">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
                 <div v-for="(item,index) in list" v-bind:key="item.num">  
+                <div style="margin-top:40px">
+                </div>
                 <div v-if="item.type==='스크랩'">
                     <v-card
                             max-width="100%"
