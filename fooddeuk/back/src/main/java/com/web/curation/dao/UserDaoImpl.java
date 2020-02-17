@@ -68,4 +68,5 @@ public class UserDaoImpl {
 		return sqlSession.selectOne(ns+"getNickname", num);
 	}
 	
+	
 }

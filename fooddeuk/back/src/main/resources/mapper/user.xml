@@ -76,5 +76,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getNickname" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select nickname from user where num=#{num}
 	</select>
-
+	
+	
  </mapper>
