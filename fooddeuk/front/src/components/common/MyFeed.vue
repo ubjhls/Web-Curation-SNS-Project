@@ -3,10 +3,38 @@
 
 
     <div class="wrapC">
-        <div class="wrapper">
-            <div class="profile-card js-profile-card">
+        <div class="wrapper" >
+            <div class="profile-card js-profile-card" >
                 <div class="profile-card__cnt js-profile-cnt">
-                    <img src="../../assets/images/profile_default.png" style="margin-bottom:10px;">
+                    <div class="my-3">
+            <v-btn @click="fileInputClick()" color="warning" fab x-large dark>
+              <v-icon>mdi-account-circle</v-icon>
+            </v-btn>
+          </div>
+  <v-row justify="center">
+    <v-dialog
+      v-model="dialog"
+      max-width="290"
+    >
+    <v-card>
+<v-card-title>
+  <v-file-input 
+  v-model="chosenFile"
+  @change="updatePicture($event)"
+  label="File input"
+  ></v-file-input>
+</v-card-title>
+<v-card-actions>
+              <v-btn btn btn--ok color="green darken-1" text @click="submit" :disabled="dialogResult===false" :class="{disabled : !dialog}">Agree</v-btn>
+              <v-btn color="green darken-1" text @click="dialog = false">Disagree</v-btn>
+              <v-btn color="green darken-1" text @click="deletePicture">삭제</v-btn>
+
+            
+</v-card-actions>
+
+    </v-card>
+    </v-dialog>
+  </v-row>
                         <div class="profile-card__name">{{nickname}}</div>
                         <div class="profile-card__txt">{{intro}}</div>
 
@@ -77,7 +105,7 @@
                             <v-card style="margin-left:13px; width:90%; height:100%; text-align:center">
                                 <v-img 
                                 v-if="item.image!==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px;"
                                 :src="item.image"
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -86,12 +114,11 @@
                                 </v-img>
                                 <v-img 
                                 v-if="item.image==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px"
                                 src="../../assets/images/noimage.png"  
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                                 >
-                                <v-card-title v-text="item.scraptitle"></v-card-title>
                                 </v-img>
 
 
@@ -215,7 +242,7 @@
                             <v-card-text>
                                 {{item.content}}
                                 
-                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image" style="width:100%; heigh:200px; ">
                             <br>
                             <br><br><hr><br>
                             주소 : {{item.address}} 
@@ -289,7 +316,9 @@
                 
                 </div>
             </div>
-             <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+             <div v-if="post">
+                <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+                </div>
         </div>
     </div>
     </div>
@@ -340,7 +369,8 @@
         watch : {
             newcomment: function(v) {
                 this.checkForm();
-            }
+            },
+ 
         },
         computed : {
             ...mapState(['userinfo']),
@@ -412,7 +442,7 @@
             getPostByNum(num) { //포스트가져오기
                 let form = new FormData()
                 form.append('num', num)
-
+                
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                     this.post = Response.data.object;
@@ -427,15 +457,13 @@
                         }
                         this.likelist.push(this.post[index].count_like);
                         this.coment.push(false)
-
                         this.todolist.push([])
                         this.commentcount.push(this.post[index].count_comment)
                     }
-
+                    if(this.post.length!=0){
+                        this.infiniteHandler(this.state);
+                    }
                     
-                })
-                .catch(Error => {
-                    console.log(Error)
                 })
             },
             followcheck(nick) { //보는 유저와 팔로우 되어 있는지 확인하기
@@ -738,12 +766,26 @@
                     console.log(Error)
                 })
             },
+            updatePicture(event){
+                this.dialog = event
+                let formdata = new FormData
+                formdata.append('image', this.dialog)
+                Axios.post('https://api.imgur.com/3/image',formdata, {headers:{Authorization: 'Client-ID d15c5b033075c6e'}})
+                .then(Response => {
+                    this.dialogResult = Response.data.data.link
+                    
+                })
+                .catch(Error =>{
+
+                })
+            },
             modal(num){
                 this.modalnum = num
             },
             // //무한 스크롤 메소드
-            infiniteHandler($state){    
-               
+             infiniteHandler($state){    
+                this.state = $state
+               if(this.post.length!=0){
                 setTimeout(()=>{
                     //alert("ㅎㅇ")
              
@@ -764,16 +806,34 @@
                     }
                     
                 },1000)
+               }
             },
             noscrap() {
                 alert("이미 스크랩 된 게시물입니다.")
+            },
+            submit(){
+                let form = new FormData()
+                form.append('picture', this.dialogResult)
+                http.post('profile/insertPicture', form)
+                .then(Response => {
+                    console.log(Response)
+                })
+            },
+            fileInputClick(){
+                this.dialog = true;
+                this.chosenFile = null;
+                this.dialogResult = false;
+            },
+            deletePicture(){
+                alert('정말 삭제하시겠습니까?')
+                
             }
-           
+            
         },
         data: () => {
             return {
                 modalnum:0,
-                dialog: false,
+              
                 usernum:0,
                 isSubmit: false,
                 error:{
@@ -802,6 +862,9 @@
                 likelist:[],
                 mynum:0,
                 commentcount:[],
+                dialog: false,
+                dialogResult: false,
+                chosenFile:null,
                 list:[],
                
             }

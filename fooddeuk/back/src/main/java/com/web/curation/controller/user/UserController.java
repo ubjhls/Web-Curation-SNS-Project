@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.model.search.Search;
 import com.web.curation.model.user.User;
+import com.web.curation.security.PasswordEncoding;
 import com.web.curation.service.ISearchService;
 import com.web.curation.service.IUserService;
 
@@ -53,7 +54,10 @@ public class UserController {
 		System.out.println("email : " + email);
 		System.out.println("password : " + password);
 		
-		User user = new User(email, password);
+		
+		PasswordEncoding passwordencoding = new PasswordEncoding();
+		String encodePassword = passwordencoding.encode(password);
+		User user = new User(email, encodePassword);
 		if(userService.updatePassword(user) != 1) {
 			return "failed";
 		}

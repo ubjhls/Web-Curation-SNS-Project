@@ -84,7 +84,7 @@
                             <v-card style="margin-left:13px; width:90%; height:100%; text-align:center">
                                 <v-img 
                                 v-if="item.image!==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px;"
                                 :src="item.image"
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -93,7 +93,7 @@
                                 </v-img>
                                 <v-img 
                                 v-if="item.image==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px"
                                 src="../../assets/images/noimage.png"  
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -163,7 +163,7 @@
                                 <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
                                 :disabled="!isSubmit"
                                 :class="{disabled : !isSubmit}"
-                                >댓글달기</button>
+                                >게시</button>
                             </div>
                             <div style="margin-left:5px; width:60%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
@@ -185,6 +185,7 @@
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                            <div v-if="item.author === mynum">
                             <v-menu offset-y style="float:right;">
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">
@@ -200,6 +201,7 @@
                                 </v-list-item>
                             </v-list>
                             </v-menu>
+                            </div>
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
@@ -239,7 +241,7 @@
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
                          <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
-                            <v-dialog v-model="dialog" persistent max-width="290">
+                            <v-dialog v-model="dialog" persistent max-width="290" :retain-focus="false">
                             <template v-slot:activator="{ on }">
                                 <v-btn depressed color="white" v-on="on" @click="modal(item.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
                             </template>
@@ -293,7 +295,7 @@
                                 <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
                                 :disabled="!isSubmit"
                                 :class="{disabled : !isSubmit}"
-                                >댓글달기</button>
+                                >게시</button>
                             </div>
                             <div style="margin-left:5px; width:60%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
@@ -569,6 +571,7 @@
             },
             commentview(num,index){ //댓글 버튼 누를 때
             //댓글 불러오기
+            this.newcomment=''
             if(this.coment[index]==false){
                     http.get('/comment/comment?postnum='+num)
                 .then(response => {
@@ -734,16 +737,13 @@
                 form.append('title',title)
                 form.append('content',content)
                 form.append('num',this.$store.state.userinfo.num)
+                this.scraptitle = ''
+                this.scrapcontent = ''
                 http.post("/post/scrap", form)
-                console.log(num)
-                .then(Response => {
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
             },
             modal(num){
                 this.modalnum = num
+                console.log(this.dialog)
             },
             noscrap(){
                 alert('이미 스크랩 된 게시물입니다')
