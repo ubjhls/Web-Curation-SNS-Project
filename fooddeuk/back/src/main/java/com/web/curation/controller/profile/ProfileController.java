@@ -89,16 +89,35 @@ public class ProfileController {
 	}
 	
 	@PostMapping("/profile/insertPicture")
-	@ApiOperation(value = "프로필사진 등록하기")
-	public Object insertPicture(@RequestParam(required = true) String picture) throws Exception {
+	@ApiOperation(value = "프로필 사진 등록하기")
+	public Object insertPicture(@RequestParam(required = true) int num,
+								@RequestParam(required = true) String picture) throws Exception {
 		log.info("POST : /profile/insertPicture");
 		
-		int num = profileService.insertPicture(picture);
-		Profile profile = profileService.getProfile(num);
-		
+		Profile profile = new Profile();
+		profile.setNum(num);
+		profile.setPicture(picture);
 		BasicResponse result = new BasicResponse();
-		result.data="success";
 		
+		if(profileService.updatePicture(profile)==0) {
+			result.data="failed";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		result.data="success";
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+
+	@GetMapping("/profile/deletePicture")
+	@ApiOperation(value = "프로필 사진 삭제하기")
+	public Object deletePicture(@RequestParam(required = true) int num) throws Exception {
+		log.info("GET : /profile/deletePicture");
+
+		BasicResponse result = new BasicResponse();
+		
+		profileService.deletePicture(num);
+		result.data="sueccess";
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
 }

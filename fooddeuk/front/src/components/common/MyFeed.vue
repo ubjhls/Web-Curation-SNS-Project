@@ -7,9 +7,18 @@
             <div class="profile-card js-profile-card" >
                 <div class="profile-card__cnt js-profile-cnt">
                     <div class="my-3">
-            <v-btn @click="fileInputClick()" color="warning" fab x-large dark>
-              <v-icon>mdi-account-circle</v-icon>
-            </v-btn>
+                        <div v-if="!this.picture">
+                            <v-btn @click="fileInputClick()" color="warning" fab x-large dark>
+                            <v-icon>mdi-account-circle</v-icon>
+                            </v-btn>
+                        </div>
+                        <div v-else>
+                            <img
+                            @click="fileInputClick()"
+                            :src="this.picture"
+                            style="width:60px;height:60px;border-radius:50%;"
+                            >
+                        </div>
           </div>
   <v-row justify="center">
     <v-dialog
@@ -105,7 +114,7 @@
                             <v-card style="margin-left:13px; width:90%; height:100%; text-align:center">
                                 <v-img 
                                 v-if="item.image!==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px;"
                                 :src="item.image"
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -114,12 +123,11 @@
                                 </v-img>
                                 <v-img 
                                 v-if="item.image==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px"
                                 src="../../assets/images/noimage.png"  
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                                 >
-                                <v-card-title v-text="item.scraptitle"></v-card-title>
                                 </v-img>
 
 
@@ -203,7 +211,16 @@
                             style="margin-bottom:100px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar style="height:50px; width:50px">
+                            <div v-if="picture">
+                                <img :src="picture" style="height:50px; width:50px">
+                            </div>
+                            <div v-else>
+                                <v-btn color="warning" fab x-large dark>
+                            <v-icon>mdi-account-circle</v-icon>
+                            </v-btn>
+                            </div>
+                            </v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:10px;">
                             <div style="float:left; font-size:20px">
@@ -243,7 +260,7 @@
                             <v-card-text>
                                 {{item.content}}
                                 
-                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image" style="width:100%; heigh:200px; ">
                             <br>
                             <br><br><hr><br>
                             주소 : {{item.address}} 
@@ -317,7 +334,9 @@
                 
                 </div>
             </div>
-             <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+             <div v-if="post">
+                <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+                </div>
         </div>
     </div>
     </div>
@@ -348,22 +367,26 @@
             if(this.$store.state.userinfo!=null) {
                 this.myEmail = this.$store.state.userinfo.email
                 this.nick = this.$store.state.userinfo.nickName
-
-                 http.get("/user/userinfo/{nickname}?nickname="+this.nick)
+                http.get("/user/userinfo/{nickname}?nickname="+this.nick)
                 .then(Response => {
                     this.mynum = Response.data.num;
                 })
                 .catch(Error => {
                     console.log(Error)
                 })
+            
             }
-
+            
             this.nickname = this.propsNickname;
             //포스트 불러오기
             this.getUserByNickname(this.nickname);
 
             //검색한 사용자와 팔로잉 체크
             this.followcheck(this.nickname);
+
+            //프로필 불러오기
+            this.getProfile(this.nick);
+            
         },
         watch : {
             newcomment: function(v) {
@@ -418,7 +441,7 @@
                     console.log(Error)
                 })
             },
-             getFollower() { //팔로우 정보가져오기
+            getFollower() { //팔로우 정보가져오기
                 let form = new FormData()
                 http.get("/follow/follower?email="+this.email)
                 .then(Response => {
@@ -441,7 +464,7 @@
             getPostByNum(num) { //포스트가져오기
                 let form = new FormData()
                 form.append('num', num)
-
+                
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                     this.post = Response.data.object;
@@ -456,15 +479,13 @@
                         }
                         this.likelist.push(this.post[index].count_like);
                         this.coment.push(false)
-
                         this.todolist.push([])
                         this.commentcount.push(this.post[index].count_comment)
                     }
-
+                    if(this.post.length!=0){
+                        this.infiniteHandler(this.state);
+                    }
                     
-                })
-                .catch(Error => {
-                    console.log(Error)
                 })
             },
             followcheck(nick) { //보는 유저와 팔로우 되어 있는지 확인하기
@@ -784,8 +805,9 @@
                 this.modalnum = num
             },
             // //무한 스크롤 메소드
-            infiniteHandler($state){    
-               
+             infiniteHandler($state){    
+                this.state = $state
+               if(this.post.length!=0){
                 setTimeout(()=>{
                     //alert("ㅎㅇ")
              
@@ -806,16 +828,22 @@
                     }
                     
                 },1000)
+               }
             },
             noscrap() {
                 alert("이미 스크랩 된 게시물입니다.")
             },
             submit(){
+                this.dialog = false
                 let form = new FormData()
+                form.append('num', this.mynum)
                 form.append('picture', this.dialogResult)
                 http.post('profile/insertPicture', form)
                 .then(Response => {
-                    console.log(Response)
+                    if(Response.data.data==='success'){
+                        this.getProfile(this.nick)
+                    }
+                    
                 })
             },
             fileInputClick(){
@@ -824,15 +852,34 @@
                 this.dialogResult = false;
             },
             deletePicture(){
-                alert('정말 삭제하시겠습니까?')
+                let num = this.mynum
+                http.get("profile/deletePicture/?num=" + num)
+                .then(Reponse =>{
+                    console.log(Response)
+                    this.picture = '';
+                    this.dialog = false
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
                 
-            }
+            },
+            getProfile(nick){
+                http.get("/profile/profile/?nickname=" + nick)
+                .then(Response => {
+                    this.picture = Response.data.picture;
+                    console.log(this.picture)
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+            },
             
         },
         data: () => {
             return {
                 modalnum:0,
-                dialog: false,
+              
                 usernum:0,
                 isSubmit: false,
                 error:{
@@ -861,15 +908,11 @@
                 likelist:[],
                 mynum:0,
                 commentcount:[],
-<<<<<<< fooddeuk/front/src/components/common/MyFeed.vue
                 dialog: false,
                 dialogResult: false,
-                chosenFile:null
-
-
-=======
+                chosenFile:null,
+                picture:''
                 list:[],
->>>>>>> fooddeuk/front/src/components/common/MyFeed.vue
                
             }
         },
