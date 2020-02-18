@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.model.BasicResponse;
+import com.web.curation.model.post.Post;
 import com.web.curation.model.search.Search;
 import com.web.curation.model.user.User;
 import com.web.curation.service.ISearchService;
@@ -74,6 +75,33 @@ public class SearchController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@GetMapping("/search/feed")
+	@ApiOperation(value = "피드 검색")
+	public Object searchFeed(@RequestParam(required = true) String keyword) throws Exception {
+		System.out.println("-----------------/search/feed-----------------");
+		System.out.println("keyword : " + keyword);
+		
+		
+		BasicResponse result = new BasicResponse();
+		result.data="success";
+		
+		if(keyword == null || keyword == "") {
+			result.data = "failed";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		List<Post> list = searchService.searchFeed(keyword);
+		System.out.println(list);
+		
+		if(list.size() == 0) {
+			result.data = "empty";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		result.object = list;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}	
+	
 	@DeleteMapping("/search/search")
 	@ApiOperation(value = "검색 삭제")
 	public String deleteSearch(@RequestParam(required = true) String myNick, 
@@ -91,6 +119,6 @@ public class SearchController {
 		}
 		
 		return "success";
-	}	
+	}
 	
 }

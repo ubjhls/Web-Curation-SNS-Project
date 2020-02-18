@@ -77,17 +77,19 @@ import http from '../../../http-common'
 import '../../assets/css/address.scss'
   export default {
     created(){
-      let form = new FormData()
-      // form.append('email', this.$store.state.userinfo.email)
-      http.get("/profile/myplace?email=" +this.$store.state.userinfo.email)
-                 .then(Response => {
-                    this.firstresult = Response.data.object[0];
-                    this.secondresult = Response.data.object[1];
-                  
-                 })
-                 .catch(Error => {
-
-                 })
+      setTimeout(() => {
+        let form = new FormData()
+        // form.append('email', this.$store.state.userinfo.email)
+        http.get("/profile/myplace?email=" +this.$store.state.userinfo.email)
+                   .then(Response => {
+                      this.firstresult = Response.data.object[0];
+                      this.secondresult = Response.data.object[1];
+                    
+                   })
+                   .catch(Error => {
+  
+                   })
+      }, 200);
     },
     watch:{
         selectt:function(v){

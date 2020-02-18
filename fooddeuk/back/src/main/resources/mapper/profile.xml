@@ -21,4 +21,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		update profile set place=#{place} where num=#{num}
 	</update>
 	
+	<select id="getPicture" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select picture from profile where num=#{num}
+	</select>
+	
+	<insert id="insertPicture" parameterType="java.lang.String">
+		insert into profile(picture)
+		values(#{picture})
+	</insert>
  </mapper>

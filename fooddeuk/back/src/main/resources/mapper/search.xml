@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="search">
 
 	<select id="getAllSearch" parameterType="java.lang.Integer" resultType="search">
-		select who from search where num=#{num} order by date desc
+		select who from search where num=#{num} order by date desc limit 5
 	</select>
 	
 	<select id="getNickname" parameterType="java.lang.Integer" resultType="java.lang.String">
@@ -31,5 +31,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateSearch" parameterType="search">
 		update search set date=now() where num=#{num} and who=#{who}
 	</update>
+	
+	<select id="searchFeed" parameterType="java.lang.String" resultType="post">
+		select * from post
+		where num in ((select num from post where content like concat('%', #{keyword}, '%') or address like concat('%', #{keyword}, '%')))
+		and author in (select num from user where auth=0) and type='일반';
+	</select>
 	
  </mapper>
