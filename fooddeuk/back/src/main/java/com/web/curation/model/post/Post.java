@@ -33,7 +33,10 @@ public class Post {
 	private int scrapnum;
 	private String nickname;
 	private String picture; // 사용자 사진
+	private String scarpnick;
 	private String scraptitle;
+	private String scrapcontent;
+	private String scrappicture; // 스크랩 원작자 사진
 
 	public Post() {
 		super();
@@ -213,15 +216,39 @@ public class Post {
 	public void setScraptitle(String scraptitle) {
 		this.scraptitle = scraptitle;
 	}
+	
+	public String getScarpnick() {
+		return scarpnick;
+	}
+
+	public void setScarpnick(String scarpnick) {
+		this.scarpnick = scarpnick;
+	}
+
+	public String getScrapcontent() {
+		return scrapcontent;
+	}
+
+	public void setScrapcontent(String scrapcontent) {
+		this.scrapcontent = scrapcontent;
+	}
+
+	public String getScrappicture() {
+		return scrappicture;
+	}
+
+	public void setScrappicture(String scrappicture) {
+		this.scrappicture = scrappicture;
+	}
 
 	@Override
 	public String toString() {
 		return "Post [num=" + num + ", author=" + author + ", title=" + title + ", content=" + content + ", date="
 				+ date + ", count_like=" + count_like + ", count_comment=" + count_comment + ", count_star="
 				+ count_star + ", address=" + address + ", image=" + image + ", islike=" + islike + ", type=" + type
-				+ ", scrapnum=" + scrapnum + ", nickname=" + nickname + ", picture=" + picture + ", scraptitle="
-				+ scraptitle + "]";
+				+ ", scrapnum=" + scrapnum + ", nickname=" + nickname + ", picture=" + picture + ", scarpnick="
+				+ scarpnick + ", scraptitle=" + scraptitle + ", scrapcontent=" + scrapcontent + ", scrappicture="
+				+ scrappicture + "]";
 	}
 
-	
 }

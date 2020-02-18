@@ -7,5 +7,6 @@ public interface IProfileService {
 	Profile getProfile(int num);
 	String getMyPlace(int num);
 	int updatePlace(Profile profile);
+	String getPicture(int num);
 	int insertPicture(String picture);
 }
