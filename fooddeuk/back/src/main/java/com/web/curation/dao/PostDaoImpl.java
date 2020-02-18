@@ -24,6 +24,10 @@ public class PostDaoImpl {
 		return sqlSession.selectList(ns+"getAllPost", num);
 	}
 	
+	public Post getPostByPostnum(int num) {
+		return sqlSession.selectOne(ns+"getPostByPostnum", num);
+	}
+	
 	public int likeCountUp(int num) {
 		return sqlSession.update(ns+"likeCountUp", num);
 	}
@@ -90,6 +94,10 @@ public class PostDaoImpl {
 	
 	public String getPicture(int num) {
 		return sqlSession.selectOne(ns+"getPicture", num);
+	}
+	
+	public int updateScrapPost(Post post) {
+		return sqlSession.update(ns+"updateScrapPost", post);
 	}
 	
 }

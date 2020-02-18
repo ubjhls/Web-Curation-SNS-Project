@@ -7,6 +7,9 @@ import java.net.URL;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +47,8 @@ import io.swagger.annotations.ApiResponses;
 @CrossOrigin("*")
 @RestController
 public class AccountController {
+	Logger log = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private IUserService userService;
 
@@ -53,39 +58,35 @@ public class AccountController {
 	@Autowired
 	private JwtService jwtService;
 	
+	
 	@PostMapping("/account/login")
 	@ApiOperation(value = "로그인")
 	public Object login(@RequestParam(required = true) String email, @RequestParam(required = true) String password) {
+		log.info("POST : /account/login");
+		
 		PasswordEncoding passwordEncoding = new PasswordEncoding();
-		System.out.println("-----------------/account/login-----------------");
-		System.out.println("email : " + email);
-		System.out.println("password : " + password);
-
 		User user = userService.findUserByEmailAndPassword(new User(email, password));
 	    
 		BasicResponse result = new BasicResponse();
 		result.status = true;
 		
 		if (user == null) {
-			System.out.println("로그인 실패1");
 			result.data = "failed";
 		} else if (!user.getConfirm().equals("Y")) {
-			System.out.println("이메일 미 인증 사용자");
+			log.debug("/account/login " + email + " " + password);
 			result.data = "noemailcheck";
 		} else {
 			if (user.getEmail().equalsIgnoreCase(email) && passwordEncoding.matches(password, user.getPassword())) {
-				System.out.println("로그인 성공");
 				// 우영이형 소스
 				String token = jwtService.create("member", user, "user");
-				System.out.println(token);
 				result.data = token;
 			} else {
-				System.out.println("로그인 실패2");
+				log.error("/account/login " + email + " " + password);
 				result.data = "failed";
 				return new ResponseEntity<>(result, HttpStatus.OK);
 			}
 		}
-
+		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -93,20 +94,16 @@ public class AccountController {
 	@PostMapping("/account/user")
 	@ApiOperation(value = "회원가입")
 	public Object signUp(@Valid @RequestBody SignupRequest request) throws Exception {
+		log.info("POST : /account/user");
 		
-		System.out.println("-----------------/account/user-----------------");
-		PasswordEncoding passwordEncoding = new PasswordEncoding();
 		String email = request.getEmail();
 		String nickname = request.getNickname();
 		String name = request.getName();
 		String password = request.getPassword();
-		password = passwordEncoding.encode(password);
 		String intro = request.getIntro();
-		System.out.println("email : " + email);
-		System.out.println("nickname : " + nickname);
-		System.out.println("name : " + name);
-		System.out.println("password : " + password);
-		System.out.println("intro : " + intro);
+		PasswordEncoding passwordEncoding = new PasswordEncoding();
+		password = passwordEncoding.encode(password);
+		
 
 		String key = "null";
 		User user = new User(email, nickname, name, password, intro, key, 0);
@@ -116,12 +113,12 @@ public class AccountController {
 		result.status = true;
 
 		if (isSuccess != 1) {
-			System.out.println("회원가입 실패");
+			log.error("/account/user");
 			result.data = "failed";
 		} else {
-			System.out.println("회원가입 성공");
 			String isSuccess2 = sendMailForJoin(email); // 메일 전송
 			if(!isSuccess2.equals("success")) {
+				log.error("/account/user");
 				result.data = "failed";
 			}
 			result.data = "success";
@@ -133,8 +130,7 @@ public class AccountController {
 	@GetMapping("/account/nickname")
 	@ApiOperation(value = "닉네임 중복체크")
 	public Object checkNick(@RequestParam(required = true) String nickname) {
-		System.out.println("-----------------/account/nickname-----------------");
-		System.out.println("nickname : " + nickname);
+		log.info("GET : /account/nickname");
 		String temp = userService.checkNick(nickname);
 
 		BasicResponse result = new BasicResponse();
@@ -150,8 +146,7 @@ public class AccountController {
 	@GetMapping("/account/email")
 	@ApiOperation(value = "이메일 중복체크")
 	public Object checkEmail(@RequestParam(required = true) final String email) {
-		System.out.println("-----------------/account/email-----------------");
-		System.out.println("email : " + email);
+		log.info("GET : /account/email");
 
 		String temp = userService.checkEmail(email);
 
@@ -167,10 +162,9 @@ public class AccountController {
 	
 	@RequestMapping(value = "account/naverlogin", method = RequestMethod.GET)
 	@ApiOperation(value = "네이버 로그인")
-    public RedirectView test2(
-            @RequestParam(value = "code") String code,
-            @RequestParam(value = "state") String state
-    ) throws Exception {
+    public RedirectView test2(@RequestParam(value = "code") String code, @RequestParam(value = "state") String state) throws Exception {
+    	log.info("GET : /account/naverlogin");
+    	
         String clientId = "OmIgPMkxDFxNbKvzwMAw";//애플리케이션 클라이언트 아이디값";
         String apiURL;
         apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&";
@@ -222,16 +216,14 @@ public class AccountController {
                 	user.setIntro("NAVER 가입자");
                 	user.setConfirm("Y");
                 	user.setSocial(1);
-                	System.out.println(user.toString());
                 	userService.signUp(user);
                 	createProfile(email);
                 }
                               
                 access_token = jwtService.create("member", user, "user");
-                System.out.println(access_token);
             }
         } catch (Exception e) {
-            System.out.println(e);
+           	log.error(e+"");
         }
         //return "redirect:http://localhost:8081/mypage?token=" + acc+ess_token;
         return new RedirectView("http://192.168.31.135:8080/#/?token="+access_token);
@@ -239,6 +231,8 @@ public class AccountController {
 	
 	// 네이버에서 받아오는 함수
 	private String getUserInfo(String access_token) {
+		log.info("METHOD : sendMailForJoin");
+		
         String header = "Bearer " + access_token; // Bearer 다음에 공백 추가
         try {
             String apiURL = "https://openapi.naver.com/v1/nid/me";
@@ -268,9 +262,8 @@ public class AccountController {
 	
 	// 회원가입 이메일 전송 메소드
 	public String sendMailForJoin(String email) throws Exception {
-		System.out.println("-----------------sendMailForJoin-----------------");
-		System.out.println("email : " + email);
-
+		log.info("METHOD : sendMailForJoin");
+		
 		String keyCode = MailUtil.createKey();
 		User user = new User(email, keyCode, 0);
 		if (userService.updateConfirm(user) != 1) {
@@ -289,7 +282,7 @@ public class AccountController {
 			MailUtil.sendMail(email, subject, msg.toString());
 			return "success";
 		} catch (Exception e) {
-			System.out.println(e);
+			log.error(e+"");
 			return "failed";
 		}
 
@@ -297,13 +290,10 @@ public class AccountController {
 	
 	// 유저 프로필 생성 메소드
 	public String createProfile(@RequestParam(required = true) final String email) {
-		System.out.println("-----------------createProfile-----------------");
-		System.out.println("email : " + email);
+		log.info("METHOD : createProfile");
 		
 		int num = userService.getNumByEmail(email);
-		System.out.println(num);
 		int isSuccess = profileService.createProfile(num);
-		System.out.println(isSuccess);
 		
 		if(isSuccess != 1) {
 			return "failed";
@@ -316,18 +306,15 @@ public class AccountController {
 	@PostMapping("/account/loginToken")
 	@ApiOperation(value = "로그인 시 토큰 발급")
 	public Object token(@Valid @RequestParam(required = true) String access_token) {
-		System.out.println("-----------------token-----------------");
-		System.out.println("access_token : " + access_token);
+		log.info("POST : /account/loginToken");
 		
 		BasicResponse result = new BasicResponse();
 		if(jwtService.isUsable(access_token)) {
-			System.out.println("유효");
 			Object o = jwtService.get("member");
 			//
 			result.status = true;
 			result.data="success";
 			result.object = o;
-			System.out.println(o);
 		}
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);

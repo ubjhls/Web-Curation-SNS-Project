@@ -2,6 +2,7 @@ package com.web.curation.service;
 
 import java.util.List;
 
+import com.web.curation.model.post.Post;
 import com.web.curation.model.search.Search;
 import com.web.curation.model.user.User;
 
@@ -13,4 +14,5 @@ public interface ISearchService {
 	int search(Search search);
 	int deleteSearch(Search search);
 	int updateSearch(Search search);
+	List<Post> searchFeed(String keyword);
 }

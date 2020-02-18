@@ -2,6 +2,8 @@ package com.web.curation.controller.comment;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin("*")
 @RestController
 public class CommentController {
+	Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private IUserService userService;
@@ -33,11 +36,11 @@ public class CommentController {
 	@Autowired
 	private IPostService postService;
 	
+	
 	@GetMapping("/comment/comment")
 	@ApiOperation(value = "댓글 가져오기")
 	public Object getAllComment(@RequestParam(required = true) int postnum) throws Exception {
-		System.out.println("-----------------/comment/comment-----------------");
-		System.out.println("postnum : " + postnum);
+		log.info("GET : /comment/comment");
 		
 		List<Comment> list = commentService.getAllComment(postnum);
 		BasicResponse result = new BasicResponse();
@@ -54,7 +57,6 @@ public class CommentController {
 			list.get(i).setNickname(nickname);
 		}
 		
-		System.out.println(list);
 		result.object = list;
 		result.status = true;
 		return new ResponseEntity<>(result, HttpStatus.OK);
@@ -65,10 +67,7 @@ public class CommentController {
 	public Object insertComment(@RequestParam(required = true) int postnum,
 			@RequestParam(required = true) String email,
 			@RequestParam(required = true) String comment) throws Exception {
-		System.out.println("-----------------/comment/comment-----------------");
-		System.out.println("postnum : " + postnum);
-		System.out.println("email : " + email);
-		System.out.println("comment : " + comment);
+		log.info("POST : /comment/comment");
 		
 		int myNum = userService.getNumByEmail(email);
 		
@@ -97,9 +96,7 @@ public class CommentController {
 	@ApiOperation(value = "댓글 삭제하기")
 	public Object deleteComment(@RequestParam(required = true) int num,
 			@RequestParam(required = true) int postnum) throws Exception {
-		System.out.println("-----------------/comment/comment-----------------");
-		System.out.println("num : " + num);
-		System.out.println("postnum : " + postnum);
+		log.info("DELETE : /comment/comment");
 		
 		BasicResponse result = new BasicResponse();
 		if(commentService.deleteComment(num) == 0 || postService.commentCountDown(postnum) == 0) {
@@ -123,16 +120,13 @@ public class CommentController {
 		result.object = list;
 		result.data="success";
 		result.status = true;
-		System.out.println("삭제리턴확인");
-		System.out.println(result.object);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping("/comment/count")
 	@ApiOperation(value = "댓글 개수 가져오기")
 	public int getCommentCount(@RequestParam(required = true) int postnum) throws Exception {
-		System.out.println("-----------------/comment/count-----------------");
-		System.out.println("postnum : " + postnum);
+		log.info("GET : /comment/count");
 		
 		return commentService.getCommentCount(postnum);
 	}

@@ -8,6 +8,7 @@ import com.web.curation.model.post.Post;
 public interface IPostService {
 	int insertPost(Post post);
 	List<Post> getAllPost(int num);
+	Post getPostByPostnum(int num);
 	int likeCountUp(int num);
 	int likeCountDown(int num);
 	int commentCountUp(int num);
@@ -25,4 +26,5 @@ public interface IPostService {
 	int updatePost(Post post);
 	List<Post> getMyScrapPost(int num);
 	String getPicture(int num);
+	int updateScrapPost(Post post);
 }
