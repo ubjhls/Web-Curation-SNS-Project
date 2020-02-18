@@ -2,6 +2,8 @@ package com.web.curation.controller.post;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,8 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 public class PostController {
 	
+	Logger log = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private IPostService postService;
 	
@@ -42,20 +46,13 @@ public class PostController {
 
 	@PostMapping("/post/post")
 	@ApiOperation(value = "게시물 작성")
-	
 	public String insertPost(@RequestParam(required = true) String email,
 							@RequestParam(required = true) String title,
 							@RequestParam(required = true) String content,
 							@RequestParam(required = true) String count_star,
 							@RequestParam(required = false) String address,
 							@RequestParam(required = false) String image) throws Exception {
-		System.out.println("-----------------/post/post-----------------");
-		System.out.println("email : " + email);
-		System.out.println("title : " + title);
-		System.out.println("content : " + content);
-		System.out.println("count_star : " + count_star);
-		System.out.println("address : " + address);
-		System.out.println("image : " + image);
+		log.info("POST : /post/post");
 		
 		int author = userService.getNumByEmail(email);
 		int star = Integer.parseInt(count_star);
@@ -76,15 +73,12 @@ public class PostController {
 	@ApiOperation(value = "게시물 가져오기")
 	public Object getMyPost(@RequestParam(required = true) int num,
 			@RequestParam(required = true) String email) throws Exception {
-		System.out.println("-----------------/post/post/{num}-----------------");
-		System.out.println("num : " + num);
-		System.out.println("email : " + email);
+		log.info("GET : /post/post/{num}");
 		
 		BasicResponse result = new BasicResponse();
 		result.data="success";
 		
 		List<Post> list = postService.getAllPost(num);
-		
 		if(list.size() == 0) {
 			result.data = "failed";
 			return new ResponseEntity<>(result, HttpStatus.OK);
@@ -99,7 +93,7 @@ public class PostController {
 			if(postlikeService.checkLike(like) != 0) {
 				list.get(i).setIslike(1);
 			}
-			list.get(i).setPicture(postService.getPicture(num));
+			// list.get(i).setPicture(postService.getPicture(num));
 			if(list.get(i).getType().equals("스크랩")) {
 				Post temp = postService.getPost(list.get(i).getScrapnum());
 				list.get(i).setScarpnick(userService.getNickname(temp.getAuthor()));
@@ -109,7 +103,6 @@ public class PostController {
 			}
 		}
 		
-		System.out.println(list);
 		result.status=true;
 		result.object = list;
 		return new ResponseEntity<>(result, HttpStatus.OK);
@@ -119,8 +112,7 @@ public class PostController {
 	@GetMapping("/post/mypost")
 	@ApiOperation(value = "내가 게시한 게시물 가져오기")
 	public Object getMyPost(@RequestParam(required = true) String nickname) throws Exception {
-		System.out.println("-----------------/post/mypost-----------------");
-		System.out.println("nickname : " + nickname);
+		log.info("GET : /post/mypost");
 		
 		int num = userService.getNumByNickname(nickname);
 		
@@ -145,7 +137,6 @@ public class PostController {
 			}
 		}
 		
-		System.out.println(list);
 		result.status=true;
 		result.object = list;
 		return new ResponseEntity<>(result, HttpStatus.OK);
@@ -154,8 +145,7 @@ public class PostController {
 	@GetMapping("/post/mylikepost")
 	@ApiOperation(value = "내가 좋아요 누른 게시물 가져오기")
 	public Object getMyLikePost(@RequestParam(required = true) String nickname) throws Exception {
-		System.out.println("-----------------/post/mylikepost-----------------");
-		System.out.println("nickname : " + nickname);
+		log.info("GET : /post/mylikepost");
 		
 		int num = userService.getNumByNickname(nickname);
 		BasicResponse result = new BasicResponse();
@@ -185,7 +175,6 @@ public class PostController {
 			}
 		}
 		
-		System.out.println(list);
 		result.status=true;
 		result.object = list;
 		return new ResponseEntity<>(result, HttpStatus.OK);
@@ -194,8 +183,7 @@ public class PostController {
 	@GetMapping("/post/myscrappost")
 	@ApiOperation(value = "내가 스크랩한 게시물 가져오기")
 	public Object getMyScrapPost(@RequestParam(required = true) String nickname) throws Exception {
-		System.out.println("-----------------/post/myscrappost-----------------");
-		System.out.println("nickname : " + nickname);
+		log.info("GET : /post/myscrappost");
 		
 		int num = userService.getNumByNickname(nickname);
 		
@@ -216,7 +204,6 @@ public class PostController {
 			list.get(i).setScrappicture(profileService.getPicture(temp.getAuthor()));
 		}
 		
-		System.out.println(list);
 		result.status=true;
 		result.object = list;
 		return new ResponseEntity<>(result, HttpStatus.OK);
@@ -225,8 +212,7 @@ public class PostController {
 	@GetMapping("/post/mycurationpost")
 	@ApiOperation(value = "내 큐레이션 지역 게시물 가져오기")
 	public Object getMyCurationPost(@RequestParam(required = true) String nickname) throws Exception {
-		System.out.println("-----------------/post/mycurationpost-----------------");
-		System.out.println("nickname : " + nickname);
+		log.info("GET : /post/mycurationpost");
 		
 		int num = userService.getNumByNickname(nickname);
 		
@@ -235,7 +221,6 @@ public class PostController {
 		String temp = profileService.getMyPlace(num);
 		String[] placeArr = temp.split("/");
 		String place = placeArr[0] + " " + placeArr[1];
-		System.out.println(place);
 		
 		List<Post> list = null;
 		
@@ -266,7 +251,6 @@ public class PostController {
 					list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 				}
 			}
-			System.out.println("모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
 		} else {
 			if(placeArr[1].equals("전체")) {
 				// 그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
@@ -293,7 +277,6 @@ public class PostController {
 						list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 					}
 				}
-				System.out.println("그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
 			} else {
 				// 그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))
 				Curation curation = new Curation(num, place);
@@ -319,7 +302,6 @@ public class PostController {
 						list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 					}
 				}
-				System.out.println("그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))");
 			}
 		}
 		
@@ -330,15 +312,13 @@ public class PostController {
 		     
 		result.status=true;
 		result.object = list;
-		System.out.println(list);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping("/post/main")
 	@ApiOperation(value = "메인화면 게시물 보여주기")
 	public Object mainPost(@RequestParam(required = true) String nickname) throws Exception {
-		System.out.println("-----------------/post/main-----------------");
-		System.out.println("nickname : " + nickname);
+		log.info("GET : /post/main");
 		
 		int num = userService.getNumByNickname(nickname);
 		
@@ -348,7 +328,6 @@ public class PostController {
 		String temp = profileService.getMyPlace(num);
 		String[] placeArr = temp.split("/");
 		String place = placeArr[0] + " " + placeArr[1];
-		System.out.println(place);
 		
 		List<Post> list = null;
 		
@@ -373,8 +352,7 @@ public class PostController {
 			}
 		} else if(placeArr[0].equals("전체")) {
 			// 모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
-			Curation curation = new Curation(num, place);
-			list = postService.getAllUserPostAndAllCuration(curation);
+			list = postService.getAllUserPost(num);
 			if(list.size() == 0) {
 				result.data = "nothing";
 				return new ResponseEntity<>(result , HttpStatus.OK);
@@ -395,7 +373,6 @@ public class PostController {
 					list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 				}
 			}
-			System.out.println("모든 피드 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
 		} else {
 			if(placeArr[1].equals("전체")) {
 				// 그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))
@@ -421,7 +398,6 @@ public class PostController {
 						list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 					}
 				}
-				System.out.println("그 지역의 모든 동네 정보 보여줌 && (공개 사용자 OR (비공개 사용자 && 팔로우))");
 			} else {
 				// 그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))
 				Curation curation = new Curation(num, place);
@@ -446,7 +422,6 @@ public class PostController {
 						list.get(i).setScrappicture(profileService.getPicture(ptemp.getAuthor()));
 					}
 				}
-				System.out.println("그 지역의 동네 정보 보여줌 && ((비공개 사용자 && 팔로우) OR공개 사용자 ))");
 			}
 		}
 		
@@ -458,7 +433,6 @@ public class PostController {
 		result.data="success";
 		result.status = true;
 		result.object = list;
-		System.out.println(list);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
@@ -468,9 +442,7 @@ public class PostController {
 							@RequestParam(required = true) int postnum,
 							@RequestParam(required = true) String title,
 							@RequestParam(required = true) String content) throws Exception {
-		System.out.println("-----------------/post/scrap-----------------");
-		System.out.println("num : " + num); // user.num
-		System.out.println("postnum : " + postnum); // post.num
+		log.info("POST : /post/scrap");
 		
 		Post scrapPost = postService.getPost(postnum); // 해당 포스트를 찾음
 		
@@ -490,9 +462,7 @@ public class PostController {
 	@ApiOperation(value = "게시물 삭제하기")
 	public Object deletePost(@RequestParam(required = true) int num,
 							@RequestParam(required = true) int mynum) throws Exception {
-		System.out.println("-----------------/post/post-----------------");;
-		System.out.println("num : " + num);
-		System.out.println("myNum : " + mynum);
+		log.info("DELETE : /post/post");
 		
 		BasicResponse result = new BasicResponse();
 		
@@ -510,7 +480,6 @@ public class PostController {
 		     
 		result.status=true;
 		result.object = list;
-		System.out.println(list);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
@@ -522,13 +491,7 @@ public class PostController {
 							@RequestParam(required = true) int count_star,
 							@RequestParam(required = true) String address,
 							@RequestParam(required = true) String image) throws Exception {
-		System.out.println("-----------------/post/post-----------------");;
-		System.out.println("num : " + num);
-		System.out.println("title : " + title);
-		System.out.println("content : " + content);
-		System.out.println("count_star : " + count_star);
-		System.out.println("address : " + address);
-		System.out.println("image : " + image);
+		log.info("PATCH : /post/post");
 		
 		Post post = new Post();
 		post.setNum(num);
@@ -541,15 +504,20 @@ public class PostController {
 		if(postService.updatePost(post) == 0) {
 			return "failed";
 		}
+		Post spost = new Post();
+		spost.setScrapnum(num);
+		spost.setAddress(address);
+		spost.setImage(image);
+		postService.updateScrapPost(spost);
 		
 		return "success";
 	}
 	
 	@GetMapping("/post/post/{postnum}")
-	@ApiOperation(value = "게시물 삭제하기")
-	public Object deletePost(@RequestParam(required = true) int num) throws Exception {
-		System.out.println("-----------------post/post/{postnum}-----------------");;
-		System.out.println("num : " + num);
+	@ApiOperation(value = "게시물 하나 가져오기")
+	public Object getPost(@RequestParam(required = true) int num,
+			@RequestParam(required = true) String email) throws Exception {
+		log.info("GET : /post/post/{postnum}");
 		
 		BasicResponse result = new BasicResponse();
 		
@@ -559,12 +527,18 @@ public class PostController {
 			result.data = "nothing";
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
-		     
+		
+		int myNum = userService.getNumByEmail(email);
+		Postlike like = new Postlike(num, myNum);
+		if(postlikeService.checkLike(like) != 0) {
+			post.setIslike(1);
+			// post.setPicture(postService.getPicture(num));
+		}
+		post.setNickname(userService.getNickname(post.getAuthor()));
+		
 		result.status=true;
 		result.object = post;
-		System.out.println(post.toString());
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}	
-	
 	
 }

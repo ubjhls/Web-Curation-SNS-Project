@@ -5,8 +5,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="post">
 
 	<insert id="insertPost" parameterType="post">
-		insert into post(author, title, content, date, count_star, address, image)
-		values(#{author}, #{title}, #{content}, now(), #{count_star}, #{address}, #{image})
+		insert into post(author, title, content, date, count_star, address, image, scrapnum)
+		values(#{author}, #{title}, #{content}, now(), #{count_star}, #{address}, #{image}, null)
 	</insert>
 	
 	<select id="getAllPost" parameterType="java.lang.Integer" resultType="post">
@@ -63,18 +63,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getAllUserPost" parameterType="java.lang.Integer" resultType="post">
 		select * from post
-		where address != ''
-		and (author in (select following from follow where follower=#{num})
+		where (author in (select following from follow where follower=#{num})
 		or author in (select num from user where auth=0))
 		order by date desc
-	</select>
-	
-	<select id="getAllUserPostAndAllCuration" parameterType="java.lang.Integer" resultType="post">
-		select * from post
-		where address != '' and num in (select num from post where substring_index(address, ' ', 3) like concat(#{place}, '%'))
-		or (author in (select following from follow where follower=#{num})
-		or author in (select num from user where auth=0))
-		order by date desc;
 	</select>
 	
 	<select id="getPost" parameterType="java.lang.Integer" resultType="post">
@@ -111,5 +102,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getPicture" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select picture from profile where num=#{num}
 	</select>
+	
+	<update id="updateScrapPost" parameterType="post">
+		update post set address=#{address}, image=#{image} where scrapnum=#{scrapnum}
+	</update>
 	
  </mapper>

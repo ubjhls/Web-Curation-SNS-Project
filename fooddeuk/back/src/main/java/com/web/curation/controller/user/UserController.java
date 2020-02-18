@@ -1,5 +1,7 @@
 package com.web.curation.controller.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +20,8 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin("*")
 @RestController
 public class UserController {
-	
+	Logger log = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private IUserService userService;
 	
@@ -31,11 +34,7 @@ public class UserController {
 							@RequestParam(required = true) String nickname, 
 							@RequestParam(required = true) String intro, 
 							@RequestParam(required = true) int auth) throws Exception {
-		System.out.println("-----------------/user/user-----------------");
-		System.out.println("email : " + email);
-		System.out.println("nickname : " + nickname);
-		System.out.println("intro : " + intro);
-		System.out.println("auth : " + auth);
+		log.info("PATCH : /user/user");
 		
 		User user = new User(email, nickname, intro, auth);
 		
@@ -50,10 +49,7 @@ public class UserController {
 	@ApiOperation(value = "비밀번호 수정")
 	public String updateNewPassword(@RequestParam(required = true) String email, 
 								@RequestParam(required = true) String password) throws Exception {
-		System.out.println("-----------------/user/password-----------------");
-		System.out.println("email : " + email);
-		System.out.println("password : " + password);
-		
+		log.info("PATCH : /user/password");
 		
 		PasswordEncoding passwordencoding = new PasswordEncoding();
 		String encodePassword = passwordencoding.encode(password);
@@ -68,8 +64,7 @@ public class UserController {
 	@GetMapping("/user/myinfo")
 	@ApiOperation(value = "내 정보 출력")
 	public User getMyInfo(@RequestParam(required = true) String email) throws Exception {
-		System.out.println("-----------------/user/myinfo-----------------");
-		System.out.println("email : " + email);
+		log.info("GET : /user/myinfo");
 		
 		User user = userService.getUserByEmail(email);
 
@@ -79,20 +74,16 @@ public class UserController {
 	@GetMapping("/user/auth")
 	@ApiOperation(value = "계정 공개 여부 확인, 0:공개, 1: 비공개")
 	public int getAuth(@RequestParam(required = true) int num) {
-		System.out.println("-----------------/user/auth-----------------");
-		System.out.println("num : " + num);
+		log.info("GET : /user/auth");
 		
 		return userService.getAuth(num);
 	}
-	
 	
 	@GetMapping("/user/userinfo")
 	@ApiOperation(value = "유저 정보 출력")
 	public User getUserInfo(@RequestParam(required = true) String myEmail,
 							@RequestParam(required = true) String otherEmail) throws Exception {
-		System.out.println("-----------------/user/userinfo-----------------");
-		System.out.println("myEmail : " + myEmail);
-		System.out.println("otherEmail : " + otherEmail);
+		log.info("GET : /user/userinfo");
 		
 		int myNum = userService.getNumByEmail(myEmail);
 		int otherNum = userService.getNumByEmail(otherEmail);
@@ -113,8 +104,7 @@ public class UserController {
 	@GetMapping("/user/userinfo/{nickname}")
 	@ApiOperation(value = "닉네임으로 유저 정보 출력")
 	public User getUserInfoByNickname(@RequestParam(required = true) String nickname) throws Exception {
-		System.out.println("-----------------/user/userinfo/{nickname}-----------------");
-		System.out.println("nickname : " + nickname);
+		log.info("GET : /user/userinfo/{nickname}");
 		
 		User user= userService.getUserByNickname(nickname);
 		
