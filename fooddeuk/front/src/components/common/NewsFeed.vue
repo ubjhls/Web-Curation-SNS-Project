@@ -1,6 +1,7 @@
 <template>
+<v-app>
     <div class="wrapC">
-        <div class="wrapper">
+        <div class="wrapper" style="position:relative">
             <div class="profile-card js-profile-card">
                 <div class="profile-card__cnt js-profile-cnt">
                     <img src="../../assets/images/profile_default.png" style="margin-bottom:10px;">
@@ -154,6 +155,7 @@
             </div>
         </div>
     </div>
+</v-app>
 </template>
 
 

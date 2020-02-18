@@ -197,7 +197,7 @@
                 this.nick = this.$store.state.userinfo.nickName
 
                  http.get("/user/userinfo/{nickname}?nickname="+this.nick)
-                .then(Response => {
+                .then(Response => { 
                     this.mynum = Response.data.num;
                 })
                 .catch(Error => {

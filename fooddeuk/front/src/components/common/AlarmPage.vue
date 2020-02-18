@@ -1,4 +1,5 @@
 <template>
+<v-app>
     <div class="contents_center" style="margin-top:65px; margin-bottom:65px">
     <v-tabs v-model="tab" grow slider-color="#F7A937" >
         <v-tab
@@ -20,6 +21,7 @@
       </v-tab-item>
     </v-tabs-items>
     </div>
+</v-app>
 </template>
 
 <script>

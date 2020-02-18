@@ -1,4 +1,5 @@
 <template>
+<v-app>
 <div>
     <v-text-field style="margin-top: 40px; margin-left:20px; margin-right:20px"
       v-model="subject"
@@ -95,6 +96,7 @@
         </button>
     </div>
 </div>
+</v-app>
 </template>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
