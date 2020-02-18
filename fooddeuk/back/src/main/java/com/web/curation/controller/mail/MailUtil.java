@@ -67,11 +67,24 @@ public class MailUtil {
 				'W', 'X', 'Y', 'Z',
 				'!', '@', '#', '$', '%', '^', '&', '+', '=', '.'};
 		
-		StringBuilder newKey = new StringBuilder();
+		StringBuilder newKey;
 		
-		for(int i = 0; i < 10; i++) {
-			int idx = (int) (charSet.length * Math.random());;
-			newKey.append(charSet[idx]);
+		while(true) {
+			newKey = new StringBuilder();
+			
+			int alpha = 0, number = 0;
+			for(int i = 0; i < 10; i++) {
+				int idx = (int) (charSet.length * Math.random());;
+				if(idx >= 0 && idx <= 9) { // 숫자
+					number++;
+				} else if(idx >= 10 && idx <= 35) { // 알파벳
+					alpha++;
+				}
+				newKey.append(charSet[idx]);
+			}
+			if(alpha >= 0 && number >= 0) {
+				break;
+			}
 		}
 		
 		return newKey.toString();

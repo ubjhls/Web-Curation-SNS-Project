@@ -1,5 +1,7 @@
 package com.web.curation.controller.profile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +16,13 @@ import com.web.curation.model.BasicResponse;
 import com.web.curation.model.profile.Profile;
 import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
-import com.web.curation.service.UserServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin("*")
 @RestController
 public class ProfileController {
+	Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private IProfileService profileService;
@@ -31,12 +33,10 @@ public class ProfileController {
 	@GetMapping("/profile/myplace")
 	@ApiOperation(value = "내 지역 정보 가져오기")
 	public Object getMyPlace(@RequestParam(required = true) String email) throws Exception {
-		System.out.println("-----------------/profile/myplace-----------------");
-		System.out.println("email : " + email);
+		log.info("GET : /profile/myplace");
 
 		int num = userService.getNumByEmail(email);
 		String place = profileService.getMyPlace(num);
-		System.out.println("place : " + place);
 		
 		BasicResponse result = new BasicResponse();
 		result.object = place.split("/");
@@ -50,10 +50,7 @@ public class ProfileController {
 	public String updatePlace(@RequestParam(required = true) String email, 
 							@RequestParam(required = true) String place1,
 							@RequestParam(required = true) String place2) throws Exception {
-		System.out.println("-----------------/profile/place-----------------");
-		System.out.println("email : " + email);
-		System.out.println("place1 : " + place1);
-		System.out.println("place2 : " + place2);
+		log.info("PATCH : /profile/place");
 
 		int num = userService.getNumByEmail(email);
 		StringBuilder sb = new StringBuilder();
@@ -75,8 +72,7 @@ public class ProfileController {
 	@GetMapping("/profile/profile")
 	@ApiOperation(value = "프로필 가져오기")
 	public Profile getProfile(@RequestParam(required = true) String nickname) throws Exception {
-		System.out.println("-----------------/profile/profile-----------------");
-		System.out.println("nickname : " + nickname);
+		log.info("GET : /profile/profile");
 		
 		int num = userService.getNumByNickname(nickname);
 		Profile profile = profileService.getProfile(num);
@@ -87,18 +83,15 @@ public class ProfileController {
 	@GetMapping("/profile/picture")
 	@ApiOperation(value = "회원 사진 가져오기")
 	public String getPicture(@RequestParam(required = true) int num) throws Exception {
-		System.out.println("-----------------/profile/picture-----------------");
-		System.out.println("num : " + num);
+		log.info("GET : /profile/picture");
 		
 		return profileService.getPicture(num);
 	}
 	
-	
 	@PostMapping("/profile/insertPicture")
 	@ApiOperation(value = "프로필사진 등록하기")
 	public Object insertPicture(@RequestParam(required = true) String picture) throws Exception {
-		System.out.println("-----------------/profile/insertPicture-----------------");
-		System.out.println("picture : " + picture);
+		log.info("POST : /profile/insertPicture");
 		
 		int num = profileService.insertPicture(picture);
 		Profile profile = profileService.getProfile(num);

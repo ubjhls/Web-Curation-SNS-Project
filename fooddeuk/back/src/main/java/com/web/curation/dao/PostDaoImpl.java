@@ -96,8 +96,8 @@ public class PostDaoImpl {
 		return sqlSession.selectOne(ns+"getPicture", num);
 	}
 	
-	public List<Post> getAllUserPostAndAllCuration(Curation curation) {
-		return sqlSession.selectList(ns+"getAllUserPostAndAllCuration", curation);
+	public int updateScrapPost(Post post) {
+		return sqlSession.update(ns+"updateScrapPost", post);
 	}
 	
 }

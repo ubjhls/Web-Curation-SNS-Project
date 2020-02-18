@@ -11,29 +11,25 @@ import com.web.curation.model.alarm.Alarm;
 @Repository
 public class AlarmDaoImpl {
 	String ns="alarm.";
+	
 	@Autowired
 	private SqlSession sqlSession;
 	
 	public void nonfollowSave(Alarm alarm) {
-		
 		sqlSession.selectOne(ns+"nonfollowSave", alarm);
-		
 	}
 
 	public int checkFollowAlarm(Alarm alarm) {
-		
 		Alarm alarm2= sqlSession.selectOne(ns+"checkFollowAlarm", alarm);
-		//System.out.println(alarm2);
+		
 		if(alarm2==null) {
 			return 1;
 		}else {
 			return 0;
 		}
-		
 	}
 
 	public List<Alarm> myalarmList(String num) {
-		
 		return sqlSession.selectList(ns+"myalarmList", num);
 	}
 
@@ -42,7 +38,6 @@ public class AlarmDaoImpl {
 	}
 
 	public List<Alarm> alarmtlist(String mynickname) {
-		
 		return sqlSession.selectList(ns+"alarmtlist", mynickname);
 	}
 	
