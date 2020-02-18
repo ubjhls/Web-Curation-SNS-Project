@@ -3,48 +3,50 @@
 
 
     <div class="wrapC">
-        <div class="wrapper" >
-            <div class="profile-card js-profile-card" >
-                <div class="profile-card__cnt js-profile-cnt">
-                    <div class="my-3">
-            <v-btn @click="fileInputClick()" color="warning" fab x-large dark>
-              <v-icon>mdi-account-circle</v-icon>
-            </v-btn>
-          </div>
-  <v-row justify="center">
-    <v-dialog
-      v-model="dialog"
-      max-width="290"
-    >
-    <v-card>
-<v-card-title>
-  <v-file-input 
-  v-model="chosenFile"
-  @change="updatePicture($event)"
-  label="File input"
-  ></v-file-input>
-</v-card-title>
-<v-card-actions>
-              <v-btn btn btn--ok color="green darken-1" text @click="submit" :disabled="dialogResult===false" :class="{disabled : !dialog}">Agree</v-btn>
-              <v-btn color="green darken-1" text @click="dialog = false">Disagree</v-btn>
-              <v-btn color="green darken-1" text @click="deletePicture">삭제</v-btn>
-
-            
-</v-card-actions>
-
-    </v-card>
-    </v-dialog>
-  </v-row>
+    <div class="wrapper">
+        <div class="profile-card js-profile-card">
+            <div class="profile-card__cnt js-profile-cnt">
+                <div class="my-3">
+                    <v-btn
+                        @click="fileInputClick()"
+                        color="warning"
+                        fab="fab"
+                        x-large="x-large"
+                        dark="dark">
+                        <v-icon>mdi-account-circle</v-icon>
+                    </v-btn>
+                </div>
+                <v-row justify="center">
+                    <v-dialog v-model="dialog" max-width="290">
+                        <v-card>
+                            <v-card-title>
+                                <v-file-input
+                                    v-model="chosenFile"
+                                    @change="updatePicture($event)"
+                                    label="File input"></v-file-input>
+                            </v-card-title>
+                            <v-card-actions>
+                                <v-btn
+                                    btn="btn"
+                                    btn--ok="btn--ok"
+                                    color="green darken-1"
+                                    text="text"
+                                    @click="submit"
+                                    :disabled="dialogResult===false"
+                                    :class="{disabled : !dialog}">Agree</v-btn>
+                                <v-btn color="green darken-1" text="text" @click="dialog = false">Disagree</v-btn>
+                                <v-btn color="green darken-1" text="text" @click="deletePicture">삭제</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-row>
                         <div class="profile-card__name">{{nickname}}</div>
                         <div class="profile-card__txt">{{intro}}</div>
-
-
                     <div class="profile-card-inf">
                         <div class="profile-card-inf__item" @click="goFollowerPage">
                             <div class="profile-card-inf__title">{{follower}}</div>
                             <div class="profile-card-inf__txt">Followers</div>
                         </div>
-
                         <div class="profile-card-inf__item" @click="goFollowingPage">
                             <div class="profile-card-inf__title">{{following}}</div>
                             <div class="profile-card-inf__txt">Following</div>
@@ -219,7 +221,7 @@
                                     <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
                                 </v-list-item>
                                 <v-list-item>
-                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                    <button style="float:right" @click="removeFeed(item.num,index)">삭제</button>
                                 </v-list-item>
                             </v-list>
                             </v-menu>
@@ -448,6 +450,7 @@
                     this.post = Response.data.object;
                     console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
+                    if(this.post!=null){
                     for (let index = 0; index < this.post.length; index++) {
                      
                         if(this.post[index].islike==1){
@@ -462,6 +465,7 @@
                     }
                     if(this.post.length!=0){
                         this.infiniteHandler(this.state);
+                    }
                     }
                     
                 })
@@ -667,13 +671,13 @@
                 
             },
             
-            removeFeed(num){
+            removeFeed(num, index){
                  if (confirm("정말 삭제하시겠습니까??") == true){    //확인
                     http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
                     .then(response => {
                         alert('게시물이 삭제되었습니다.')
                         this.post = response.data.object
-                        
+                        this.list.splice(index, 1)
                     })
                 .catch(Error =>{
                 })

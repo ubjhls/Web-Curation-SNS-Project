@@ -94,6 +94,10 @@
             작성하기
         </button>
     </div>
+
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
 </div>
 </template>
 
@@ -118,6 +122,11 @@ import http from "../../../http-common"
       },
       content: function (v) {
           this.checkForm();
+      },
+      overlay (val) {
+        val && setTimeout(() => {
+          this.overlay = false
+        }, 2000)
       },
     },
     methods: {
@@ -243,21 +252,26 @@ import http from "../../../http-common"
           }
         },
         processFile(event){
+           
           console.log(event)
           // alert(this.$refs.photoimage.files)
           this.image = event
-
+          if(this.image!=null){
+            if(!this.overlay){
+                this.overlay = true;
+            }
           let formdata = new FormData()
           formdata.append('image',this.image)
 
           Axios.post('https://api.imgur.com/3/image',formdata, {headers:{Authorization: 'Client-ID d15c5b033075c6e'}})
           .then(Response => {
               this.imageResult = Response.data.data.link;
-              alert("갔다옴")
+           
             })
           .catch(Error => {
 
           })
+          }
         }
     },
     data () {
@@ -279,7 +293,8 @@ import http from "../../../http-common"
          subject: false,
          content: false,
          stars:false
-       }
+       },
+       overlay: false,
       }
     },
   }

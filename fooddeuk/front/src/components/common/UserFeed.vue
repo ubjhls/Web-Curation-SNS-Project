@@ -453,7 +453,7 @@
                             this.todolist.push([])
                             this.commentcount.push(this.post[index].count_comment)
                         }
-                        if(this.auth==0&&this.post.length!=0){
+                        if(this.post.length!=0){
                             this.infiniteHandler(this.state);
                         }
                     }
