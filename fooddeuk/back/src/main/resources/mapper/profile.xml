@@ -20,8 +20,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updatePlace" parameterType="profile">
 		update profile set place=#{place} where num=#{num}
 	</update>
-	<insert id="insertPicture" parameterType="java.lang.String">
-		insert into profile(picture)
-		values(#{picture})
-	</insert>
+	<update id="updatePicture" parameterType="profile">
+		update profile set picture = #{picture} where num=#{num}
+	</update>
+	<update id="deletePicture" parameterType="java.lang.Integer">
+		update profile set picture = null where num=#{num}
+	</update>
  </mapper>
