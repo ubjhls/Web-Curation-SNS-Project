@@ -30,18 +30,18 @@ public class Profile {
 		super();
 	}
 	
-	public Profile(int num, String interest) {
+	public Profile(int num, String place) {
 		super();
 		this.num = num;
-		this.place = interest;
+		this.place = place;
 	}
-
+	
 	public Profile(int num, int count_follower, int count_following, String interest) {
 		super();
 		this.num = num;
 		this.count_follower = count_follower;
 		this.count_following = count_following;
-		this.place = interest;
+		this.place = place;
 	}
 
 	public Profile(int num, int count_follower, int count_following) {
@@ -56,7 +56,7 @@ public class Profile {
 		this.num = num;
 		this.count_follower = count_follower;
 		this.count_following = count_following;
-		this.place = interest;
+		this.place = place;
 		this.picture = picture;
 	}
 
