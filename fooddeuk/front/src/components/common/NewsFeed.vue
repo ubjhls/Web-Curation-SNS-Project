@@ -309,7 +309,7 @@
                     console.log(Error)
                 })
             }
-            this.nickname = this.propsNickname;
+            this.nickname = this.$store.state.userinfo.nickName
             //포스트 불러오기
             this.getUserByNickname(this.nickname);
 
