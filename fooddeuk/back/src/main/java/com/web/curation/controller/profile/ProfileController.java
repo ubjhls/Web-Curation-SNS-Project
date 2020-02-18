@@ -54,7 +54,7 @@ public class ProfileController {
 		System.out.println("email : " + email);
 		System.out.println("place1 : " + place1);
 		System.out.println("place2 : " + place2);
-
+		
 		int num = userService.getNumByEmail(email);
 		StringBuilder sb = new StringBuilder();
 		
@@ -96,16 +96,36 @@ public class ProfileController {
 	
 	@PostMapping("/profile/insertPicture")
 	@ApiOperation(value = "프로필사진 등록하기")
-	public Object insertPicture(@RequestParam(required = true) String picture) throws Exception {
+	public Object insertPicture(@RequestParam(required = true) int num,
+								@RequestParam(required = true) String picture) throws Exception {
 		System.out.println("-----------------/profile/insertPicture-----------------");
 		System.out.println("picture : " + picture);
-		
-		int num = profileService.insertPicture(picture);
-		Profile profile = profileService.getProfile(num);
-		
+		System.out.println("num : " + num);
+		Profile profile = new Profile();
+		profile.setNum(num);
+		profile.setPicture(picture);
 		BasicResponse result = new BasicResponse();
-		result.data="success";
 		
+		if(profileService.updatePicture(profile)==0) {
+			result.data="failed";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		result.data="success";
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	@GetMapping("/profile/deletePicture")
+	@ApiOperation(value = "프로필사진 삭제하기")
+	public Object deletePicture(@RequestParam(required = true) int num) throws Exception {
+		System.out.println("-----------------/profile/deletePicture-----------------");
+		System.out.println("num : " + num);
+		BasicResponse result = new BasicResponse();
+		
+		profileService.deletePicture(num);
+		result.data="sueccess";
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	
+		
+		
 	}
 }

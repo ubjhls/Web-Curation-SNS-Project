@@ -343,7 +343,7 @@
                 this.myEmail = this.$store.state.userinfo.email
                 this.nick = this.$store.state.userinfo.nickName
                  http.get("/user/userinfo/{nickname}?nickname="+this.nick)
-                .then(Response => {
+                .then(Response => { 
                     this.mynum = Response.data.num;
                 })
                 .catch(Error => {
@@ -739,6 +739,7 @@
                 form.append('num',this.$store.state.userinfo.num)
                 this.scraptitle = ''
                 this.scrapcontent = ''
+                alert('스크랩 되었습니다.')
                 http.post("/post/scrap", form)
             },
             modal(num){
