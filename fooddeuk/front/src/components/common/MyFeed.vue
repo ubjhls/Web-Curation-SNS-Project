@@ -833,7 +833,7 @@
         data: () => {
             return {
                 modalnum:0,
-                dialog: false,
+              
                 usernum:0,
                 isSubmit: false,
                 error:{
@@ -862,15 +862,10 @@
                 likelist:[],
                 mynum:0,
                 commentcount:[],
-<<<<<<< fooddeuk/front/src/components/common/MyFeed.vue
                 dialog: false,
                 dialogResult: false,
-                chosenFile:null
-
-
-=======
+                chosenFile:null,
                 list:[],
->>>>>>> fooddeuk/front/src/components/common/MyFeed.vue
                
             }
         },

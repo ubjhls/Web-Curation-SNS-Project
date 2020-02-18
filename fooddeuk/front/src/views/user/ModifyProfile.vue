@@ -93,12 +93,14 @@
                 .digits()
                 .has()
                 .letters();
-            if(this.$store.state.userinfo!=null) {
-                this.email = this.$store.state.userinfo.email;
-                this.name = this.$store.state.userinfo.name;
-            }
 
-            this.getMyInfo();
+                setTimeout(() => {
+                     if(this.$store.state.userinfo!=null) {
+                     this.email = this.$store.state.userinfo.email;
+                     this.name = this.$store.state.userinfo.name;
+                     this.getMyInfo();
+                    }
+                }, 200);
         },
         watch: {
             nickName: function (v) {
