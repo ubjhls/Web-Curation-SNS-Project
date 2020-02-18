@@ -78,33 +78,40 @@
                            <div style="margin-left:20px; margin-bottom:20px">
                                 {{ item.content }}<br>
                             </div>
-                        <p style="text-align:center">
-                            <v-card style="margin-left:13px; width:90%; height:100%; text-align:center">
+
+                        <div>
+                            <p>{{item}}</p>
+
+                            
+                            
+                            <v-card style="margin-left:13px; width:90%; height:auto;" @click.stop="showScrapPost(item.scrapnum)">
+                                <div style=" background-color:#F7A937;text-align:center">스크랩한 게시물</div>
+                                <v-list-item style="width:100%;">
+                                <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                                <v-list-item-content style="padding-left:5%">
+                                <v-list-item-title style="margin-top:5px; font-size:15px;">{{item.scraptitle}}
+                                <v-list-item-subtitle>{{item.scarpnick}} <br>
+                                </v-list-item-subtitle>
+                                </v-list-item-title>
+                                </v-list-item-content>
+                                </v-list-item>
+
+                                <div style="height:auto; padding:5%;">{{item.scrapcontent}}</div>
+
                                 <v-img 
                                 v-if="item.image!==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px;"
                                 :src="item.image"
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                                 >
-                                <v-card-title v-text="item.scraptitle"></v-card-title>
                                 </v-img>
-                                <v-img 
-                                v-if="item.image==null"
-                                style="width:100%;"
-                                src="../../assets/images/noimage.png"  
-                                class="white--text align-end"
-                                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                                >
-                                <v-card-title v-text="item.scraptitle"></v-card-title>
-                                </v-img>
-
 
                                 <v-card-actions>
                                 <v-spacer></v-spacer>
                                 </v-card-actions>
                             </v-card>
-                        </p>
+                        </div>
                         <v-spacer></v-spacer>
 
 
@@ -173,6 +180,34 @@
 
                 </div>
 
+                <div class="text-center">
+                    <v-dialog
+                    v-model="scrapdialog"
+                    width="500"
+                    :retain-focus="false"
+                    >
+                    <v-card>
+                        <v-card-title
+                        primary-title
+                        >
+                        본문
+                        </v-card-title>
+
+                        <v-card-text>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </v-card-text>
+
+                        <v-divider></v-divider>
+
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="scrapdialog = false">close</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                    </v-dialog>
+                </div>
+
+
                 <div v-if="item.type==='일반'">
                     <v-card
                             max-width="100%"
@@ -237,7 +272,7 @@
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
                          <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
-                            <v-dialog v-model="dialog" persistent max-width="290">
+                            <v-dialog v-model="dialog" persistent max-width="290" :retain-focus="false">
                             <template v-slot:activator="{ on }">
                                 <v-btn depressed color="white" v-on="on" @click="modal(item.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
                             </template>
@@ -531,6 +566,18 @@
 
                 }
             },
+            showScrapPost(scrapNum) {
+                this.scrapdialog = true;
+
+                 http.get('/post/post/{postnum}?num=' + scrapNum)
+                .then(Response => {
+                     this.scrappost = Response.data.object;
+                     console.log(this.scrappost);
+                })
+                .catch(Error => {
+                     console.log(Error)
+                })
+            },
             toggleadd(num, index) { //좋아요를 클릭할때
                this.likelist[index]++;
                this.$set(this.like,index,!this.like[index])
@@ -761,7 +808,7 @@
                 })
             },
             modal(num){
-                this.modalnum = num
+                this.modalnum = num;
             },
             noscrap(){
                 alert('이미 스크랩 된 게시물입니다')
@@ -772,6 +819,7 @@
             return {
                 modalnum:0,
                 dialog: false,
+                scrapdialog : false,
                 usernum:0,
                 isSubmit: false,
                 error:{
@@ -795,6 +843,7 @@
                 myEmail:'',
                 feeds: 0,
                 post : [],
+                scrappost :[],
                 commentNum:'',
                 likelist:[],
                 mynum:0,
