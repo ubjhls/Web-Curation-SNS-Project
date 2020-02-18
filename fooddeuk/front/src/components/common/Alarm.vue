@@ -1,4 +1,5 @@
 <template>
+<div>
   <v-card
     class="mx-auto"
   >
@@ -38,6 +39,7 @@
       </template>
     </v-list>
   </v-card>
+</div>
 </template>
 
 <script>
@@ -154,3 +156,10 @@
     }
   }
 </script>
+<style lang="scss" scoped>
+// html, body {
+//     margin: 0;
+//     height: 100%;
+//     overflow: hidden;
+// }
+</style>

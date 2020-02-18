@@ -47,6 +47,7 @@
   import VueMomentJS from 'vue-momentjs'
   import { fireDB } from '../../main';
   import EventBus from '../../EventBus'
+  import firebase from 'firebase'
 
   Vue.use(VueMomentJS, moment)
 
@@ -58,7 +59,7 @@
         this.email = this.$store.state.userinfo.email;
         this.nickname = this.$store.state.userinfo.nickName;
       }
-      // this.getAlarms();
+      this.getAlarms();
       this.watchAlarmFromFirebase();
     },
     mounted : function() {
@@ -75,16 +76,16 @@
       setAlarm(alarm) {
         this.alarmCount = alarm;
       },
-      upAlarmToFirebase() {
-        fireDB.collection('Alarm').doc(this.email)
-        .set({
-          count : this.alarmCount + 1
+      upAlarmToFirebase(email) {
+        fireDB.collection('Alarm').doc(email)
+        .update({
+          count : firebase.firestore.FieldValue.increment(1)
         })
       },
-      downAlarmToFirebase() {
-        fireDB.collection('Alarm').doc(this.email)
-        .set({
-          count : this.alarmCount - 1
+      downAlarmToFirebase(email) {
+        fireDB.collection('Alarm').doc(email)
+        .update({
+          count : firebase.firestore.FieldValue.increment(-1)
         })
       },
       watchAlarmFromFirebase() {
@@ -93,13 +94,9 @@
           fireDB.collection('Alarm').doc(this.email).onSnapshot( {
               includeMetadataChanges: true    
           },function(doc) {
-              if(doc.data()==undefined) {
-                  count = 0;
-              } else {
-                  count = doc.data().count;
-              }
-              whoami.setAlarm(count);
+              count = doc.data().count;
               whoami.getAlarms();
+              whoami.setAlarm(count);
           })
       },
       getTime(time) {
@@ -109,7 +106,6 @@
         http.get("/follow/requestlist?mynickname=" + this.nickname)
         .then(Response => {
           this.items = Response.data
-          // console.log(Response.data)
         })
         .catch(Error => {
             console.log(Error)
@@ -138,12 +134,24 @@
         form.append('num', num)
         form.append('nickname', this.nickname)
         form.append('mynickname', otherNickname)
+
+        var otherEmail;
+        http.get('/user/userinfo/{nickname}?nickname=' + otherNickname)
+        .then(Response => {
+          otherEmail = Response.data.email;
+          // console.log(Response)
+        })
+        .catch(Error => {
+          console.log(Error)
+        })
+
         form.append('agree', '0')
         http.post("/follow/followagree", form)
         .then(Response => {
           // console.log(Response.data)
           this.getAlarms();
-          this.downAlarmToFirebase();
+          this.downAlarmToFirebase(this.email);
+          this.upAlarmToFirebase(otherEmail);
         })
         .catch(Error => {
             console.log(Error)

@@ -1,7 +1,7 @@
 <template>
 <v-app>
     <div class="contents_center" style="margin-top:65px; margin-bottom:65px">
-    <v-tabs v-model="tab" grow slider-color="#F7A937" >
+    <v-tabs v-model="tab" grow color="#F7A937" slider-color="#F7A937" >
         <v-tab
         v-for="item in items"
         :key="item"
