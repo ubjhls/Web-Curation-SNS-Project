@@ -81,8 +81,11 @@
     export default {
         components: {},
         created() {
-          this.nickname = this.$store.state.userinfo.nickName;
-          this.getUserByNickname(this.nickname);
+          setTimeout(() => {
+            
+            this.nickname = this.$store.state.userinfo.nickName;
+            this.getUserByNickname(this.nickname);
+          }, 200);
         },
         watch: {},
         methods: {

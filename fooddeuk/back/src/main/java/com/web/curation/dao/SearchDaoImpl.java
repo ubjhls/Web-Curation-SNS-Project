@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.web.curation.model.post.Post;
 import com.web.curation.model.search.Search;
 import com.web.curation.model.user.User;
 
@@ -42,6 +43,10 @@ public class SearchDaoImpl {
 	
 	public int updateSearch(Search search) {
 		return sqlSession.update(ns+"updateSearch", search);
+	}
+
+	public List<Post> searchFeed(String keyword) {
+		return sqlSession.selectList(ns+"searchFeed", keyword);
 	}
 	
 }

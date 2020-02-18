@@ -114,7 +114,7 @@
                             <v-card style="margin-left:13px; width:90%; height:100%; text-align:center">
                                 <v-img 
                                 v-if="item.image!==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px;"
                                 :src="item.image"
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -123,12 +123,11 @@
                                 </v-img>
                                 <v-img 
                                 v-if="item.image==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px"
                                 src="../../assets/images/noimage.png"  
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                                 >
-                                <v-card-title v-text="item.scraptitle"></v-card-title>
                                 </v-img>
 
 
@@ -261,7 +260,7 @@
                             <v-card-text>
                                 {{item.content}}
                                 
-                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image"  style="width:100%; heigh:auto; ">
+                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image" style="width:100%; heigh:200px; ">
                             <br>
                             <br><br><hr><br>
                             주소 : {{item.address}} 
@@ -335,7 +334,9 @@
                 
                 </div>
             </div>
-             <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+             <div v-if="post">
+                <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+                </div>
         </div>
     </div>
     </div>
@@ -463,7 +464,7 @@
             getPostByNum(num) { //포스트가져오기
                 let form = new FormData()
                 form.append('num', num)
-
+                
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
                     this.post = Response.data.object;
@@ -478,15 +479,13 @@
                         }
                         this.likelist.push(this.post[index].count_like);
                         this.coment.push(false)
-
                         this.todolist.push([])
                         this.commentcount.push(this.post[index].count_comment)
                     }
-
+                    if(this.post.length!=0){
+                        this.infiniteHandler(this.state);
+                    }
                     
-                })
-                .catch(Error => {
-                    console.log(Error)
                 })
             },
             followcheck(nick) { //보는 유저와 팔로우 되어 있는지 확인하기
@@ -806,8 +805,9 @@
                 this.modalnum = num
             },
             // //무한 스크롤 메소드
-            infiniteHandler($state){    
-               
+             infiniteHandler($state){    
+                this.state = $state
+               if(this.post.length!=0){
                 setTimeout(()=>{
                     //alert("ㅎㅇ")
              
@@ -828,6 +828,7 @@
                     }
                     
                 },1000)
+               }
             },
             noscrap() {
                 alert("이미 스크랩 된 게시물입니다.")
@@ -878,7 +879,7 @@
         data: () => {
             return {
                 modalnum:0,
-                dialog: false,
+              
                 usernum:0,
                 isSubmit: false,
                 error:{
@@ -907,16 +908,11 @@
                 likelist:[],
                 mynum:0,
                 commentcount:[],
-<<<<<<< fooddeuk/front/src/components/common/MyFeed.vue
                 dialog: false,
                 dialogResult: false,
                 chosenFile:null,
                 picture:''
-
-
-=======
                 list:[],
->>>>>>> fooddeuk/front/src/components/common/MyFeed.vue
                
             }
         },

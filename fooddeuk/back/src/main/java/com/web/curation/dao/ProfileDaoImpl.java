@@ -28,6 +28,7 @@ public class ProfileDaoImpl {
 	public int updatePlace(Profile profile) {
 		return sqlSession.update(ns+"updatePlace", profile);
 	}
+	
 	public int updatePicture(Profile profile) {
 		return sqlSession.update(ns+"updatePicture", profile);
 	}
@@ -35,4 +36,8 @@ public class ProfileDaoImpl {
 	public int deletePicture(int num) {
 		return sqlSession.update(ns+"deletePicture", num);
 	}
+	public String getPicture(int num) {
+		return sqlSession.selectOne(ns+"getPicture", num);
+	}
+	
 }

@@ -37,8 +37,10 @@
             <div v-if="auth==1 && isfollow==0" style="margin-top:20px; text-align:center">
                 비공개 계정입니다.
             </div>
+            <div v-else> 
                 <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
+                <div v-else-if="post">
                 <div v-for="(item,index) in list" v-bind:key="item.num">  
                 <div v-if="item.type==='스크랩'">
                     <v-card
@@ -82,7 +84,7 @@
                             <v-card style="margin-left:13px; width:90%; height:100%; text-align:center">
                                 <v-img 
                                 v-if="item.image!==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px;"
                                 :src="item.image"
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -91,7 +93,7 @@
                                 </v-img>
                                 <v-img 
                                 v-if="item.image==null"
-                                style="width:100%;"
+                                style="width:100%; height:200px"
                                 src="../../assets/images/noimage.png"  
                                 class="white--text align-end"
                                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -161,7 +163,7 @@
                                 <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
                                 :disabled="!isSubmit"
                                 :class="{disabled : !isSubmit}"
-                                >댓글달기</button>
+                                >게시</button>
                             </div>
                             <div style="margin-left:5px; width:60%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
@@ -183,6 +185,7 @@
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                            <div v-if="item.author === mynum">
                             <v-menu offset-y style="float:right;">
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">
@@ -198,6 +201,7 @@
                                 </v-list-item>
                             </v-list>
                             </v-menu>
+                            </div>
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
@@ -237,7 +241,7 @@
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
                          <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
-                            <v-dialog v-model="dialog" persistent max-width="290">
+                            <v-dialog v-model="dialog" persistent max-width="290" :retain-focus="false">
                             <template v-slot:activator="{ on }">
                                 <v-btn depressed color="white" v-on="on" @click="modal(item.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
                             </template>
@@ -291,7 +295,7 @@
                                 <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
                                 :disabled="!isSubmit"
                                 :class="{disabled : !isSubmit}"
-                                >댓글달기</button>
+                                >게시</button>
                             </div>
                             <div style="margin-left:5px; width:60%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
@@ -304,9 +308,9 @@
                 
                 </div>
             </div>
-             <div v-if="post">
-                <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
-                </div>
+            <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+            </div>  
+        </div>
         </div>
         </div>  
     </div> 
@@ -435,20 +439,23 @@
                     this.post = Response.data.object;
                     console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
-                    for (let index = 0; index < this.post.length; index++) {
-                     
-                        if(this.post[index].islike==1){
-                            this.like.push(true)
-                        }else{
-                            this.like.push(false)
+                    if(this.post!=null){
+
+                        for (let index = 0; index < this.post.length; index++) {
+                         
+                            if(this.post[index].islike==1){
+                                this.like.push(true)
+                            }else{
+                                this.like.push(false)
+                            }
+                            this.likelist.push(this.post[index].count_like);
+                            this.coment.push(false)
+                            this.todolist.push([])
+                            this.commentcount.push(this.post[index].count_comment)
                         }
-                        this.likelist.push(this.post[index].count_like);
-                        this.coment.push(false)
-                        this.todolist.push([])
-                        this.commentcount.push(this.post[index].count_comment)
-                    }
-                    if(this.post.length!=0){
-                        this.infiniteHandler(this.state);
+                        if(this.auth==0&&this.post.length!=0){
+                            this.infiniteHandler(this.state);
+                        }
                     }
                     
                 })
@@ -564,6 +571,7 @@
             },
             commentview(num,index){ //댓글 버튼 누를 때
             //댓글 불러오기
+            this.newcomment=''
             if(this.coment[index]==false){
                     http.get('/comment/comment?postnum='+num)
                 .then(response => {
@@ -683,8 +691,7 @@
                 this.state = $state
                if(this.post.length!=0){
                 setTimeout(()=>{
-                    //alert("ㅎㅇ")
-             
+
                     const temp = [];
                     const size = this.list.length;
                     for (let i = size; i< size+3; i++) {
@@ -706,38 +713,16 @@
             },
             //밑은 알람 메소드
             updateAlarmToFirebase(email) {       
-                // console.log(this.email + ":" + this.userAlarmCount)
                 fireDB.collection('Alarm').doc(email)
                 .update({
                     count : firebase.firestore.FieldValue.increment(1)
                 })
             },
-            // getAlarmFromFirebase() {
-            //     let whoami = this;
-            //     let count = 0;
-            //     fireDB.collection('Alarm').doc(this.email).get().then(function(doc) {
-            //     if(doc.data()==undefined) {
-            //         count = 0;
-            //     } else {
-            //         count = doc.data().count;
-            //     }
-            //     whoami.setAlarm(count);
-            //     }).catch(function(error) {
-            //         console.log(error)
-            //     })
-            // },
             togglecomment(num) {
                 this.commenttoggle = !this.commenttoggle
                 http.get("/comment/comment?num=" + num)
                 .then(response => {
                     this.comment = response.data.object
-                    // for(this.i=0; this.i< this.comment.length; this.i++){
-                    //     if (this.comment[this.i].num==num){
-                    //         alert('asd')
-                    //         this.comments.push(this.comment[this.i].comment)
-                    //     }
-                    // }
-                    
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -752,16 +737,13 @@
                 form.append('title',title)
                 form.append('content',content)
                 form.append('num',this.$store.state.userinfo.num)
+                this.scraptitle = ''
+                this.scrapcontent = ''
                 http.post("/post/scrap", form)
-                console.log(num)
-                .then(Response => {
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
             },
             modal(num){
                 this.modalnum = num
+                console.log(this.dialog)
             },
             noscrap(){
                 alert('이미 스크랩 된 게시물입니다')
