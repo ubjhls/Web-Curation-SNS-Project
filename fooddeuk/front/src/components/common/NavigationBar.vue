@@ -188,12 +188,7 @@ import http from '../../../http-common'
           {name:"FollowingPage"}
         )
       },
-      detail(num){
-            
-                if(!this.dialog){
-                    this.dialog = true;
-                }
-            },
+     
     },
     computed : {
       ...mapState(['userinfo']),
