@@ -4,10 +4,11 @@
       v-model="subject"
       label="제목"
       value=""
+      maxlength="13"
+      counter
       id="subject"
       single-line
       full-width
-      hide-details
     ></v-text-field>
     <v-col cols="12" sm="3">
             <v-btn v-if="star1==1" text icon style="color:red" @click="star1go()">
@@ -119,6 +120,9 @@ import http from "../../../http-common"
       content: function (v) {
           this.checkForm();
       },
+      address: function (v) {
+          this.checkForm();
+      }
     },
     methods: {
         checkForm() {
@@ -133,6 +137,12 @@ import http from "../../../http-common"
           }
           else{
             this.check.content = false;
+          }
+          if(this.address.length < 1){
+            this.check.address = '1자이상'
+          }
+          else{
+            this.check.address = false;
           }
         
           let issubmit = true;
@@ -253,7 +263,7 @@ import http from "../../../http-common"
           Axios.post('https://api.imgur.com/3/image',formdata, {headers:{Authorization: 'Client-ID d15c5b033075c6e'}})
           .then(Response => {
               this.imageResult = Response.data.data.link;
-              alert("갔다옴")
+              alert("이미지 등록이 완료되었습니다.")
             })
           .catch(Error => {
 
@@ -276,6 +286,7 @@ import http from "../../../http-common"
        star5:0,
        issubmit: false,
        check: {
+         address: false,
          subject: false,
          content: false,
          stars:false

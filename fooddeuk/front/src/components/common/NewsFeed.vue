@@ -3,6 +3,7 @@
     <div class="wrapC">
         <div class="wrapper">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
+                <div v-else>
                 <div v-for="(item,index) in list" v-bind:key="item.num">
                 <div style="margin-top:80px">
                 </div>
@@ -10,7 +11,7 @@
                     <v-card
                             max-width="100%"
                             class="mx-auto"
-                            style="margin-bottom:100px; position:relative"
+                            style="margin-bottom:30px; position:relative"
                     >
                     <v-list-item>
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
@@ -84,12 +85,9 @@
 
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
-                           <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
+
                         <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
                         <button @click="noscrap"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
-
-                        </div>
-
                         </div>
                         <br>
                     </div>
@@ -97,10 +95,10 @@
                   
                         <div v-if="like[index]===true">
                             <p v-if="likelist[index] === 1">
-                                {{nick}}님<span>이 좋아합니다.</span>
+                                {{nickname}}님<span>이 좋아합니다.</span>
                             </p>
                             <p v-else>
-                                {{nick}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
+                                {{nickname}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
                             </p>
                         </div>
 
@@ -150,6 +148,7 @@
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                            <div v-if="item.author === mynum">
                             <v-menu offset-y style="float:right;">
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">
@@ -165,6 +164,7 @@
                                 </v-list-item>
                             </v-list>
                             </v-menu>
+                            </div>
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="width:50px; margin-left:5px">{{item.nickname}} <br>
@@ -226,10 +226,10 @@
                   
                         <div v-if="like[index]===true">
                             <p v-if="likelist[index] === 1">
-                                {{nick}}님<span>이 좋아합니다.</span>
+                                {{nickname}}님<span>이 좋아합니다.</span>
                             </p>
                             <p v-else>
-                                {{nick}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
+                                {{nickname}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
                             </p>
                         </div>
 
@@ -272,7 +272,10 @@
                 </div>
             </div>
              <infinite-loading style="margin-top:30%" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+            </div>
         </div>  
+        <div style="margin-bottom:30px">
+    </div>
     </div> 
     </v-app>
 </template>
@@ -298,22 +301,17 @@
         name: 'App',
         props:['propsNickname'],
         created () {
-            if(this.$store.state.userinfo!=null) {
-                this.myEmail = this.$store.state.userinfo.email
-                this.nick = this.$store.state.userinfo.nickName
-                 http.get("/user/userinfo/{nickname}?nickname="+this.nick)
-                .then(Response => {
-                    this.mynum = Response.data.num;
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
-            }
-            this.nickname = this.$store.state.userinfo.nickName
-            //포스트 불러오기
+            setTimeout(() => {
+                if(this.$store.state.userinfo!=null) {
+                    this.myEmail = this.$store.state.userinfo.email
+                    this.nickname = this.$store.state.userinfo.nickName
+                }
+                //포스트 불러오기
+            }, 200);
+            this.mynum = this.$store.state.userinfo.num
+        },
+        mounted() {
             this.getUserByNickname(this.nickname);
-
-          
         },
         watch : {
             newcomment: function(v) {
@@ -353,7 +351,6 @@
                 form.append('nickname', nick)
                 http.get("/user/userinfo/{nickname}?nickname="+nick)
                 .then(Response => {
-                    
                     this.num = Response.data.num;
                     this.intro = Response.data.intro;
                     this.email = Response.data.email;
@@ -367,7 +364,7 @@
                 })
             },
             getPostByNum(num) { //포스트가져오기
-                console.log('')
+               
                 http.get("/post/main?nickname="+this.$store.state.userinfo.nickName)
                 .then(Response => {
                     this.post = Response.data.object;
@@ -386,7 +383,9 @@
                         this.todolist.push([])
                         this.commentcount.push(this.post[index].count_comment)
                     }
-
+                     if(this.post.length!=0){
+                            this.infiniteHandler(this.state);
+                        }
                     
                 })
                 .catch(Error => {
@@ -518,7 +517,7 @@
                     http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
                     .then(response => {
                         alert('게시물이 삭제되었습니다.')
-                        console.log(response.data)
+              
                         this.post = response.data.object
                     })
                 .catch(Error =>{
@@ -544,12 +543,12 @@
                     }
                 });
             },
-            // //무한 스크롤 메소드
+           // //무한 스크롤 메소드
             infiniteHandler($state){    
-               
+                this.state = $state
+               if(this.post.length!=0){
                 setTimeout(()=>{
-                    //alert("ㅎㅇ")
-             
+
                     const temp = [];
                     const size = this.list.length;
                     for (let i = size; i< size+3; i++) {
@@ -567,13 +566,14 @@
                     }
                     
                 },1000)
+               }
             },
             //밑은 알람 메소드
             setAlarm(alarm) {
                 this.userAlarmCount = alarm;
             },
             updateAlarmToFirebase() {       
-                console.log(this.email + ":" + this.userAlarmCount)
+     
                 fireDB.collection('Alarm').doc(this.email)
                 .set({
                     count : this.userAlarmCount + 1
@@ -612,13 +612,7 @@
                 http.get("/comment/comment?num=" + num)
                 .then(response => {
                     this.comment = response.data.object
-                    // for(this.i=0; this.i< this.comment.length; this.i++){
-                    //     if (this.comment[this.i].num==num){
-                    //         alert('asd')
-                    //         this.comments.push(this.comment[this.i].comment)
-                    //     }
-                    // }
-                    
+      
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -634,7 +628,7 @@
                 form.append('content',content)
                 form.append('num',this.$store.state.userinfo.num)
                 http.post("/post/scrap", form)
-                console.log(num)
+         
                 .then(Response => {
                 })
                 .catch(Error => {
@@ -660,7 +654,6 @@
                 },
                 scraptitle:'',
                 scrapcontent:'',
-                nick:'',
                 nickname : '',
                 num:0,
                 intro:'',
@@ -681,6 +674,7 @@
                 commentcount:[],         
                 //무한스크롤
                 list:[],
+                statt:'',
             }
         },
         components:{

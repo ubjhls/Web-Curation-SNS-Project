@@ -2,11 +2,12 @@
 
   <v-navigation-drawer v-model="propDrawer" temporary>
 
-      <v-list-item>
-        <v-list-item-avatar style="margin-top:20%; margin-left:41%">
-          <v-img src="https://randomuser.me/api/portraits/men/73.jpg"></v-img>
+      <v-list-item> 
+        <v-list-item-avatar style="margin-top:20%; margin-left:41%" >
+          <v-img @click="detail()" src="https://randomuser.me/api/portraits/men/73.jpg"></v-img>
         </v-list-item-avatar>
       </v-list-item>
+
 
       <div style="padding-top:10px; text-align:center">
         <p>{{userinfo.nickName}}</p>
@@ -68,7 +69,36 @@
         </div>
       </v-list>
 
+    <div>
+      <v-dialog
+                        v-model="dialog"
+                        width="500"
+                        :retain-focus="false"
+                        style="z-index:1006; position:relative;"
+                        >
+                        <v-card>
+                        <v-card-title
+                            class="headline grey lighten-2"
+                            primary-title>
+                            프로필바꾸기
+                        </v-card-title>
+
+                        <v-divider></v-divider>
+
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="primary"
+                        text
+                        @click="dialog = false">
+                        닫기
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+             </v-dialog>
+    </div>
     </v-navigation-drawer>
+
 </template>
 
 <script>
@@ -90,6 +120,7 @@ import http from '../../../http-common'
         email : '',
         follower : 0,
         following : 0,
+        dialog:false,
       }
     },
 
@@ -163,7 +194,13 @@ import http from '../../../http-common'
         this.$router.push(
           {name:"FollowingPage"}
         )
-      }
+      },
+      detail(num){
+            
+                if(!this.dialog){
+                    this.dialog = true;
+                }
+            },
     },
     computed : {
       ...mapState(['userinfo']),

@@ -37,8 +37,10 @@
             <div v-if="auth==1 && isfollow==0" style="margin-top:20px; text-align:center">
                 비공개 계정입니다.
             </div>
+            <div v-else> 
                 <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
+                <div v-else-if="post">
                 <div v-for="(item,index) in list" v-bind:key="item.num">  
                 <div v-if="item.type==='스크랩'">
                     <v-card
@@ -306,9 +308,9 @@
                 
                 </div>
             </div>
-             <div v-if="post">
-                <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
-                </div>
+            <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+            </div>  
+        </div>
         </div>
         </div>  
     </div> 
@@ -437,20 +439,23 @@
                     this.post = Response.data.object;
                     console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
-                    for (let index = 0; index < this.post.length; index++) {
-                     
-                        if(this.post[index].islike==1){
-                            this.like.push(true)
-                        }else{
-                            this.like.push(false)
+                    if(this.post!=null){
+
+                        for (let index = 0; index < this.post.length; index++) {
+                         
+                            if(this.post[index].islike==1){
+                                this.like.push(true)
+                            }else{
+                                this.like.push(false)
+                            }
+                            this.likelist.push(this.post[index].count_like);
+                            this.coment.push(false)
+                            this.todolist.push([])
+                            this.commentcount.push(this.post[index].count_comment)
                         }
-                        this.likelist.push(this.post[index].count_like);
-                        this.coment.push(false)
-                        this.todolist.push([])
-                        this.commentcount.push(this.post[index].count_comment)
-                    }
-                    if(this.post.length!=0){
-                        this.infiniteHandler(this.state);
+                        if(this.post.length!=0){
+                            this.infiniteHandler(this.state);
+                        }
                     }
                     
                 })
@@ -686,8 +691,7 @@
                 this.state = $state
                if(this.post.length!=0){
                 setTimeout(()=>{
-                    //alert("ㅎㅇ")
-             
+
                     const temp = [];
                     const size = this.list.length;
                     for (let i = size; i< size+3; i++) {
@@ -709,38 +713,16 @@
             },
             //밑은 알람 메소드
             updateAlarmToFirebase(email) {       
-                // console.log(this.email + ":" + this.userAlarmCount)
                 fireDB.collection('Alarm').doc(email)
                 .update({
                     count : firebase.firestore.FieldValue.increment(1)
                 })
             },
-            // getAlarmFromFirebase() {
-            //     let whoami = this;
-            //     let count = 0;
-            //     fireDB.collection('Alarm').doc(this.email).get().then(function(doc) {
-            //     if(doc.data()==undefined) {
-            //         count = 0;
-            //     } else {
-            //         count = doc.data().count;
-            //     }
-            //     whoami.setAlarm(count);
-            //     }).catch(function(error) {
-            //         console.log(error)
-            //     })
-            // },
             togglecomment(num) {
                 this.commenttoggle = !this.commenttoggle
                 http.get("/comment/comment?num=" + num)
                 .then(response => {
                     this.comment = response.data.object
-                    // for(this.i=0; this.i< this.comment.length; this.i++){
-                    //     if (this.comment[this.i].num==num){
-                    //         alert('asd')
-                    //         this.comments.push(this.comment[this.i].comment)
-                    //     }
-                    // }
-                    
                 })
                 .catch(Error => {
                     console.log(Error)

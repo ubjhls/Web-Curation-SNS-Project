@@ -110,4 +110,14 @@ public class PostServiceImpl implements IPostService {
 		return postdao.getPicture(num);
 	}
 
+	@Override
+	public Post getPostByPostnum(int num) {
+		return postdao.getPostByPostnum(num);
+	}
+
+	@Override
+	public List<Post> getAllUserPostAndAllCuration(Curation curation) {
+		return postdao.getAllUserPostAndAllCuration(curation);
+	}
+
 }

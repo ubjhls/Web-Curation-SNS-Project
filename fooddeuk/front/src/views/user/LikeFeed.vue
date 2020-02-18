@@ -6,13 +6,14 @@
                 <img src="../../assets/images/backIcon.png" style="width:35px;">
             </button>
             </div>
-            <p style="vertical-align: middle;padding: 8px 5px;float:left;">내 큐레이션 피드</p>
+            <p style="vertical-align: middle;padding: 8px 5px;float:left;">내가 좋아한 피드</p>
         </div>
     <div class="wrapC">
         <div class="wrapper">
-                <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
+                <div v-if="post===null" style="margin-top:60px; text-align:center"> 게시물이 없습니다.</div>
+                <div v-else> 
                 <div v-for="(item,index) in list" v-bind:key="item.num">  
-                    <div style="margin-top:40px">
+                <div style="margin-top:40px">
                 </div>
                 <div v-if="item.type==='스크랩'">
                     <v-card
@@ -43,8 +44,9 @@
                             </div>
                         </v-list-item-title>
 
-                        <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
-                         <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
+                    
+                        <v-list-item-subtitle style="width:50px; margin-left:5px">{{item.nickname}} <br>
+                         <div style="margin-top:10px; margin-left:2px"> {{ getTime(item.date) }}</div> </v-list-item-subtitle>
                         <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->
                         </v-list-item-content>
                         </v-list-item>
@@ -92,7 +94,7 @@
 
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
-                          <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
+                        <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
                         <button @click="noscrap"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
 
                         </div>
@@ -150,12 +152,13 @@
                     <v-card
                             max-width="100%"
                             class="mx-auto"
-                            style="margin-bottom:100px; position:relative"
+                            style="margin-bottom:100px; position:relative;"                   
                     >
                     <v-list-item>
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px; float:left">{{item.title}}
+                            <div v-if="item.author === mynum">
                             <v-menu offset-y style="float:right;">
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">
@@ -171,9 +174,10 @@
                                 </v-list-item>
                             </v-list>
                             </v-menu>
+                            </div>
                         </v-list-item-title>
 
-                        <v-list-item-subtitle style="width:50px; margin-left:5px">{{nickname}} <br>
+                        <v-list-item-subtitle style="width:50px; margin-left:5px">{{item.nickname}} <br>
 
                          <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
                         </v-list-item-content>
@@ -209,7 +213,7 @@
 
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
-                       <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
+                         <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
                             <v-dialog v-model="dialog" persistent max-width="290">
                             <template v-slot:activator="{ on }">
                                 <v-btn depressed color="white" v-on="on" @click="modal(item.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
@@ -277,7 +281,8 @@
                 
                 </div>
             </div>
-             <infinite-loading style="margin-top:30%" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+                <infinite-loading  style="margin-top:20px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+            </div>
         </div>  
     </div> 
     </v-app>
@@ -307,15 +312,18 @@
             if(this.$store.state.userinfo!=null) {
                 this.myEmail = this.$store.state.userinfo.email
                 this.nick = this.$store.state.userinfo.nickName
-                this.nickname = this.$store.state.userinfo.nickName
+                this.mynum = this.$store.state.userinfo.num
+                console.log(this.mynum)
                  http.get("/user/userinfo/{nickname}?nickname="+this.nick)
                 .then(Response => {
-                    this.mynum = Response.data.num;
+
                 })
                 .catch(Error => {
                     console.log(Error)
                 })
             }
+           
+            this.nickname = this.propsNickname;
             //포스트 불러오기
             this.getUserByNickname(this.nickname);
 
@@ -359,7 +367,7 @@
                 form.append('nickname', nick)
                 http.get("/user/userinfo/{nickname}?nickname="+nick)
                 .then(Response => {
-                    
+
                     this.num = Response.data.num;
                     this.intro = Response.data.intro;
                     this.email = Response.data.email;
@@ -373,26 +381,32 @@
                 })
             },
             getPostByNum(num) { //포스트가져오기
-                console.log('')
-                http.get("/post/mycurationpost?nickname="+this.$store.state.userinfo.nickName)
+              
+                http.get("/post/mylikepost?nickname="+this.$store.state.userinfo.nickName)
                 .then(Response => {
                     this.post = Response.data.object;
                     console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
-                    for (let index = 0; index < this.post.length; index++) {
-                     
-                        if(this.post[index].islike==1){
-                            this.like.push(true)
-                        }else{
-                            this.like.push(false)
+                    if(this.post!=null){
+
+                        for (let index = 0; index < this.post.length; index++) {
+      
+                            if(this.post[index].islike==1){
+                                this.like.push(true)
+                            }else{
+                                this.like.push(false)
+                            }
+                            this.likelist.push(this.post[index].count_like);
+                            this.coment.push(false)
+    
+                            this.todolist.push([])
+                            this.commentcount.push(this.post[index].count_comment)
                         }
-                        this.likelist.push(this.post[index].count_like);
-                        this.coment.push(false)
-
-                        this.todolist.push([])
-                        this.commentcount.push(this.post[index].count_comment)
+                       
+                        if(this.post.length!=0){
+                            this.infiniteHandler(this.state);
+                        }
                     }
-
                     
                 })
                 .catch(Error => {
@@ -552,7 +566,8 @@
             },
             // //무한 스크롤 메소드
             infiniteHandler($state){    
-               
+                this.state = $state
+               if(this.post.length!=0){
                 setTimeout(()=>{
                     //alert("ㅎㅇ")
              
@@ -573,6 +588,7 @@
                     }
                     
                 },1000)
+               }
             },
             //밑은 알람 메소드
             setAlarm(alarm) {

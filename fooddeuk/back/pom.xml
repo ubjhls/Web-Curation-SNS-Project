@@ -118,12 +118,25 @@
 			<artifactId>gson</artifactId>
 			<version>2.8.0</version>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-devtools</artifactId>
+	   		<version>2.2.4.RELEASE</version>
+		</dependency>
+
 		<dependency> 
 			<groupId>org.springframework.security</groupId> 
 			<artifactId>spring-security-web</artifactId> 
 			<version>4.0.0.RELEASE</version> 
 		</dependency>
-		
+		<!-- reload -->
+		<dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-devtools</artifactId>
+	        <optional>true</optional>
+    	</dependency>
 
 	</dependencies>
 

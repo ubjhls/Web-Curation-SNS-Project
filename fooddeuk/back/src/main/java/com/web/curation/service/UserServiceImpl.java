@@ -103,5 +103,5 @@ public class UserServiceImpl implements IUserService {
 		return userdao.getNickname(num);
 	}
 
-
+	
 }

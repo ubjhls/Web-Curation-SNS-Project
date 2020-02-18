@@ -3,13 +3,47 @@
 
 
     <div class="wrapC">
-        <div class="wrapper">
+        <div class="wrapper" >
             <div class="profile-card js-profile-card">
                 <div class="profile-card__cnt js-profile-cnt">
-                    <img src="../../assets/images/profile_default.png" style="margin-bottom:10px;">
-                        <div class="profile-card__name">{{nickname}}</div>
-                        <div class="profile-card__txt">{{intro}}</div>
+                    <div class="my-3">
+                        <v-btn
+                            @click="fileInputClick()"
+                            color="warning"
+                            fab="fab"
+                            x-large="x-large"
+                            dark="dark">
+                            <v-icon>mdi-account-circle</v-icon>
+                        </v-btn>
+                    </div>
+                    <v-row justify="center">
+                        <v-dialog v-model="dialog" max-width="290">
+                            <v-card>
+                                <v-card-title>
+                                    <v-file-input
+                                        v-model="chosenFile"
+                                        @change="updatePicture($event)"
+                                        label="File input"></v-file-input>
+                                </v-card-title>
+                                <v-card-actions>
+                                    <v-btn
+                                        btn="btn"
+                                        btn--ok="btn--ok"
+                                        color="green darken-1"
+                                        text="text"
+                                        @click="submit"
+                                        :disabled="dialogResult===false"
+                                        :class="{disabled : !dialog}">Agree</v-btn>
+                                    <v-btn color="green darken-1" text="text" @click="dialog = false">Disagree</v-btn>
+                                    <v-btn color="green darken-1" text="text" @click="deletePicture">삭제</v-btn>
 
+                                </v-card-actions>
+
+                            </v-card>
+                        </v-dialog>
+                    </v-row>
+                    <div class="profile-card__name">{{nickname}}</div>
+                    <div class="profile-card__txt">{{intro}}</div>
 
                     <div class="profile-card-inf">
                         <div class="profile-card-inf__item" @click="goFollowerPage">
@@ -21,7 +55,7 @@
                             <div class="profile-card-inf__title">{{following}}</div>
                             <div class="profile-card-inf__txt">Following</div>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </div>
 
@@ -42,7 +76,7 @@
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; float:left;">
-                            <div style="float:left; font-size:20px">
+                            <div style="float:left; font-size:15px">
                             {{item.title}}
                             </div>
                             <div v-if="item.author === mynum">
@@ -58,7 +92,7 @@
                                     <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
                                 </v-list-item>
                                 <v-list-item>
-                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                    <button style="float:right" @click="removeFeed(item.num, index)">삭제</button>
                                 </v-list-item>
                             </v-list>
                             </v-menu>
@@ -123,10 +157,10 @@
                   
                         <div v-if="like[index]===true">
                             <p v-if="likelist[index] === 1">
-                                {{nick}}님<span>이 좋아합니다.</span>
+                                {{nickname}}님<span>이 좋아합니다.</span>
                             </p>
                             <p v-else>
-                                {{nick}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
+                                {{nickname}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
                             </p>
                         </div>
 
@@ -177,7 +211,7 @@
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:10px;">
-                            <div style="float:left; font-size:20px">
+                            <div style="float:left; font-size:15px">
                             {{item.title}}
                             </div>
                             <v-menu offset-y style="float:right;">
@@ -191,7 +225,7 @@
                                     <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
                                 </v-list-item>
                                 <v-list-item>
-                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                    <button style="float:right" @click="removeFeed(item.num, index)">삭제</button>
                                 </v-list-item>
                             </v-list>
                             </v-menu>
@@ -294,8 +328,8 @@
         </div>
     </div>
     </div>
-    </v-app>
-</template>
+</v-app>
+</template> 
 
 
 <script>
@@ -321,16 +355,10 @@
             if(this.$store.state.userinfo!=null) {
                 this.myEmail = this.$store.state.userinfo.email
                 this.nick = this.$store.state.userinfo.nickName
-
-                 http.get("/user/userinfo/{nickname}?nickname="+this.nick)
-                .then(Response => {
-                    this.mynum = Response.data.num;
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
+                console.log(this.nick)
             }
 
+            this.mynum = this.$store.state.userinfo.num
             this.nickname = this.propsNickname;
             //포스트 불러오기
             this.getUserByNickname(this.nickname);
@@ -341,7 +369,8 @@
         watch : {
             newcomment: function(v) {
                 this.checkForm();
-            }
+            },
+ 
         },
         computed : {
             ...mapState(['userinfo']),
@@ -638,12 +667,13 @@
                 
             },
             
-            removeFeed(num){
+            removeFeed(num, index){
                  if (confirm("정말 삭제하시겠습니까??") == true){    //확인
                     http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
                     .then(response => {
                         alert('게시물이 삭제되었습니다.')
                         this.post = response.data.object
+                        this.list.splice(index, 1)
                         
                     })
                 .catch(Error =>{
@@ -737,6 +767,19 @@
                     console.log(Error)
                 })
             },
+            updatePicture(event){
+                this.dialog = event
+                let formdata = new FormData
+                formdata.append('image', this.dialog)
+                Axios.post('https://api.imgur.com/3/image',formdata, {headers:{Authorization: 'Client-ID d15c5b033075c6e'}})
+                .then(Response => {
+                    this.dialogResult = Response.data.data.link
+                    
+                })
+                .catch(Error =>{
+
+                })
+            },
             modal(num){
                 this.modalnum = num
             },
@@ -768,13 +811,30 @@
             },
             noscrap() {
                 alert("이미 스크랩 된 게시물입니다.")
+            },
+            submit(){
+                let form = new FormData()
+                form.append('picture', this.dialogResult)
+                http.post('profile/insertPicture', form)
+                .then(Response => {
+                    console.log(Response)
+                })
+            },
+            fileInputClick(){
+                this.dialog = true;
+                this.chosenFile = null;
+                this.dialogResult = false;
+            },
+            deletePicture(){
+                alert('정말 삭제하시겠습니까?')
+                
             }
-           
+            
         },
         data: () => {
             return {
                 modalnum:0,
-                dialog: false,
+              
                 usernum:0,
                 isSubmit: false,
                 error:{
@@ -803,6 +863,9 @@
                 likelist:[],
                 mynum:0,
                 commentcount:[],
+                dialog: false,
+                dialogResult: false,
+                chosenFile:null,
                 list:[],
                
             }

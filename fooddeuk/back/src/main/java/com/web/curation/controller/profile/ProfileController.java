@@ -14,6 +14,7 @@ import com.web.curation.model.BasicResponse;
 import com.web.curation.model.profile.Profile;
 import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
+import com.web.curation.service.UserServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -83,5 +84,28 @@ public class ProfileController {
 		return profile;
 	}
 	
+	@GetMapping("/profile/picture")
+	@ApiOperation(value = "회원 사진 가져오기")
+	public String getPicture(@RequestParam(required = true) int num) throws Exception {
+		System.out.println("-----------------/profile/picture-----------------");
+		System.out.println("num : " + num);
+		
+		return profileService.getPicture(num);
+	}
 	
+	
+	@PostMapping("/profile/insertPicture")
+	@ApiOperation(value = "프로필사진 등록하기")
+	public Object insertPicture(@RequestParam(required = true) String picture) throws Exception {
+		System.out.println("-----------------/profile/insertPicture-----------------");
+		System.out.println("picture : " + picture);
+		
+		int num = profileService.insertPicture(picture);
+		Profile profile = profileService.getProfile(num);
+		
+		BasicResponse result = new BasicResponse();
+		result.data="success";
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }
