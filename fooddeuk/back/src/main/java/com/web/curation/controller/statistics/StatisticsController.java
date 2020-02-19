@@ -1,5 +1,7 @@
 package com.web.curation.controller.statistics;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin("*")
 @RestController
 public class StatisticsController {
+	Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private IStatisticsService statsService;
@@ -22,8 +25,7 @@ public class StatisticsController {
 	@GetMapping("/stats/{num}")
 	@ApiOperation(value = "특정 회원의 전체 통계 가져오기")
 	public Object getAllSearch(@RequestParam(required = true) int num) throws Exception {
-		System.out.println("-----------------/stats/{num}-----------------");
-		System.out.println("num : " + num);
+		log.info("GET : /stats/{num}");
 		
 		BasicResponse result = new BasicResponse();
 		Statistics stats = new Statistics();
@@ -46,10 +48,7 @@ public class StatisticsController {
 	public Object getAllSearch(@RequestParam(required = true) int num,
 								@RequestParam(required = true) String year,
 								@RequestParam(required = true) String month) throws Exception {
-		System.out.println("-----------------/stats/date/{num}-----------------");
-		System.out.println("num : " + num);
-		System.out.println("year : " + year);
-		System.out.println("month : " + month);
+		log.info("GET : /stats/date/{num}");
 		
 		BasicResponse result = new BasicResponse();
 		Statistics stats = new Statistics();
@@ -67,7 +66,6 @@ public class StatisticsController {
 		result.data = "success";
 		result.object = stats;
 		
-		System.out.println(stats.toString());
 		return result;
 	}
 

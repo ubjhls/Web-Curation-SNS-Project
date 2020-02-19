@@ -7,9 +7,18 @@
             <div class="profile-card js-profile-card" >
                 <div class="profile-card__cnt js-profile-cnt">
                     <div class="my-3">
-            <v-btn @click="fileInputClick()" color="warning" fab x-large dark>
-              <v-icon>mdi-account-circle</v-icon>
-            </v-btn>
+                        <div v-if="!this.picture">
+                            <v-btn @click="fileInputClick()" color="warning" fab x-large dark>
+                            <v-icon>mdi-account-circle</v-icon>
+                            </v-btn>
+                        </div>
+                        <div v-else>
+                            <img
+                            @click="fileInputClick()"
+                            :src="this.picture"
+                            style="width:60px;height:60px;border-radius:50%;"
+                            >
+                        </div>
           </div>
   <v-row justify="center">
     <v-dialog
@@ -202,7 +211,16 @@
                             style="margin-bottom:100px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar style="height:50px; width:50px">
+                            <div v-if="picture">
+                                <img :src="picture" style="height:50px; width:50px">
+                            </div>
+                            <div v-else>
+                                <v-btn color="warning" fab x-large dark>
+                            <v-icon>mdi-account-circle</v-icon>
+                            </v-btn>
+                            </div>
+                            </v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:10px;">
                             <div style="float:left; font-size:20px">
@@ -349,22 +367,26 @@
             if(this.$store.state.userinfo!=null) {
                 this.myEmail = this.$store.state.userinfo.email
                 this.nick = this.$store.state.userinfo.nickName
-
-                 http.get("/user/userinfo/{nickname}?nickname="+this.nick)
+                http.get("/user/userinfo/{nickname}?nickname="+this.nick)
                 .then(Response => {
                     this.mynum = Response.data.num;
                 })
                 .catch(Error => {
                     console.log(Error)
                 })
+            
             }
-
+            
             this.nickname = this.propsNickname;
             //포스트 불러오기
             this.getUserByNickname(this.nickname);
 
             //검색한 사용자와 팔로잉 체크
             this.followcheck(this.nickname);
+
+            //프로필 불러오기
+            this.getProfile(this.nick);
+            
         },
         watch : {
             newcomment: function(v) {
@@ -419,7 +441,7 @@
                     console.log(Error)
                 })
             },
-             getFollower() { //팔로우 정보가져오기
+            getFollower() { //팔로우 정보가져오기
                 let form = new FormData()
                 http.get("/follow/follower?email="+this.email)
                 .then(Response => {
@@ -812,11 +834,16 @@
                 alert("이미 스크랩 된 게시물입니다.")
             },
             submit(){
+                this.dialog = false
                 let form = new FormData()
+                form.append('num', this.mynum)
                 form.append('picture', this.dialogResult)
                 http.post('profile/insertPicture', form)
                 .then(Response => {
-                    console.log(Response)
+                    if(Response.data.data==='success'){
+                        this.getProfile(this.nick)
+                    }
+                    
                 })
             },
             fileInputClick(){
@@ -825,9 +852,28 @@
                 this.dialogResult = false;
             },
             deletePicture(){
-                alert('정말 삭제하시겠습니까?')
+                let num = this.mynum
+                http.get("profile/deletePicture/?num=" + num)
+                .then(Reponse =>{
+                    console.log(Response)
+                    this.picture = '';
+                    this.dialog = false
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
                 
-            }
+            },
+            getProfile(nick){
+                http.get("/profile/profile/?nickname=" + nick)
+                .then(Response => {
+                    this.picture = Response.data.picture;
+                    console.log(this.picture)
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+            },
             
         },
         data: () => {
@@ -865,6 +911,7 @@
                 dialog: false,
                 dialogResult: false,
                 chosenFile:null,
+                picture:''
                 list:[],
                
             }

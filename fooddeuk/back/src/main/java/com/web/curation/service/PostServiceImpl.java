@@ -116,8 +116,8 @@ public class PostServiceImpl implements IPostService {
 	}
 
 	@Override
-	public List<Post> getAllUserPostAndAllCuration(Curation curation) {
-		return postdao.getAllUserPostAndAllCuration(curation);
+	public int updateScrapPost(Post post) {
+		return postdao.updateScrapPost(post);
 	}
 
 }
