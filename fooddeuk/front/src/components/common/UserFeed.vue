@@ -1,7 +1,5 @@
 <template>
 <v-app data-app>
-
-
     <div class="wrapC">
         <div class="wrapper">
             <div class="profile-card js-profile-card">
@@ -97,7 +95,7 @@
                                 </v-list-item-content>
                                 </v-list-item>
 
-                                <div style="height:auto; padding:5%;">{{item.scrapcontent}}</div>
+                                <div style="height:auto; overflow:hidden; text-overflow:ellipsis; white-space: nowrap; padding:5%;">{{item.scrapcontent}}</div>
 
                                 <v-img 
                                 v-if="item.image!==null"
@@ -156,12 +154,13 @@
 
                         <div v-if="coment[index]===true">
                             <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
-                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
-                                    <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                    <h5 style="float:left; ">{{ cmts.comment }} 
-                                    </h5>
-                                    <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
-                                    <br>                 
+                                <div style="margin-bottom:10px;" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <h5 style="width:25%; float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmts.comment }} 
+                                    </div>
+                                    <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>
+                                    <div style="clear:both;"></div>
                                 </div>
                             </div>
                   
@@ -275,12 +274,15 @@
                                 </p>
 
                                 <div v-if="isClickScrapComment[0]==true">
-                                    <div style="margin-bottom:1px" v-for="cmts in scrapComment" v-bind:key="cmts.id" >
-                                        <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                        <h5 style="float:left; ">{{ cmts.comment }} 
-                                        </h5>
-                                        <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="scrapremoveComent(scrappost.num,cmts,index)">X</span>
-                                        <br>                 
+                                    <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
+                                        <div style="margin-bottom:10px;" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                            <h5 style="width:25%; float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                            <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmts.comment }} 
+                                            </div>
+                                            <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                            <br>
+                                            <div style="clear:both;"></div>
+                                        </div>
                                     </div>
                         
                                     <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
@@ -412,12 +414,13 @@
 
                         <div v-if="coment[index]===true">
                             <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
-                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
-                                    <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                    <h5 style="float:left; ">{{ cmts.comment }} 
-                                    </h5>
-                                    <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
-                                    <br>                 
+                                <div style="margin-bottom:10px;" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <h5 style="width:25%; float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmts.comment }} 
+                                    </div>
+                                    <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>
+                                    <div style="clear:both;"></div>
                                 </div>
                             </div>
                   
@@ -803,8 +806,6 @@
                 })
                 .catch(Error =>{
                 })
- 
-                
             },
             removeFeed(num){
                 if(confirm("정말 삭제하시겠습니까??") == true){    //확인
@@ -976,8 +977,24 @@
                     this.newcomment=''
                 })
             },
-            scrapremoveComent() {
-
+            scrapremoveComent(num, cmt) {
+                http.delete("/comment/comment?postnum=" + num + "&num="+ cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
+                .then(response => {
+                    //댓글 삭제(갱신까지)
+                  
+                    this.scrapComment = response.data.object;
+                    
+                    //댓글 수 갱신
+                    http.get("/comment/count?postnum="+num)
+                    .then(Response => {
+                        this.$set(this.scrapCommentCount,0,Response.data)
+                    })
+                    .catch(Error => {
+                        console.log(Error)
+                    })
+                })
+                .catch(Error =>{
+                })
             },
         },
         data: () => {
