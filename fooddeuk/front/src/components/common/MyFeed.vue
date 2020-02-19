@@ -80,7 +80,7 @@
                             style="margin-bottom:100px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar style="height:50px; width:50px"><img :src="item.picture"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; float:left;">
                             <div style="float:left; font-size:15px">
@@ -216,8 +216,8 @@
                     >
                     <v-list-item>
                         <v-list-item-avatar style="height:50px; width:50px">
-                            <div v-if="picture">
-                                <img :src="picture" style="height:50px; width:50px">
+                            <div v-if="item.picture">
+                                <img :src="item.picture" style="height:50px; width:50px">
                             </div>
                             <div v-else>
                                 <v-btn color="warning" fab x-large dark>
