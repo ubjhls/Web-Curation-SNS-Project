@@ -85,12 +85,9 @@
 
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
-                           <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
+
                         <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
                         <button @click="noscrap"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
-
-                        </div>
-
                         </div>
                         <br>
                     </div>
@@ -98,10 +95,10 @@
                   
                         <div v-if="like[index]===true">
                             <p v-if="likelist[index] === 1">
-                                {{nick}}님<span>이 좋아합니다.</span>
+                                {{nickname}}님<span>이 좋아합니다.</span>
                             </p>
                             <p v-else>
-                                {{nick}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
+                                {{nickname}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
                             </p>
                         </div>
 
@@ -151,6 +148,7 @@
                         <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
+                            <div v-if="item.author === mynum">
                             <v-menu offset-y style="float:right;">
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">
@@ -166,6 +164,7 @@
                                 </v-list-item>
                             </v-list>
                             </v-menu>
+                            </div>
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="width:50px; margin-left:5px">{{item.nickname}} <br>
@@ -227,10 +226,10 @@
                   
                         <div v-if="like[index]===true">
                             <p v-if="likelist[index] === 1">
-                                {{nick}}님<span>이 좋아합니다.</span>
+                                {{nickname}}님<span>이 좋아합니다.</span>
                             </p>
                             <p v-else>
-                                {{nick}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
+                                {{nickname}}님 외  {{ likelist[index] - 1 }} 명이 좋아합니다
                             </p>
                         </div>
 
@@ -305,9 +304,11 @@
             setTimeout(() => {
                 if(this.$store.state.userinfo!=null) {
                     this.myEmail = this.$store.state.userinfo.email
+                    this.nickname = this.$store.state.userinfo.nickName
                 }
                 //포스트 불러오기
             }, 200);
+            this.mynum = this.$store.state.userinfo.num
             this.nickname = this.propsNickname;
             this.nick = this.nickname;
             
@@ -353,7 +354,6 @@
                 form.append('nickname', nick)
                 http.get("/user/userinfo/{nickname}?nickname="+nick)
                 .then(Response => {
-                    
                     this.num = Response.data.num;
                     this.intro = Response.data.intro;
                     this.email = Response.data.email;
@@ -660,7 +660,6 @@
                 },
                 scraptitle:'',
                 scrapcontent:'',
-                nick:'',
                 nickname : '',
                 num:0,
                 intro:'',

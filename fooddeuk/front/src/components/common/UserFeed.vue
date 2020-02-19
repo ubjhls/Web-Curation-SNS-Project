@@ -887,6 +887,7 @@
                 form.append('num',this.$store.state.userinfo.num)
                 this.scraptitle = ''
                 this.scrapcontent = ''
+                alert('스크랩 되었습니다.')
                 http.post("/post/scrap", form)
             },
             modal(num){

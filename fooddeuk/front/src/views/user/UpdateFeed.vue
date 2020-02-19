@@ -138,7 +138,6 @@ import http from "../../../http-common"
       this.address = this.$route.params.address;
       this.tmpimage = this.$route.params.image
       this.image = this.$route.params.image;
-      processFile(this.$route.params.image)
 
       
       // this.image = this.$route.params.image;
@@ -151,6 +150,9 @@ import http from "../../../http-common"
       content: function (v) {
           this.checkForm();
       },
+      address: function (v) {
+          this.checkForm();
+      }
     },
     methods: {
         goBack() {
@@ -170,6 +172,13 @@ import http from "../../../http-common"
           else{
             this.check.content = false;
           }
+          if(this.address.length < 1){
+            this.check.address = '1자이상'
+          }
+          else{
+            this.check.address = false;
+          }
+        
         
           let issubmit = true;
 
@@ -184,7 +193,6 @@ import http from "../../../http-common"
 
         },
         submit(){
-          console.log('asd')
           if(this.issubmit){
             let form = new FormData()
             form.append('num', this.num)
@@ -195,7 +203,7 @@ import http from "../../../http-common"
             let star = this.star1+this.star2+this.star3+this.star4+this.star5
             form.append('count_star', star)
             if (this.imageResult === null) {
-              this.imageResult = this.tmpimage
+              this.imageResult = this.image
             }
             form.append('image', this.imageResult)
             
@@ -319,6 +327,7 @@ import http from "../../../http-common"
        star5:0,
        issubmit: false,
        check: {
+         address: false,
          subject: false,
          content: false,
          stars:false

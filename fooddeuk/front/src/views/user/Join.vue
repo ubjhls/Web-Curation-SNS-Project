@@ -147,6 +147,7 @@
             },
             email: function (v) {
                 this.checkForm();
+                this.exist_email= ''
             },
             password: function (v) {
                 this.checkForm();

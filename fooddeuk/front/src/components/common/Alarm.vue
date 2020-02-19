@@ -1,7 +1,7 @@
 <template>
 <div>
   <v-card
-    class="mx-auto"
+    style="width:100%"
   >
     <div v-if="items.length==0">
       알림이 없습니다.
