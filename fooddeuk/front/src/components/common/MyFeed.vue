@@ -911,9 +911,8 @@
                 dialog: false,
                 dialogResult: false,
                 chosenFile:null,
-                picture:''
+                picture:'',
                 list:[],
-               
             }
         },
         components:{
