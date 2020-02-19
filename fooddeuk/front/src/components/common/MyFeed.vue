@@ -869,8 +869,8 @@
                 dialog: false,
                 dialogResult: false,
                 chosenFile:null,
+                picture:'',
                 list:[],
-               
             }
         },
         components:{
