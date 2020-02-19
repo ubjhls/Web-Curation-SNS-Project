@@ -124,6 +124,10 @@ import http from "../../../http-common"
       content: function (v) {
           this.checkForm();
       },
+      address: function (v) {
+          this.checkForm();
+      },
+
       overlay (val) {
         val && setTimeout(() => {
           this.overlay = false

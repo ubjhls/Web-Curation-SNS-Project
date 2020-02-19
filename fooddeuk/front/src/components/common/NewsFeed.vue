@@ -114,7 +114,7 @@
 
                         <div v-if="coment[index]===true">
                             <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
-                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                <div style="margin-bottom:1px; height:auto" v-for="cmts in cmt" v-bind:key="cmts.id" >
                                     <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
                                     <h5 style="float:left; ">{{ cmts.comment }} 
                                     </h5>

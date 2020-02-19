@@ -6,18 +6,18 @@
                 <img src="../../assets/images/backIcon.png" style="width:35px;">
             </button>
             </div>
-            <p style="vertical-align: middle;padding: 8px 5px;float:left;">내 정보 수정</p>
+            <p style="vertical-align: middle;padding: 8px 5px;float:left;">내 피드 수정</p>
         </div>
     <v-text-field style="margin-top: 40px; margin-left:20px; margin-right:20px"
       v-model="subject"
       label="제목"
-      value=""
       id="subject"
+      counter
+      maxlength="13"
       single-line
       full-width
-      hide-details
     ></v-text-field>
-    <v-col cols="12" sm="3">
+    <v-col v-if="type==='일반'" cols="12" sm="3">
             <v-btn v-if="star1==1" text icon style="color:red" @click="star1go()">
               <v-icon>mdi-star</v-icon>
             </v-btn>
@@ -70,7 +70,7 @@
       single-line
     ></v-textarea>
 
-  <div style="margin-bottom: 90px">
+  <div v-if="type=='일반'" style="margin-bottom: 90px">
       <v-text-field style="font-size:13px; margin-top: 10px; margin-left:20px; margin-right:5px; width:70%; float:left" disabled="disabled"
         v-model="address"
         label="주소"
@@ -88,7 +88,7 @@
       />
     </div>
   </div>
-    <v-file-input style="width:80%; margin-left:15px"
+    <v-file-input v-if="type=='일반'" style="width:80%; margin-left:15px"
       input-type="file"
       @change="processFile($event)"
       label="File input"
@@ -138,6 +138,9 @@ import http from "../../../http-common"
       this.address = this.$route.params.address;
       this.tmpimage = this.$route.params.image
       this.image = this.$route.params.image;
+      this.type = this.$route.params.type 
+      console.log(this.$route.params.type)
+
 
       
       // this.image = this.$route.params.image;
@@ -209,6 +212,7 @@ import http from "../../../http-common"
             
             http.patch("/post/post", form)
             var router = this.$router;
+            alert('게시물이 수정되었습니다.')
               router.go(-1)
             .then(Response => {
             })
@@ -310,29 +314,30 @@ import http from "../../../http-common"
     },
     data () {
       return {
-       tmpimage:'',
-       num:0,
-       count_star:0,
-       date: '',
-       subject: '',
-       content: '',
-       open:false,
-       address:'',
-       image:null,
-       imageResult:null,
-       star1:0,
-       star2:0,
-       star3:0,
-       star4:0,
-       star5:0,
-       issubmit: false,
-       check: {
-         address: false,
-         subject: false,
-         content: false,
-         stars:false
-       }
-      }
+        tmpimage:'',
+        type:'',
+        num:0,
+        count_star:0,
+        date: '',
+        subject: '',
+        content: '',
+        open:false,
+        address:'',
+        image:null,
+        imageResult:null,
+        star1:0,
+        star2:0,
+        star3:0,
+        star4:0,
+        star5:0,
+        issubmit: false,
+        check: {
+          address: false,
+          subject: false,
+          content: false,
+          stars:false
+        }
+        }
     },
   }
   

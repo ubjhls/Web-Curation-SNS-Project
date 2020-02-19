@@ -182,7 +182,6 @@ const requestGetAllSearch= (data,callback,errorCallback) => {
     // console.log(data.email);
     http.get("/search/all?email=" + data.email)
     .then(Response => {
-        // console.log(Response);
         if(Response!=null)
             callback(Response.data, callback);
     })
