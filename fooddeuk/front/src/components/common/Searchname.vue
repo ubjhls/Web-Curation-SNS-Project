@@ -21,11 +21,16 @@
     <h1 style="margin-top:60px" v-if="isSearch=='search'">검색 결과</h1>
         <div v-if="history.length && isSearch=='history'" style="padding-top:20px">
             <ul>
-                <li class="nick-list" v-for="item in history" :key="item">
+                <li class="nick-list" v-for="item in history" :key="item.id">
                     <div class="profile-card-search" style="margin-left:-20px">
-                        <img src="data:image/jpeg;base64,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PqrOr1Z3WJUMsatMOX4eThmL43G4gGVlJLE0kAvY2Ise5o6gOsD5laSsuxfB21JjkbJJDPCbwVMZtJGeo8C09QdDqurhbj6QTx0le+CTmScqCuhI5Uk405MzP5uU6eRvos7PimtpnxK/gyxasR5ho6IigWBERAREQEREBERAREQEREArFeNfh/UUXOdSMklo6mqElRSQMPaGsLe8xpB1jLg3QC+vkSdqRexMxw8mNsei/licNbBg87W7Zp5YYA0W0u25cVIUvAmLz61FfS0wv8tPE6V9vAvlsAfMBaiiltnyT5RxhpHhDcKcOxYVT8iJ8j7vfI+R+Uvkkebuc7KAPAbbAKZRFClEREBERAREQUXFPhrFLPUTwV9bTvqJDJIxhidDzCBmdy3N3NrnVRM/BuNU36ito6kDdssb4HkeRYS2/qFqCLuuS1eJcWpW3MMUxLHamla6PEKWpoy8FrakBssLXHQFsrAW366hQfC+DS4ni0bQ5sscEkclZVU5ijbI0AyU7pG3I5nMaQS0ag9N1/QksbXtLXNDmuFnNIBBHgQVy4XhFNRtc2mpoIWuOZzY42RhzvEhoC6vmteNS5pirWdw7URFElEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQf//Z" alt="profile card">
-                        <p @click="goProfileByNickname(item)" style="float:left; width:100px; height:20px; margin-top:15px; margin-right:90px">{{ item }}</p>
-                        <button style="margin-top:18px" @click="RemoveName(item)">
+                        <div v-if="item.picture">
+                        <img :src="item.picture" alt="picture">
+                        </div>
+                        <div v-else>
+                        <img src="" alt="">
+                        </div>
+                        <p @click="goProfileByNickname(item.nickname)" style="float:left; width:100px; height:20px; margin-top:15px; margin-right:90px">{{ item.nickname }}</p>
+                        <button style="margin-top:18px" @click="RemoveName(item.nickname)">
                         X</button>
                     </div>
                     <br>
@@ -37,8 +42,8 @@
             <ul>
                 <li class="nick-list" v-for="(item,index) in searchResult" :key="item.nickName">
                     <div class="profile-card-search" style="margin-left:-20px">
-                        <a @click="goProfileByNickname(item.nickname)"><img src="data:image/jpeg;base64,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PqrOr1Z3WJUMsatMOX4eThmL43G4gGVlJLE0kAvY2Ise5o6gOsD5laSsuxfB21JjkbJJDPCbwVMZtJGeo8C09QdDqurhbj6QTx0le+CTmScqCuhI5Uk405MzP5uU6eRvos7PimtpnxK/gyxasR5ho6IigWBERAREQEREBERAREQEREArFeNfh/UUXOdSMklo6mqElRSQMPaGsLe8xpB1jLg3QC+vkSdqRexMxw8mNsei/licNbBg87W7Zp5YYA0W0u25cVIUvAmLz61FfS0wv8tPE6V9vAvlsAfMBaiiltnyT5RxhpHhDcKcOxYVT8iJ8j7vfI+R+Uvkkebuc7KAPAbbAKZRFClEREBERAREQUXFPhrFLPUTwV9bTvqJDJIxhidDzCBmdy3N3NrnVRM/BuNU36ito6kDdssb4HkeRYS2/qFqCLuuS1eJcWpW3MMUxLHamla6PEKWpoy8FrakBssLXHQFsrAW366hQfC+DS4ni0bQ5sscEkclZVU5ijbI0AyU7pG3I5nMaQS0ag9N1/QksbXtLXNDmuFnNIBBHgQVy4XhFNRtc2mpoIWuOZzY42RhzvEhoC6vmteNS5pirWdw7URFElEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQf//Z" alt="profile card">
-                        <p style="float:left; width:100px; color:gray; height:20px; margin-top:15px; margin-right:90px" v-html="searchResult[index]"></p></a>
+                        <a @click="goProfileByNickname(item.nickname)"><img src="" alt="profile card">
+                        <p style="float:left; width:100px; color:gray; height:20px; margin-top:15px; margin-right:90px" v-html="searchAlias[index]"></p></a>
                         <button style="margin-top:18px" @click="RemoveName(item)">
                         X</button>
                     </div>
@@ -49,10 +54,10 @@
     </div>
     <div v-if="fcheck">
         <div class="field" style="float:left; width:80%;">
-            <input v-model="searchContents" type="text" class="input-search" @keyup.enter="AddName">
+            <input v-model="searchContents" type="text" class="input-search" @keyup.enter="serachFeed">
         </div>
          <div style="width:20%; float:left">
-                <button class="check-button" @click="serachFeed()">검색</button>
+                <button class="check-button" @click="serachFeed">검색</button>
         </div>
         <div style="clear:both;"></div>
         <div v-if="post.length==0" style="padding-top:20px; text-align:center">검색 결과가 없습니다.</div>
@@ -66,11 +71,13 @@
                     @click="detail(index)"
                     >
                     <v-list-item-avatar>
-                        <v-img src="https://cdn.vuetifyjs.com/images/lists/1.jpg"></v-img>
+                        <v-img :src="item.picture"></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
+                        <div style="margin-bottom:10px">
                     <v-list-item-title v-html="item.title"></v-list-item-title>
                     <v-list-item-subtitle v-html="item.content"></v-list-item-subtitle>
+                        </div>
                     </v-list-item-content>
                     </v-list-item>
                   
@@ -90,9 +97,9 @@
                         >
                         <v-card>
                         <v-card-title
-                            class="headline grey lighten-2"
-                            primary-title>
-                            News Feed
+                        class="headline grey lighten-2"
+                        primary-title>
+                        피드 검색
                         </v-card-title>
 
                          <v-card
@@ -101,11 +108,11 @@
                             style="position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar style="height:50px; width:50px"><img :src="postdetail.picture"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{postdetail.title}}
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;" v-html="postdetail.title">
                         </v-list-item-title>
-                        <v-list-item-subtitle style="width:50px; margin-left:5px">{{postdetail.nickname}} <br>
+                        <v-list-item-subtitle style="width:50px; margin-left:5px" v-html="postdetail.nickname"> <br>
                          <div style="margin-top:10px; margin-left:2px"> {{getTime(postdetail.date)}}</div> </v-list-item-subtitle>
                         </v-list-item-content>
                         </v-list-item>
@@ -121,7 +128,9 @@
                                 <img v-if="postdetail.image!=='null' || postdetail.image!==null" v-bind:src="postdetail.image"  style="width:100%; heigh:auto; ">
                             <br>
                             <br><br><hr><br>
-                            주소 : {{postdetail.address}} 
+                            주소 : 
+                            <div v-html="postdetail.address">
+                            </div> 
                             </v-card-text>
 
                     <div style="width:100%">
@@ -134,28 +143,53 @@
 
                         <button @click="commentview(postdetail.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
-
+                         <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
+                            <v-dialog v-model="searchdialog" persistent max-width="290" :retain-focus="false">
+                            <template v-slot:activator="{ on }">
+                                <v-btn depressed color="white" v-on="on" @click="modal(postdetail.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
+                            </template>
+                            <v-card style="height:400px">
+                                <v-card-title class="headline">{{postdetail.nickname}}님의 게시물</v-card-title>
+                                 <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="searchtitle" id="searchtitle" counter
+                                maxlength="13"></v-text-field>
+                                <v-textarea style="color:blue; width:90%; margin-left:10px" 
+                                v-model="searchcontent" 
+                                label="내용입력" 
+                                id="searchcontent" 
+                                counter
+                                maxlength="50"
+                                full-width
+                                single-line>
+                                </v-textarea>
+                                <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="green darken-1" text @click="searchdialog = false">취소</v-btn>
+                                <v-btn color="green darken-1" text @click="scrapfeed(postdetail.num, searchtitle, searchcontent);">스크랩</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                            </v-dialog>
+                        </v-row>
                     </div>
                     <br>
                     </div>
                     <br>
                     
-                        <div v-if="postdetail.islike==1">
-                            <p v-if="postdetail.islike == 1 && postdetail.count_like == 1 ">
+                        <div v-if="postdetail.islike==1" style="margin-top:5px; margin-left:5px">
+                            <p v-if="postdetail.islike == 1 && postdetail.count_like == 1 " style="color: gray; font-size:12px;">
                                 {{myNick}}님<span>이 좋아합니다.</span>
                             </p>
-                            <p v-else>
+                            <p v-else style="color: gray; font-size:12px;">
                                 {{myNick}}님 외  {{ postdetail.count_like - 1 }} 명이 좋아합니다
                             </p>
                         </div>
                     
-                        <div v-if="postdetail.islike==0">
-                            <p>
+                        <div v-if="postdetail.islike==0" style="margin-top:5px; margin-left:5px">
+                            <p style="color: gray; font-size:12px;">
                                 {{ postdetail.count_like }} 명이 좋아합니다
                             </p>
                         </div>
                         
-                        <p>
+                        <p style="color: gray; font-size:12px; margin-left:5px">
                             {{ postdetail.count_comment }} 개의 댓글이 있습니다.
                         </p>
 
@@ -185,7 +219,7 @@
                         <v-divider></v-divider>
                         <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn
+                        <v-btn style="float:right"
                             color="primary"
                         text
                         @click="close()">
@@ -269,6 +303,8 @@
                 UserApi.requestGetAllSearch(data, res => {
                     if (res != null) {
                         this.history = res;
+                        console.log(this.history)
+
                         
                     } else {
                         alert("데이터 없음");
@@ -292,10 +328,10 @@
                 
                 let search = this.NewName
                 UserApi.requestSearchNickname(data, res => {
-                    
+                    console.log(res)
                     this.searchResult = res;
                     for (let index = 0; index < this.searchResult.length; index++) {
-                        this.searchResult[index] = this.searchResult[index].nickname.replace(search,'<span style="color:red">'+search+'</span>');
+                        this.$set(this.searchAlias, index, this.searchResult[index].nickname.replace(search,'<span style="background-color:yellow">'+search+'</span>'));
                     }
                 
                     this.isSubmit = true;
@@ -354,28 +390,36 @@
                 }
             },
             serachFeed(){
+                console.log('serachFeed')
                 if(this.searchContents!=''){
                     http.get("/search/feed?keyword=" + this.searchContents +'&email=' + this.email)
                     .then(Response => {
                         this.post=[]
+                        console.log(Response)
                         if(Response.data.object!=null){
 
-                            this.post=Response.data.object
-                            
+                            this.post=Response.data.object;
+
+                            for (let index = 0; index < this.post.length; index++) {
+                                this.post[index].title = this.post[index].title.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.post[index].content = this.post[index].content.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.post[index].address = this.post[index].address.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.$set(this.post, index, this.post[index]);
+                            }
                         }
-                      
                     })
                     .catch(Error => {
                         console.log(Error)
                     })
                 }else{
-                    alert("검색을 입력해주세요!")
+                    alert("검색어을 입력해주세요!")
                 }
             },
             detail(num){
                 this.postdetail = this.post[num];
+
                 console.log(this.postdetail)
-                this.postdetail.content = this.postdetail.content.replace(/(?:\r\n|\r|\n)/g, '<br/>')
+                this.postdetail.content = this.postdetail.content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
   
                 if(!this.dialog){
                     this.dialog = true;
@@ -436,9 +480,14 @@
                     .then(Response => {
                         this.post=[]
                         if(Response.data.object!=null){
-
                             this.post=Response.data.object
-                            
+
+                            for (let index = 0; index < this.post.length; index++) {
+                                this.post[index].title = this.post[index].title.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.post[index].content = this.post[index].content.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.post[index].address = this.post[index].address.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.$set(this.post, index, this.post[index]);
+                            }
                         }
                       
                     })
@@ -519,6 +568,21 @@
  
                 
             },
+            modal(num){
+                this.modalnum = num;
+            },
+            scrapfeed(num,title,content) {
+                this.dialog= false
+                let form = new FormData()
+                form.append('postnum', num)
+                form.append('title',title)
+                form.append('content',content)
+                form.append('num',this.$store.state.userinfo.num)
+                this.searchtitle = ''
+                this.searchcontent = ''
+                alert('스크랩 되었습니다.')
+                http.post("/post/scrap", form)
+            },
          
 
         },
@@ -533,6 +597,7 @@
                 isSearch : 'history',
                 history: [],
                 searchResult : [],
+                searchAlias : [],
                 canClick:false,
                 searchedUser : {
                     nickname:null,
@@ -553,6 +618,10 @@
                 newcomment:'',
                 commentcheck:false,
                 todolist:'',
+                modalnum: 0,
+                searchtitle:'',
+                searchcontent:'',
+                searchdialog: false,
             }
         },
 }
