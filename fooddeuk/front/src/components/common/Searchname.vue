@@ -1,4 +1,5 @@
 <template>
+<v-app>
 <div class="wrapC">
     <div>
     <div action="" class="search">
@@ -23,12 +24,7 @@
             <ul>
                 <li class="nick-list" v-for="item in history" :key="item.id">
                     <div class="profile-card-search" style="margin-left:-20px">
-                        <div v-if="item.picture">
                         <img :src="item.picture" alt="picture">
-                        </div>
-                        <div v-else>
-                        <img src="" alt="">
-                        </div>
                         <p @click="goProfileByNickname(item.nickname)" style="float:left; width:100px; height:20px; margin-top:15px; margin-right:90px">{{ item.nickname }}</p>
                         <button style="margin-top:18px" @click="RemoveName(item.nickname)">
                         X</button>
@@ -43,7 +39,7 @@
                 <li class="nick-list" v-for="(item,index) in searchResult" :key="item.nickName">
                     <div class="profile-card-search" style="margin-left:-20px">
                         <a @click="goProfileByNickname(item.nickname)"><img src="" alt="profile card">
-                        <p style="float:left; width:100px; color:gray; height:20px; margin-top:15px; margin-right:90px" v-html="searchResult[index]"></p></a>
+                        <p style="float:left; width:100px; color:gray; height:20px; margin-top:15px; margin-right:90px" v-html="searchAlias[index]"></p></a>
                         <button style="margin-top:18px" @click="RemoveName(item)">
                         X</button>
                     </div>
@@ -54,10 +50,10 @@
     </div>
     <div v-if="fcheck">
         <div class="field" style="float:left; width:80%;">
-            <input v-model="searchContents" type="text" class="input-search" @keyup.enter="AddName">
+            <input v-model="searchContents" type="text" class="input-search" @keyup.enter="serachFeed">
         </div>
          <div style="width:20%; float:left">
-                <button class="check-button" @click="serachFeed()">검색</button>
+                <button class="check-button" @click="serachFeed">검색</button>
         </div>
         <div style="clear:both;"></div>
         <div v-if="post.length==0" style="padding-top:20px; text-align:center">검색 결과가 없습니다.</div>
@@ -97,9 +93,9 @@
                         >
                         <v-card>
                         <v-card-title
-                            class="headline grey lighten-2"
-                            primary-title>
-                            {{postdetail.title}}
+                        class="headline grey lighten-2"
+                        primary-title>
+                        피드 검색
                         </v-card-title>
 
                          <v-card
@@ -110,9 +106,9 @@
                     <v-list-item>
                         <v-list-item-avatar style="height:50px; width:50px"><img :src="postdetail.picture"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{postdetail.title}}
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;" v-html="postdetail.title">
                         </v-list-item-title>
-                        <v-list-item-subtitle style="width:50px; margin-left:5px">{{postdetail.nickname}} <br>
+                        <v-list-item-subtitle style="width:50px; margin-left:5px" v-html="postdetail.nickname"> <br>
                          <div style="margin-top:10px; margin-left:2px"> {{getTime(postdetail.date)}}</div> </v-list-item-subtitle>
                         </v-list-item-content>
                         </v-list-item>
@@ -128,7 +124,9 @@
                                 <img v-if="postdetail.image!=='null' || postdetail.image!==null" v-bind:src="postdetail.image"  style="width:100%; heigh:auto; ">
                             <br>
                             <br><br><hr><br>
-                            주소 : {{postdetail.address}} 
+                            주소 : 
+                            <div v-html="postdetail.address">
+                            </div> 
                             </v-card-text>
 
                     <div style="width:100%">
@@ -228,6 +226,7 @@
              </v-dialog>
         </div>
 </div>
+</v-app>
 
 </template>
 
@@ -283,7 +282,7 @@
                     console.log(Error)
                 })
             },
-            getUserInfoByNickname(nick) {
+                getUserInfoByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
                 http.get("/user/userinfo/{nickname}?nickname=" + nick)
@@ -301,6 +300,7 @@
                 UserApi.requestGetAllSearch(data, res => {
                     if (res != null) {
                         this.history = res;
+                        console.log(this.history)
 
                         
                     } else {
@@ -325,11 +325,11 @@
                 
                 let search = this.NewName
                 UserApi.requestSearchNickname(data, res => {
-                    
+                    console.log(res)
                     this.searchResult = res;
 
                     for (let index = 0; index < this.searchResult.length; index++) {
-                        this.searchResult[index] = this.searchResult[index].nickname.replace(search,'<span style="color:red">'+search+'</span>');
+                        this.$set(this.searchAlias, index, this.searchResult[index].nickname.replace(search,'<span style="background-color:yellow">'+search+'</span>'));
                     }
                 
                     this.isSubmit = true;
@@ -389,16 +389,23 @@
                 }
             },
             serachFeed(){
+                console.log('serachFeed')
                 if(this.searchContents!=''){
                     http.get("/search/feed?keyword=" + this.searchContents +'&email=' + this.email)
                     .then(Response => {
                         this.post=[]
+                        console.log(Response)
                         if(Response.data.object!=null){
 
-                            this.post=Response.data.object
-                            
+                            this.post=Response.data.object;
+
+                            for (let index = 0; index < this.post.length; index++) {
+                                this.post[index].title = this.post[index].title.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.post[index].content = this.post[index].content.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.post[index].address = this.post[index].address.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.$set(this.post, index, this.post[index]);
+                            }
                         }
-                      
                     })
                     .catch(Error => {
                         console.log(Error)
@@ -409,7 +416,9 @@
             },
             detail(num){
                 this.postdetail = this.post[num];
-                this.postdetail.content = this.postdetail.content.replace(/(?:\r\n|\r|\n)/g, '<br/>')
+
+                console.log(this.postdetail)
+                this.postdetail.content = this.postdetail.content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
   
                 if(!this.dialog){
                     this.dialog = true;
@@ -470,9 +479,14 @@
                     .then(Response => {
                         this.post=[]
                         if(Response.data.object!=null){
-
                             this.post=Response.data.object
-                            
+
+                            for (let index = 0; index < this.post.length; index++) {
+                                this.post[index].title = this.post[index].title.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.post[index].content = this.post[index].content.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.post[index].address = this.post[index].address.replace(this.searchContents,'<span style="background-color:yellow">'+this.searchContents+'</span>');
+                                this.$set(this.post, index, this.post[index]);
+                            }
                         }
                       
                     })
@@ -581,6 +595,7 @@
                 isSearch : 'history',
                 history: [],
                 searchResult : [],
+                searchAlias : [],
                 canClick:false,
                 searchedUser : {
                     nickname:null,

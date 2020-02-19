@@ -2,16 +2,9 @@
   <v-navigation-drawer v-model="propDrawer" temporary>
       <v-list-item>
         <v-list-item-avatar style="margin-top:20%; margin-left:41%">
-          <div v-if="!this.picture">
-            <v-btn @click="fileInputClick" fab x-large dark style="background-color:#fb8c00">
-            <v-icon>mdi-account-circle</v-icon>
-            </v-btn>
-        </div>
-        <div v-else>
              <v-img @click="fileInputClick"
-             style="width:60px;height:60px;border-radius:50%;"
+             style="width:48px;height:48px;border-radius:50%;"
              :src="this.picture"></v-img>
-        </div>
         </v-list-item-avatar>
       </v-list-item>
       <div style="padding-top:10px; text-align:center">
@@ -79,9 +72,14 @@ label="File input"
 ></v-file-input>
 </v-card-title>
 <v-card-actions>
-          <v-btn btn btn--ok color="green darken-1" text @click="submit" :disabled="dialogResult===false" :class="{disabled : !dialog}">Agree</v-btn>
-          <v-btn color="green darken-1" text @click="dialog = false">Disagree</v-btn>
-          <v-btn color="green darken-1" text @click="deletePicture">삭제</v-btn>
+          <v-btn btn btn--ok color="green darken-1" text @click="submit" :disabled="dialogResult===false" :class="{disabled : !dialog}">변경</v-btn>
+          <v-btn color="green darken-1" text @click="dialog = false">취소</v-btn>
+          <div v-if="picture==='https://i.imgur.com/JFutv5P.png'">
+          <v-btn color="green darken-1" text @click="deletePicture" disabled="">삭제</v-btn>
+          </div>
+          <div v-else>
+            <v-btn color="green darken-1" text @click="deletePicture">삭제</v-btn>
+          </div>
         
 </v-card-actions>
 </v-card>
@@ -233,7 +231,7 @@ import http from '../../../http-common'
           http.get("profile/deletePicture/?num=" + num)
           .then(Reponse =>{
               console.log(Response)
-              this.picture = '';
+              this.picture = 'https://i.imgur.com/JFutv5P.png';
               this.dialog = false
           })
           .catch(Error => {
