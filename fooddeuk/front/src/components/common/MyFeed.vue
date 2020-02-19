@@ -381,10 +381,6 @@
 
             //검색한 사용자와 팔로잉 체크
             this.followcheck(this.nickname);
-
-            //프로필 불러오기
-            this.getProfile(this.nick);
-            
         },
         watch : {
             newcomment: function(v) {
@@ -439,7 +435,7 @@
                     console.log(Error)
                 })
             },
-            getFollower() { //팔로우 정보가져오기
+             getFollower() { //팔로우 정보가져오기
                 let form = new FormData()
                 http.get("/follow/follower?email="+this.email)
                 .then(Response => {
@@ -468,6 +464,7 @@
                     this.post = Response.data.object;
                     console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
+                    if(this.post!=null){
                     for (let index = 0; index < this.post.length; index++) {
                      
                         if(this.post[index].islike==1){
@@ -482,6 +479,7 @@
                     }
                     if(this.post.length!=0){
                         this.infiniteHandler(this.state);
+                    }
                     }
                     
                 })
@@ -833,16 +831,11 @@
                 alert("이미 스크랩 된 게시물입니다.")
             },
             submit(){
-                this.dialog = false
                 let form = new FormData()
-                form.append('num', this.mynum)
                 form.append('picture', this.dialogResult)
                 http.post('profile/insertPicture', form)
                 .then(Response => {
-                    if(Response.data.data==='success'){
-                        this.getProfile(this.nick)
-                    }
-                    
+                    console.log(Response)
                 })
             },
             fileInputClick(){
@@ -851,28 +844,9 @@
                 this.dialogResult = false;
             },
             deletePicture(){
-                let num = this.mynum
-                http.get("profile/deletePicture/?num=" + num)
-                .then(Reponse =>{
-                    console.log(Response)
-                    this.picture = '';
-                    this.dialog = false
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
+                alert('정말 삭제하시겠습니까?')
                 
-            },
-            getProfile(nick){
-                http.get("/profile/profile/?nickname=" + nick)
-                .then(Response => {
-                    this.picture = Response.data.picture;
-                    console.log(this.picture)
-                })
-                .catch(Error => {
-                    console.log(Error)
-                })
-            },
+            }
             
         },
         data: () => {
@@ -912,7 +886,6 @@
                 chosenFile:null,
                 picture:'',
                 list:[],
-               
             }
         },
         components:{

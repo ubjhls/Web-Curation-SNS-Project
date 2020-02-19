@@ -1,5 +1,4 @@
 <template>
-<v-app>
 <div>
     <v-text-field style="margin-top: 40px; margin-left:20px; margin-right:20px"
       v-model="subject"
@@ -96,8 +95,11 @@
             작성하기
         </button>
     </div>
+
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
 </div>
-</v-app>
 </template>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
@@ -122,9 +124,11 @@ import http from "../../../http-common"
       content: function (v) {
           this.checkForm();
       },
-      address: function (v) {
-          this.checkForm();
-      }
+      overlay (val) {
+        val && setTimeout(() => {
+          this.overlay = false
+        }, 2000)
+      },
     },
     methods: {
         checkForm() {
@@ -255,10 +259,14 @@ import http from "../../../http-common"
           }
         },
         processFile(event){
+           
           console.log(event)
           // alert(this.$refs.photoimage.files)
           this.image = event
-
+          if(this.image!=null){
+            if(!this.overlay){
+                this.overlay = true;
+            }
           let formdata = new FormData()
           formdata.append('image',this.image)
 
@@ -270,6 +278,7 @@ import http from "../../../http-common"
           .catch(Error => {
 
           })
+          }
         }
     },
     data () {
@@ -292,7 +301,8 @@ import http from "../../../http-common"
          subject: false,
          content: false,
          stars:false
-       }
+       },
+       overlay: false,
       }
     },
   }

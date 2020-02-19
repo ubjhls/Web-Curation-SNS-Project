@@ -1,5 +1,7 @@
 package com.web.curation.controller.mail;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +20,8 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 public class MailController {
 	
+	Logger log = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private IUserService userService;
 	
@@ -27,8 +31,7 @@ public class MailController {
 	@PostMapping("/mail/resend")
 	@ApiOperation(value = "회원가입 이메일 재 전송")	
 	public String reSendMailForJoin(@RequestParam(required = true) String email) throws Exception {
-		System.out.println("-----------------/mail/resend-----------------");
-		System.out.println("email : " + email);
+		log.info("POST : /mail/resend");
 		
 		String keyCode = MailUtil.createKey();
 		User user = new User(email, keyCode, 0);
@@ -48,7 +51,7 @@ public class MailController {
 			MailUtil.sendMail(email, subject, msg.toString());
 			return "success";
 		} catch (Exception e) {
-			System.out.println(e);
+			log.error(e+"");
 			return "failed";
 		}
 		
@@ -58,9 +61,7 @@ public class MailController {
 	@ApiOperation(value = "회원가입 인증")
 	public String updateConfirm(@RequestParam(required = true) String email,
 								@RequestParam(required = true) String key) throws Exception {
-		System.out.println("-----------------/mail/confirm-----------------");
-		System.out.println("email : " + email);
-		System.out.println("key : " + key);
+		log.info("PATCH : /mail/confirm");
 		
 		if(email == null || key == null) {
 			return "failed";
@@ -85,8 +86,7 @@ public class MailController {
 	@PostMapping("/mail/certification")
 	@ApiOperation(value = "비밀번호 변경 본인 인증 메일 발송")	
 	public String checkEmail(@RequestParam(required = true) String email) throws Exception { 
-		System.out.println("-----------------/mail/certification-----------------");
-		System.out.println("email : " + email);
+		log.info("POST : /mail/certification");
 		
 		if(email == null) {
 			return "failed";
@@ -94,7 +94,6 @@ public class MailController {
 
 		String newKey = MailUtil.createKey();
 		User user = new User(email, newKey, 0, 0);
-		System.out.println(user.toString());
 		if(userService.updateKey(user) != 1) {
 			return "failed";
 		}
@@ -112,13 +111,11 @@ public class MailController {
 		return "success";
 	}
 	
-	@PostMapping("mail/key")
+	@PostMapping("/mail/key")
 	@ApiOperation(value = "본인 인증 키 인증")	
 	public String compareKey(@RequestParam(required = true) String email,
 							@RequestParam(required = true) String key) throws Exception {
-		System.out.println("-----------------mail/key-----------------");
-		System.out.println("email : " + email);
-		System.out.println("key : " + key);
+		log.info("POST : /mail/key");
 		
 		String getKey = userService.getKey(email);
 		
@@ -129,11 +126,10 @@ public class MailController {
 		return "success";
 	}
 	
-	@PostMapping("mail/password")
+	@PostMapping("/mail/password")
 	@ApiOperation(value = "비밀번호 변경 임시 비밀번호 발송")	
 	public String sendMailFindPassword(@RequestParam(required = true) String email) throws Exception {
-		System.out.println("-----------------mail/password-----------------");
-		System.out.println("email : " + email);
+		log.info("POST : /mail/password");
 		
 		if(email == null) {
 			return "failed";
@@ -161,6 +157,8 @@ public class MailController {
 	}
 	
 	public String getSocial(String email) {
+		log.info("METHOD : getSocial");
+		
 		return userService.getSocial(email);
 	}
 	

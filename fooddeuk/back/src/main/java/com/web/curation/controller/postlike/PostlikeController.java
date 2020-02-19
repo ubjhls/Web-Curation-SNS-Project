@@ -2,6 +2,8 @@ package com.web.curation.controller.postlike;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,8 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin("*")
 @RestController
 public class PostlikeController {
-	
+	Logger log = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private IUserService userService;
 	
@@ -37,9 +40,7 @@ public class PostlikeController {
 	@ApiOperation(value = "좋아요")
 	public Object like(@RequestParam(required = true) int postnum,
 							@RequestParam(required = true) String email) throws Exception {
-		System.out.println("-----------------/postlike/like-----------------");
-		System.out.println("postnum : " + postnum);
-		System.out.println("email : " + email);
+		log.info("POST : /postlike/like");
 
 		int myNum = userService.getNumByEmail(email);
 		
@@ -63,7 +64,6 @@ public class PostlikeController {
 		}
 		
 		BasicResponse result = new BasicResponse();
-		System.out.println(list);
 		
 		result.status = true;
 		result.object = list;
@@ -74,9 +74,7 @@ public class PostlikeController {
 	@ApiOperation(value = "좋아요 취소")
 	public Object unlike(@RequestParam(required = true) int postnum,
 							@RequestParam(required = true) String email) throws Exception {
-		System.out.println("-----------------/postlike/unlike-----------------");
-		System.out.println("postnum : " + postnum);
-		System.out.println("email : " + email);
+		log.info("DELETE : /postlike/unlike");
 
 		int myNum = userService.getNumByEmail(email);
 		
@@ -100,7 +98,6 @@ public class PostlikeController {
 		}
 		
 		BasicResponse result = new BasicResponse();
-		System.out.println(list);
 		
 		result.status = true;
 		result.object = list;
