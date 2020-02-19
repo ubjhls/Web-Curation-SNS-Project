@@ -343,7 +343,7 @@
                 this.myEmail = this.$store.state.userinfo.email
                 this.nick = this.$store.state.userinfo.nickName
                  http.get("/user/userinfo/{nickname}?nickname="+this.nick)
-                .then(Response => { 
+                .then(Response => {
                     this.mynum = Response.data.num;
                 })
                 .catch(Error => {
@@ -453,7 +453,7 @@
                             this.todolist.push([])
                             this.commentcount.push(this.post[index].count_comment)
                         }
-                        if(this.auth==0&&this.post.length!=0){
+                        if(this.post.length!=0){
                             this.infiniteHandler(this.state);
                         }
                     }
