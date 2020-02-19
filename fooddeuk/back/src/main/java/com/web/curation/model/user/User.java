@@ -28,6 +28,7 @@ public class User {
 	private String confirm;
 	private int social;
 	private String temp;
+	private String picture;
 
 	@Column(insertable = false, updatable = false)
 	private LocalDateTime createDate;
@@ -187,21 +188,28 @@ public class User {
 	public void setCreateDate(LocalDateTime createDate) {
 		this.createDate = createDate;
 	}
-
-	public String gettemp() {
+	
+	public String getTemp() {
 		return temp;
 	}
 
-	public void settemp(String temp) {
+	public void setTemp(String temp) {
 		this.temp = temp;
+	}
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 
 	@Override
 	public String toString() {
 		return "User [num=" + num + ", email=" + email + ", nickname=" + nickname + ", name=" + name + ", password="
 				+ password + ", intro=" + intro + ", auth=" + auth + ", confirm=" + confirm + ", social=" + social
-				+ ", temp=" + temp + ", createDate=" + createDate + "]";
+				+ ", temp=" + temp + ", picture=" + picture + ", createDate=" + createDate + "]";
 	}
-	
-	
+
 }

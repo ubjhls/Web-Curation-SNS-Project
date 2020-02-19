@@ -93,7 +93,7 @@ public class PostController {
 			if(postlikeService.checkLike(like) != 0) {
 				list.get(i).setIslike(1);
 			}
-			// list.get(i).setPicture(postService.getPicture(num));
+			list.get(i).setPicture(postService.getPicture(list.get(i).getAuthor()));
 			if(list.get(i).getType().equals("스크랩")) {
 				Post temp = postService.getPost(list.get(i).getScrapnum());
 				list.get(i).setScarpnick(userService.getNickname(temp.getAuthor()));
@@ -197,6 +197,7 @@ public class PostController {
 		}
 		
 		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setPicture(postService.getPicture(list.get(i).getAuthor()));
 			Post temp = postService.getPost(list.get(i).getScrapnum());
 			list.get(i).setScarpnick(userService.getNickname(temp.getAuthor()));
 			list.get(i).setScraptitle(temp.getTitle());
@@ -477,6 +478,9 @@ public class PostController {
 			result.data = "nothing";
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setPicture(postService.getPicture(list.get(i).getAuthor()));			
+		}
 		     
 		result.status=true;
 		result.object = list;
@@ -532,9 +536,10 @@ public class PostController {
 		Postlike like = new Postlike(num, myNum);
 		if(postlikeService.checkLike(like) != 0) {
 			post.setIslike(1);
-			// post.setPicture(postService.getPicture(num));
+			post.setPicture(postService.getPicture(post.getAuthor()));
 		}
 		post.setNickname(userService.getNickname(post.getAuthor()));
+		post.setPicture(profileService.getPicture(post.getAuthor()));
 		
 		result.status=true;
 		result.object = post;

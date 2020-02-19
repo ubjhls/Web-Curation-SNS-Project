@@ -20,6 +20,7 @@ import com.web.curation.model.postlike.Postlike;
 import com.web.curation.model.search.Search;
 import com.web.curation.model.user.User;
 import com.web.curation.service.IPostlikeService;
+import com.web.curation.service.IProfileService;
 import com.web.curation.service.ISearchService;
 import com.web.curation.service.IUserService;
 
@@ -39,18 +40,23 @@ public class SearchController {
 	@Autowired
 	private IPostlikeService postlikeService;
 	
+	@Autowired
+	private IProfileService profileService;
+	
 	@GetMapping("/search/all")
 	@ApiOperation(value = "최근 검색")
-	public List<String> getAllSearch(@RequestParam(required = true) String email) throws Exception {
+	public List<User> getAllSearch(@RequestParam(required = true) String email) throws Exception {
 		log.info("GET : /search/all");
 		
 		int num = userService.getNumByEmail(email);
 		List<Search> list = searchService.getAllSearch(num);
-		List<String> result = new ArrayList<>();
+		List<User> result = new ArrayList<>();
 		
 		for (int i = 0; i < list.size(); i++) {
-			String nickname = searchService.getNickname(list.get(i).getWho());
-			result.add(nickname);
+			User user = new User();
+			user.setNickname(searchService.getNickname(list.get(i).getWho()));
+			user.setPicture(profileService.getPicture(list.get(i).getWho()));
+			result.add(user);
 		}
 		
 		return result;
@@ -108,7 +114,7 @@ public class SearchController {
 			}
 			String nickname = userService.getNickname(list.get(i).getAuthor());
 			list.get(i).setNickname(nickname);
-			// list.get(i).setPicture(postService.getPicture(num));
+			list.get(i).setPicture(profileService.getPicture(list.get(i).getAuthor()));
 		}
 		
 		result.object = list;
