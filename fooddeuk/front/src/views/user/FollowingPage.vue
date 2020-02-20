@@ -166,7 +166,7 @@
             GoUserFeed(nick){
                 var router = this.$router
                  router.push({
-                    name: "UserFeed",
+                    name: "MainPage",
                     params: {
                         "nickname": nick,
                     }

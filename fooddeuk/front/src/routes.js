@@ -23,7 +23,6 @@ import ScrapFeed from './views/user/ScrapFeed.vue'
 import LikeFeed from './views/user/LikeFeed.vue'
 import Statistics from './views/user/Statistics.vue'
 import UpdateFeed from './views/user/UpdateFeed.vue'
-import UserFeed from './components/common/UserFeed.vue'
 
 
 import Vue from 'vue';
@@ -216,13 +215,6 @@ const onlyAuthUser = (to, from, next) =>{
         name : 'Statistics',
         component : Statistics,
         beforeEnter : onlyAuthUser,
-    },
-    {
-        path : '/common/UserFeed',
-        name : 'UserFeed',
-        component : FollowingPage,
-        beforeEnter : onlyAuthUser,
-        props: true
     },
 
 ];
