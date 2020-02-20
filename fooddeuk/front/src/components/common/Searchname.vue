@@ -1,4 +1,5 @@
 <template>
+<v-app>
 <div class="wrapC">
     <div>
     <div action="" class="search">
@@ -23,12 +24,7 @@
             <ul>
                 <li class="nick-list" v-for="item in history" :key="item.id">
                     <div class="profile-card-search" style="margin-left:-20px">
-                        <div v-if="item.picture">
                         <img :src="item.picture" alt="picture">
-                        </div>
-                        <div v-else>
-                        <img src="" alt="">
-                        </div>
                         <p @click="goProfileByNickname(item.nickname)" style="float:left; width:100px; height:20px; margin-top:15px; margin-right:90px">{{ item.nickname }}</p>
                         <button style="margin-top:18px" @click="RemoveName(item.nickname)">
                         X</button>
@@ -42,10 +38,9 @@
             <ul>
                 <li class="nick-list" v-for="(item,index) in searchResult" :key="item.nickName">
                     <div class="profile-card-search" style="margin-left:-20px">
-                        <a @click="goProfileByNickname(item.nickname)"><img src="" alt="profile card">
+                        <a @click="goProfileByNickname(item.nickname)"><img :src="item.picture" alt="profile card">
                         <p style="float:left; width:100px; color:gray; height:20px; margin-top:15px; margin-right:90px" v-html="searchAlias[index]"></p></a>
-                        <button style="margin-top:18px" @click="RemoveName(item)">
-                        X</button>
+                        
                     </div>
                     <br>
                 </li>
@@ -230,6 +225,7 @@
              </v-dialog>
         </div>
 </div>
+</v-app>
 
 </template>
 
@@ -285,7 +281,7 @@
                     console.log(Error)
                 })
             },
-            getUserInfoByNickname(nick) {
+                getUserInfoByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
                 http.get("/user/userinfo/{nickname}?nickname=" + nick)
@@ -330,6 +326,7 @@
                 UserApi.requestSearchNickname(data, res => {
                     console.log(res)
                     this.searchResult = res;
+
                     for (let index = 0; index < this.searchResult.length; index++) {
                         this.$set(this.searchAlias, index, this.searchResult[index].nickname.replace(search,'<span style="background-color:yellow">'+search+'</span>'));
                     }
@@ -372,6 +369,7 @@
             },
             goProfileByNickname(nick) {
                 this.getUserInfoByNickname(nick);
+                console.log(nick)
                 this.$emit('child', nick)
             },
             checkchange(value){
@@ -505,7 +503,6 @@
                 http.get('/comment/comment?postnum='+num)
                 .then(response => {
                     if(response.data.object!=null){
-                        console.log(response.data.object)
                         this.todolist = response.data.object
                     }     
                 })
