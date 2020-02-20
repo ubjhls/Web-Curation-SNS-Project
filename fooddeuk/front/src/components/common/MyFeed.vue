@@ -1167,7 +1167,6 @@
                 // this.getPostByNum(this.num);
             },
             goProfileByNickname(nick) {
-                alert(nick + " 눌림!")
                 this.scrapdialog = false;
                 this.$emit('child', nick)
             },
