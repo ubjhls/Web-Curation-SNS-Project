@@ -17,7 +17,7 @@
         <MyFeed v-if="menu.isProfile" :propsNickname="nickname" @child="getPropsNick"></MyFeed>
         <AddFeed v-if="menu.isAdd" @child="updateAddFeedvalue"></AddFeed>
         <Searchname v-if="menu.isSearch" @child="getPropsNick"></Searchname>
-        <UserFeed v-if="menu.isUserProfile" :propsNickname="propsNickname"></UserFeed>
+        <UserFeed v-if="menu.isUserProfile" :propsNickname="propsNickname" @child="getPropsNick"></UserFeed>
 
 
         <div class="footer" style="z-index:6;">
@@ -111,6 +111,7 @@
                 })
             },
             getPropsNick(propsNick) {
+                this.menu.isUserProfile = false;
                 if(this.$store.state.userinfo!=null){
                     this.nickname = this.$store.state.userinfo.nickName;
                 }
