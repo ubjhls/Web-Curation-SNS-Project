@@ -33,8 +33,11 @@
                 </li>
             </ul>
         </div>
-
-        <div v-if="searchResult && isSearch=='search'" style="padding-top:10px">
+        
+        <div v-if="searchResult.length==0 && isSearch=='search'" style="padding-top:10px; text-align:center;">
+            검색 결과가 없습니다.
+        </div>
+        <div v-if="searchResult.length!=0 && isSearch=='search'" style="padding-top:10px">
             <ul>
                 <li class="nick-list" v-for="(item,index) in searchResult" :key="item.nickName">
                     <div class="profile-card-search" style="margin-left:-20px">
@@ -300,8 +303,6 @@
                     if (res != null) {
                         this.history = res;
                         console.log(this.history)
-
-                        
                     } else {
                         alert("데이터 없음");
                     }
@@ -326,11 +327,11 @@
                 UserApi.requestSearchNickname(data, res => {
                     console.log(res)
                     this.searchResult = res;
-
-                    for (let index = 0; index < this.searchResult.length; index++) {
-                        this.$set(this.searchAlias, index, this.searchResult[index].nickname.replace(search,'<span style="background-color:yellow">'+search+'</span>'));
+                    if(res.length!=0) {
+                        for (let index = 0; index < this.searchResult.length; index++) {
+                            this.$set(this.searchAlias, index, this.searchResult[index].nickname.replace(search,'<span style="background-color:yellow">'+search+'</span>'));
+                        }
                     }
-                
                     this.isSubmit = true;
                 }, error => {
                     var router = this.$router;

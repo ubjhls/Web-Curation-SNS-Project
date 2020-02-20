@@ -84,7 +84,6 @@
         components: {},
         created() {
           setTimeout(() => {
-            
             this.nickname = this.$store.state.userinfo.nickName;
             this.getUserByNickname(this.nickname);
           }, 200);
@@ -113,7 +112,6 @@
                 this.items = Response.data.object;
                 this.isfollow = Response.data.object2;
                 console.log(this.isfollow)
-
               })
             },
             getUserByNickname(nick) {
