@@ -12,7 +12,7 @@
         <div style="position:relative; z-index:1005">
         <NavigationBar class="navi" :drawer="menu.isNavi" @child="updateNaviValue" v-if="menu.isNavi"></NavigationBar>
         </div>
-        <NewsFeed v-if="menu.isHome" :propsNickname="nickname"></NewsFeed>
+        <NewsFeed v-if="menu.isHome" :propsNickname="nickname" @child="getPropsNick"></NewsFeed>
         <AlarmPage v-if="menu.isAlarm"></Alarmpage>      
         <MyFeed v-if="menu.isProfile" :propsNickname="nickname" @child="getPropsNick"></MyFeed>
         <AddFeed v-if="menu.isAdd" @child="updateAddFeedvalue"></AddFeed>

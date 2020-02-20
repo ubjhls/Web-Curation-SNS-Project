@@ -370,7 +370,6 @@
             },
             goProfileByNickname(nick) {
                 this.getUserInfoByNickname(nick);
-                console.log(nick)
                 this.$emit('child', nick)
             },
             checkchange(value){
