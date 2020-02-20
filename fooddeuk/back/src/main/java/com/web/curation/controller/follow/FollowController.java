@@ -21,7 +21,9 @@ import com.web.curation.model.follow.Follow;
 import com.web.curation.model.user.User;
 import com.web.curation.service.IAlarmService;
 import com.web.curation.service.IFollowService;
+import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
+import com.web.curation.service.ProfileServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -38,6 +40,9 @@ public class FollowController {
 	
 	@Autowired
 	private IAlarmService alarmService;
+	
+	@Autowired
+	private IProfileService profileService;
 	
 	
 	@GetMapping("/follow/follow")
@@ -99,8 +104,8 @@ public class FollowController {
 		}
 		
 		Alarm alarm = new Alarm();
-		alarm.setReceiver(nickname);
-		alarm.setSender(mynickname);
+		alarm.setSender(userService.getEmail(myNum));
+		alarm.setReceiver(userService.getEmail(otherNum));
 		alarm.setReason(2);
 		
 		//알람 메세지저장
@@ -189,9 +194,10 @@ public class FollowController {
 		log.info("POST : /follow/nonfollow");
 	
 		Alarm alarm = new Alarm();
-	
-	    alarm.setReceiver(nickname);
-		alarm.setSender(mynickname);
+		int myNum = userService.getNumByNickname(mynickname);
+		int otherNum = userService.getNumByNickname(nickname);
+		alarm.setSender(userService.getEmail(myNum));
+		alarm.setReceiver(userService.getEmail(otherNum));
 		
 		//비공개 사용자에게 팔로우 요쳥 = 1;
 		alarm.setReason(1);
@@ -214,7 +220,14 @@ public class FollowController {
 	public List<Alarm> requestlist(@RequestParam(required = true) String mynickname) throws Exception {
 		log.info("GET : /follow/requestlist");
 		
-		List<Alarm> list = alarmService.myalarmList(mynickname);
+		List<Alarm> list = alarmService.myalarmList(userService.getEmailByNickname(mynickname));
+		
+		for (int i = 0; i < list.size(); i++) {
+			int num = userService.getNumByEmail(list.get(i).getSender());
+			list.get(i).setPicture(profileService.getPicture(num));
+			list.get(i).setSender(userService.getNickname(num));
+			list.get(i).setReceiver(mynickname);
+		}
 	
 		return list;
 	}
@@ -225,9 +238,9 @@ public class FollowController {
 					@RequestParam(required = true) String nickname, @RequestParam(required = true) String agree) throws Exception {
 		log.info("POST : /follow/followagree");
 		
+		int myNum = userService.getNumByNickname(mynickname);
+		int otherNum = userService.getNumByNickname(nickname);
 		if(agree.equals("1")) {
-			int myNum = userService.getNumByNickname(mynickname);
-			int otherNum = userService.getNumByNickname(nickname);
 			
 			Follow follow = new Follow(myNum, otherNum);
 			
@@ -243,15 +256,15 @@ public class FollowController {
 			
 			//알람저장
 			Alarm alarm2 = new Alarm();
-			alarm2.setReceiver(nickname);
-			alarm2.setSender(mynickname);
+			alarm2.setSender(userService.getEmail(myNum));
+			alarm2.setReceiver(userService.getEmail(otherNum));
 			alarm2.setReason(2);
 			alarmService.nonfollowSave(alarm2);
 		}else {
 			//알람저장
 			Alarm alarm2 = new Alarm();
-			alarm2.setSender(nickname);
-			alarm2.setReceiver(mynickname);
+			alarm2.setSender(userService.getEmail(myNum));
+			alarm2.setReceiver(userService.getEmail(otherNum));
 			alarm2.setReason(3);
 			alarmService.nonfollowSave(alarm2);
 		}
@@ -266,8 +279,15 @@ public class FollowController {
 	public List<Alarm> alarmtlist(@RequestParam(required = true) String mynickname) throws Exception {
 		log.info("GET : /follow/alarmlist");
 		
-		List<Alarm> list = alarmService.alarmtlist(mynickname);
-	
+		List<Alarm> list = alarmService.alarmtlist(userService.getEmailByNickname(mynickname));
+
+		for (int i = 0; i < list.size(); i++) {
+			int num = userService.getNumByEmail(list.get(i).getSender());
+			list.get(i).setPicture(profileService.getPicture(num));
+			list.get(i).setSender(userService.getNickname(num));
+			list.get(i).setReceiver(mynickname);
+		}
+		
 		return list;
 	}
 	

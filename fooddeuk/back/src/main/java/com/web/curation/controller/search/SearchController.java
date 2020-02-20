@@ -79,7 +79,10 @@ public class SearchController {
 		
 		if(list.size() == 0) {
 			result.data = "empty";
-			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setPicture(profileService.getPicture(list.get(i).getNum()));
 		}
 		
 		result.object = list;

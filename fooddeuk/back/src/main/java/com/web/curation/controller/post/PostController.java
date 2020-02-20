@@ -197,6 +197,10 @@ public class PostController {
 		}
 		
 		for (int i = 0; i < list.size(); i++) {
+			Postlike like = new Postlike(list.get(i).getNum(), num);
+			if(postlikeService.checkLike(like) != 0) {
+				list.get(i).setIslike(1);
+			}
 			list.get(i).setPicture(postService.getPicture(list.get(i).getAuthor()));
 			Post temp = postService.getPost(list.get(i).getScrapnum());
 			list.get(i).setScarpnick(userService.getNickname(temp.getAuthor()));
@@ -503,7 +507,10 @@ public class PostController {
 		post.setContent(content);
 		post.setCount_star(count_star);
 		post.setAddress(address);
-		post.setImage(image);
+		
+		if(!image.equals("null")) {
+			post.setImage(image);
+		}
 		
 		if(postService.updatePost(post) == 0) {
 			return "failed";
