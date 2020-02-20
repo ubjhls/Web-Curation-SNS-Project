@@ -20,8 +20,8 @@
                             style="margin-bottom:40px; position:relative"
                     >
                     <v-list-item>
-                         <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px"><img :src="item.picture"></v-list-item-avatar>
-                                <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                         <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px" @click="goProfileByNickname(item.nickname)"><img :src="item.picture"></v-list-item-avatar>
+                        <v-list-item-avatar v-else style="height:50px; width:50px" @click="goProfileByNickname(item.nickname)"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">
                             <div style="float:left;">{{item.title}}</div>
@@ -61,8 +61,8 @@
                             <v-card style="margin-left:13px; width:90%; height:auto;" @click.stop="showScrapPost(item.scrapnum, item.scarpnick)">
                                 <div style=" background-color:#F7A937;text-align:center">스크랩한 게시물</div>
                                 <v-list-item style="width:100%;">
-                                <v-list-item-avatar v-if="item.scrappicture" style="height:50px; width:50px"><img :src="item.scrappicture"></v-list-item-avatar>
-                                <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                                <v-list-item-avatar v-if="item.scrappicture" style="height:50px; width:50px" @click="goProfileByNickname(item.scrapnick)"><img :src="item.scrappicture"></v-list-item-avatar>
+                                <v-list-item-avatar v-else style="height:50px; width:50px" @click="goProfileByNickname(item.scrapnick)"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                                 <v-list-item-content style="padding-left:5%">
                                 <v-list-item-title style="margin-top:5px; font-size:15px;">{{item.scraptitle}}
                                 <v-list-item-subtitle>{{item.scarpnick}} <br>
@@ -305,8 +305,8 @@
                             style="margin-bottom:40px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px"><img :src="item.picture"></v-list-item-avatar>
-                        <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px" @click="goProfileByNickname(item.nickname)"><img :src="item.picture"></v-list-item-avatar>
+                        <v-list-item-avatar v-else style="height:50px; width:50px" @click="goProfileByNickname(item.nickname)"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">
                             <div style="float:left;">{{item.title}}</div>

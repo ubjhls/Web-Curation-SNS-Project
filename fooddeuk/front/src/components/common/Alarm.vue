@@ -26,7 +26,7 @@
           :key="item.title"
         >
           <v-list-item-avatar>
-            <v-img :src="item.avatar"></v-img>
+            <v-img :src="item.picture"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content @click="confirmAlarm(item.num)">
@@ -123,7 +123,7 @@
         http.get("/follow/alarmlist?mynickname=" + this.nickname)
         .then(Response => {
           this.items = Response.data
-          // console.log(Response.data)
+          console.log(Response.data)
         })
         .catch(Error => {
             console.log(Error)
