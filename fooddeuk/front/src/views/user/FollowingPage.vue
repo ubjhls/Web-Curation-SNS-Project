@@ -31,10 +31,10 @@
           <v-list-item-subtitle v-text="item.email"></v-list-item-subtitle>
         </v-list-item-content>
 
-        <div class="profile-card-ctr" v-if="isfollow[index]==0">  
+        <div class="profile-card-ctr" v-if="isfollow[index]==0 && nickname==$store.state.userinfo.nickName">  
             <button class="profile-card__button button--orange" @click="followgo(index)">Follow</button>
         </div>
-        <div class="profile-card-ctr" v-if="isfollow[index]==1">
+        <div class="profile-card-ctr" v-if="isfollow[index]==1 && nickname==$store.state.userinfo.nickName">
           
             <button class="profile-card__button button--orange" style="background:gray" @click="unfollowgo(index)">UnFollow</button>
         </div>
@@ -64,10 +64,16 @@
     export default {
         components: {},
         created() {
-            setTimeout(() => { 
+            if(this.$route.params.nickname!=null) {
+            this.nickname = this.$route.params.nickname;
+            this.getUserByNickname(this.nickname);
+          }
+          else if(this.$route.params.nickname==null) {
+            setTimeout(() => {
                 this.nickname = this.$store.state.userinfo.nickName;
                 this.getUserByNickname(this.nickname);
             }, 200);
+          }
         },
         watch: {},
         methods: {

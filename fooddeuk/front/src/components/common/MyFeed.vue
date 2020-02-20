@@ -269,6 +269,8 @@
                         >
                         </v-img>
 
+                        <div v-html="scrappost.address"></div>
+
                         <v-divider style="margin:5%;"></v-divider>
 
                         <div style="width:100%">

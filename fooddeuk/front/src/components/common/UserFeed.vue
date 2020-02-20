@@ -228,6 +228,8 @@
                         >
                         </v-img>
 
+                        <div v-html="scrappost.address"></div>
+
                         <v-divider style="margin:5%;"></v-divider>
 
                         <div style="width:100%">
@@ -1047,21 +1049,26 @@
             goProfileByNickname(nick) {
                 this.scrapdialog = false;
                 
-                this.nickname = nick;
-                this.list = [];
+                if(nick == this.nick) {
+                    this.$emit('child', nick);
+                }
+                else {
+                    this.nickname = nick;
+                    this.list = [];
 
-                this.getProfile(this.nickname)
-                //포스트 불러오기
-                this.getUserByNickname(this.nickname);
+                    this.getProfile(this.nickname)
+                    //포스트 불러오기
+                    this.getUserByNickname(this.nickname);
 
-                //검색한 사용자와 팔로잉 체크
-                this.followcheck(this.nickname);
+                    //검색한 사용자와 팔로잉 체크
+                    this.followcheck(this.nickname);
+                }
             },
-            goFollowerPage() {
-                this.$router.push({name : 'FollowPage'})
+            goFollowerPage(nick) {
+                this.$router.push({name : 'FollowPage', params :{nickname : this.nickname}})
             },
-            goFollowingPage() {
-                this.$router.push({name : 'FollowingPage'})
+            goFollowingPage(nick) {
+                this.$router.push({name : 'FollowingPage', params :{nickname : this.nickname}})
             },
         },
         data: () => {

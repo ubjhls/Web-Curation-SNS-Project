@@ -106,7 +106,7 @@
                             style="position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar style="height:50px; width:50px"><img :src="postdetail.picture"></v-list-item-avatar>
+                        <v-list-item-avatar style="height:50px; width:50px" @click="goProfileByNickname(postdetail.nickname)"><img :src="postdetail.picture"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;" v-html="postdetail.title">
                         </v-list-item-title>
