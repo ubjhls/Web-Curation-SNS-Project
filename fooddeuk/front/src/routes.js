@@ -149,12 +149,14 @@ const onlyAuthUser = (to, from, next) =>{
         name : 'FollowPage',
         component : FollowPage,
         beforeEnter : onlyAuthUser,
+        props: true
     },
     {
         path : '/user/FollowingPage',
         name : 'FollowingPage',
         component : FollowingPage,
         beforeEnter : onlyAuthUser,
+        props: true
     },
     {
         path : '/user/ModifyProfile',

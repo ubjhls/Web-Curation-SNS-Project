@@ -6,7 +6,7 @@
                 <img src="../../assets/images/backIcon.png" style="width:40px;">
             </button>
             </div>
-            <p style="vertical-align: middle;padding: 8px 5px;float:left;">비밀번호 찾기</p>
+            <p style="vertical-align: middle;padding: 8px 5px;float:left;">회원가입</p>
         </div>
         <div class="wrapC">
             <div style="text-align:center">

@@ -24,7 +24,9 @@
       >
 
         <v-list-item-content>
-          {{item.nickname}}
+          <button @click="GoUserFeed(item.nickname)" style="text-align:left">
+            {{item.nickname}}
+          </button>
           <v-list-item-subtitle v-text="item.email"></v-list-item-subtitle>
         </v-list-item-content>
 
@@ -180,6 +182,15 @@
                     console.log(Error)
                 })
             },
+            GoUserFeed(nick){
+                var router = this.$router
+                 router.push({
+                    name: "MainPage",
+                    params: {
+                        "nickname": nick,
+                    }
+                });
+            }
             
         },
     data: () => ({

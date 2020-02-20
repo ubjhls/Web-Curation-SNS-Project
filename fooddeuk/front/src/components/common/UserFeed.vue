@@ -4,7 +4,8 @@
         <div class="wrapper">
             <div class="profile-card js-profile-card">
                 <div class="profile-card__cnt js-profile-cnt">
-                    <img src="../../assets/images/profile_default.png" style="margin-bottom:10px;">
+                    <img v-if="this.picture" :src="this.picture" style="width:60px;height:60px;border-radius:50%;" >
+                    <img v-else src="../../assets/images/profile_default.png" style="width:60px;height:60px;border-radius:50%;" >
                         <div class="profile-card__name">{{nickname}}</div>
                         <div class="profile-card__txt">{{intro}}</div>
 
@@ -47,7 +48,8 @@
                             style="margin-bottom:100px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                         <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px"><img :src="item.picture"></v-list-item-avatar>
+                                <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;"> {{item.title}}
                             <div v-if="item.author === mynum">
@@ -59,10 +61,10 @@
                             </template>
                             <v-list>
                                 <v-list-item>
-                                    <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
+                                    <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image,item.type)">수정</button>
                                 </v-list-item>
                                 <v-list-item>
-                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                    <button style="float:right" @click="removeFeed(item.numm, index)">삭제</button>
                                 </v-list-item>
                             </v-list>
                             </v-menu>
@@ -86,7 +88,8 @@
                             <v-card style="margin-left:13px; width:90%; height:auto;" @click.stop="showScrapPost(item.scrapnum, item.scarpnick)">
                                 <div style=" background-color:#F7A937;text-align:center">스크랩한 게시물</div>
                                 <v-list-item style="width:100%;">
-                                <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                                <v-list-item-avatar v-if="item.scrappicture" style="height:50px; width:50px"><img :src="item.scrappicture"></v-list-item-avatar>
+                                <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                                 <v-list-item-content style="padding-left:5%">
                                 <v-list-item-title style="margin-top:5px; font-size:15px;">{{item.scraptitle}}
                                 <v-list-item-subtitle>{{item.scarpnick}} <br>
@@ -188,7 +191,9 @@
                     >
                     <v-card>
                         <v-list-item style="width:100%;">
-                            <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                            <v-list-item-avatar v-if="item.scrappicture" style="height:50px; width:50px"><img :src="item.scrappicture"></v-list-item-avatar>
+                            <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                            
                             <v-list-item-content style="padding-left:5%">
                             <v-list-item-title style="margin-top:5px; font-size:15px;">{{scrappost.title}}
                             <v-list-item-subtitle>{{scrapnickname}} <br>
@@ -234,17 +239,27 @@
                                 <button @click="scrapcommentview(scrappost.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                                 </div>
                                 <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
-                                    <v-dialog v-model="dialog" persistent max-width="290" :retain-focus="false">
+                                    <v-dialog v-model="tmpdialog" persistent max-width="290" :retain-focus="false">
                                     <template v-slot:activator="{ on }">
-                                        <v-btn depressed color="white" v-on="on" @click="modal(item.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
+                                        <v-btn depressed color="white" v-on="on" @click="modal(scrappost.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
                                     </template>
                                     <v-card>
                                         <v-card-title class="headline">{{scrappost.nickname}}님의 게시물</v-card-title>
-                                        <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
-                                        <v-text-field style="color:blue; width:90%; margin-left:10px" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
+                                       <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle" counter
+                                            maxlength="13">
+                                        </v-text-field>
+                                        <v-textarea style="color:blue; width:90%; margin-left:10px" 
+                                            v-model="scrapcontent" 
+                                            label="내용입력" 
+                                            id="scrapcontent" 
+                                            counter
+                                            maxlength="50"
+                                            full-width
+                                            single-line>
+                                        </v-textarea>
                                         <v-card-actions>
                                         <v-spacer></v-spacer>
-                                        <v-btn color="green darken-1" text @click="dialog = false">취소</v-btn>
+                                        <v-btn color="green darken-1" text @click="tmpdialog = false">취소</v-btn>
                                         <v-btn color="green darken-1" text @click="scrapfeed(modalnum, scraptitle, scrapcontent);">스크랩</v-btn>
                                         </v-card-actions>
                                     </v-card>
@@ -314,7 +329,8 @@
                             style="margin-bottom:100px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px"><img :src="item.picture"></v-list-item-avatar>
+                        <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">{{item.title}}
                             <div v-if="item.author === mynum">
@@ -329,7 +345,7 @@
                                     <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
                                 </v-list-item>
                                 <v-list-item>
-                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                    <button style="float:right" @click="removeFeed(item.num, index)">삭제</button>
                                 </v-list-item>
                             </v-list>
                             </v-menu>
@@ -379,8 +395,18 @@
                             </template>
                             <v-card>
                                 <v-card-title class="headline">{{nickname}}님의 게시물</v-card-title>
-                                 <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
-                                <v-text-field style="color:blue; width:90%; margin-left:10px" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
+                                <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle" counter
+                                    maxlength="13">
+                                </v-text-field>
+                                <v-textarea style="color:blue; width:90%; margin-left:10px" 
+                                    v-model="scrapcontent" 
+                                    label="내용입력" 
+                                    id="scrapcontent" 
+                                    counter
+                                    maxlength="50"
+                                    full-width
+                                    single-line>
+                                </v-textarea>
                                 <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="green darken-1" text @click="dialog = false">취소</v-btn>
@@ -483,8 +509,13 @@
                     console.log(Error)
                 })
             }
-
             this.nickname = this.propsNickname;
+            if(this.$route.params.nickname){
+                this.nickname = this.$route.params.nickname;
+                this.$route.params.nickname = null
+            }
+
+            this.getProfile(this.nickname)
             //포스트 불러오기
             this.getUserByNickname(this.nickname);
 
@@ -515,6 +546,16 @@
                     }
                 )
                 this.isSubmit = isSubmit;
+            },
+            getProfile(nick){
+                http.get("/profile/profile/?nickname=" + nick)
+                .then(Response => {
+                    this.picture = Response.data.picture;
+                    // console.log(this.picture)
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
             },
             getTime(time) {
                 moment.locale('ko')
@@ -807,13 +848,14 @@
                 .catch(Error =>{
                 })
             },
-            removeFeed(num){
+            removeFeed(num, index){
                 if(confirm("정말 삭제하시겠습니까??") == true){    //확인
                     http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
                     .then(response => {
                         alert('게시물이 삭제되었습니다.')
                         console.log(response.data)
                         this.post = response.data.object
+                        this.list = this.list.splice(index, 1)
                     })
                     .catch(Error =>{
                     })
@@ -821,11 +863,12 @@
                     return false;
                 }
             },
-            updateFeed(num, title, content, count_star, address, image){
+            updateFeed(num, title, content, count_star, address, image, type){
                 var router = this.$router
                  router.push({
                     name: "UpdateFeed",
                     params: {
+                        "type": type,
                         "num": num,
                         "title": title,
                         "content": content,
@@ -881,6 +924,8 @@
             },
             scrapfeed(num,title,content) {
                 this.dialog= false
+                this.scrapdialog = false
+                this.tmpdialog = false
                 let form = new FormData()
                 form.append('postnum', num)
                 form.append('title',title)
@@ -1000,6 +1045,7 @@
         data: () => {
             return {
                 modalnum:0,
+                tmpdialog: false,
                 dialog: false,
                 scrapdialog : false,
                 usernum:0,
@@ -1038,6 +1084,7 @@
                 scrapLike:[],
                 scrapLikeCount:[],
                 isClickScrapComment:[],
+                picture:''
             }
         },
         components:{

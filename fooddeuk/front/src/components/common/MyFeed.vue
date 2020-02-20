@@ -6,20 +6,11 @@
         <div class="wrapper" >
             <div class="profile-card js-profile-card" >
                 <div class="profile-card__cnt js-profile-cnt">
-                    <div class="my-3">
-                        <div v-if="!this.picture">
-                            <v-btn @click="fileInputClick()" color="warning" fab x-large dark>
-                            <v-icon>mdi-account-circle</v-icon>
-                            </v-btn>
+                        <div style="text-align:center; margin:auto; width:60px; height:60px">
+                        <v-img @click="fileInputClick"
+                        style="width:60 px;height:60px;border-radius:50%; text-align:center; background-size:auto"
+                        :src="this.picture"></v-img>
                         </div>
-                        <div v-else>
-                            <img
-                            @click="fileInputClick()"
-                            :src="this.picture"
-                            style="width:60px;height:60px;border-radius:50%;"
-                            >
-                        </div>
-                    </div>
             <v-row justify="center">
                 <v-dialog
                 v-model="picturedialog"
@@ -34,9 +25,14 @@
             ></v-file-input>
             </v-card-title>
             <v-card-actions>
-              <v-btn btn btn--ok color="green darken-1" text @click="submit" :disabled="dialogResult===false" :class="{disabled : !picturedialog}">Agree</v-btn>
-              <v-btn color="green darken-1" text @click="picturedialog = false">Disagree</v-btn>
-              <v-btn color="green darken-1" text @click="deletePicture">삭제</v-btn>
+              <v-btn btn btn--ok color="green darken-1" text @click="submit" :disabled="dialogResult===false" :class="{disabled : !picturedialog}">변경</v-btn>
+              <v-btn color="green darken-1" text @click="picturedialog = false">취소</v-btn>
+              <div v-if="picture==='https://i.imgur.com/JFutv5P.png'">
+                <v-btn color="green darken-1" text @click="deletePicture" disabled="">삭제</v-btn>
+              </div>
+              <div v-else>
+                <v-btn color="green darken-1" text @click="deletePicture">삭제</v-btn>
+              </div>
 
             
             </v-card-actions>
@@ -102,7 +98,7 @@
                             
                             <v-list>
                                 <v-list-item>
-                                    <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
+                                    <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image,item.type)">수정</button>
                                 </v-list-item>
                                 <v-list-item>
                                     <button style="float:right" @click="removeFeed(item.num, index)">삭제</button>
@@ -293,8 +289,17 @@
                                     </template>
                                     <v-card>
                                         <v-card-title>{{scrappost.nickname}}님의 게시물</v-card-title>
-                                        <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
-                                        <v-text-field style="color:blue; width:90%; margin-left:10px" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
+                                        <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle"
+                                        counter
+                                        maxlength="13"
+                                        full-width
+                                        single-line>
+                                        </v-text-field>
+                                        <v-textarea style="color:blue; width:90%; margin-left:10px" label="내용입력" v-model="scrapcontent" id="scrapcontent"
+                                        counter
+                                        maxlength="50"
+                                        full-width
+                                        single-line></v-textarea>
                                         <v-card-actions>
                                         <v-spacer></v-spacer>
                                         <v-btn color="green darken-1" text @click="dialog = false">취소</v-btn>
@@ -365,14 +370,7 @@
                     >
                     <v-list-item>
                         <v-list-item-avatar style="height:50px; width:50px">
-                            <div v-if="picture">
-                                <img :src="picture" style="height:50px; width:50px">
-                            </div>
-                            <div v-else>
-                                <v-btn color="warning" fab x-large dark>
-                            <v-icon>mdi-account-circle</v-icon>
-                            </v-btn>
-                            </div>
+                            <img :src="picture" style="height:50px; width:50px">
                             </v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-top:5px; font-size:10px;">
@@ -387,7 +385,7 @@
                             </template>
                             <v-list>
                                 <v-list-item>
-                                    <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image)">수정</button>
+                                    <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image,item.type)">수정</button>
                                 </v-list-item>
                                 <v-list-item>
                                     <button style="float:right" @click="removeFeed(item.num, index)">삭제</button>
@@ -866,11 +864,12 @@
                 }
 
             },
-            updateFeed(num, title, content, count_star, address, image){
+            updateFeed(num, title, content, count_star, address, image, type){
                 var router = this.$router
                  router.push({
                     name: "UpdateFeed",
                     params: {
+                        "type": type,
                         "num": num,
                         "title": title,
                         "content": content,
