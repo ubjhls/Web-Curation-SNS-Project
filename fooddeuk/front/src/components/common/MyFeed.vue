@@ -338,7 +338,7 @@
                                     <h5 style="width:25%; float:left; margin-left:5px; margin-right:20px; font-weight:bold; line-height:1em;"> {{ cmts.nickname }}</h5> &nbsp; 
                                     <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmts.comment }} 
                                     </div>
-                                    <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || scrappost.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || scrappost.author == mynum" @click="scrapremoveComent(scrappost.num,cmts)">X</span>
                                     <br>
                                     <div style="clear:both;"></div>
                                 </div>
@@ -509,6 +509,7 @@
     import http from '../../../http-common'
     import NavigationBar from '../../components/common/NavigationBar'
     import {fireDB} from '../../main'
+    import firebase from 'firebase'
     import InfiniteLoading from 'vue-infinite-loading';
     
 
@@ -699,7 +700,6 @@
                         this.isfollow = 1;
                         this.getFollower();
                         this.getFollowing();
-                        this.updateAlarmToFirebase();
                     })
                     .catch(Error => {
                         console.log(Error)
@@ -714,7 +714,6 @@
                     http.post("/follow/nonfollow", form)
                     .then(Response => {
                         if(Response.data==='success') {
-                            this.updateAlarmToFirebase();
                             alert("팔로우가 요청되었습니다.")
                         }
                         else if(Response.data==='failed') {
@@ -742,10 +741,23 @@
                 form.append('postnum', num)
                 form.append('email', this.$store.state.userinfo.email)
 
+                let modalEmail = null;
+
+                http.get("/user/userinfo/{nickname}?nickname="+this.list[index].nickname)
+                .then(Response => {
+                    console.log("scrapnick " + this.scrappost.nickname)
+                    modalEmail = Response.data.email
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+
                 http.post('/postlike/like',form)
                 .then(response => {
                      this.post = response.data.object; 
-                     
+                     if(this.mynum!=this.list[index].author) {
+                        this.updateAlarmToFirebase(modalEmail)
+                     }
                 })
                 .catch(Error => {
                      console.log(Error)
@@ -886,10 +898,10 @@
             setAlarm(alarm) {
                 this.userAlarmCount = alarm;
             },
-            updateAlarmToFirebase() {       
-                fireDB.collection('Alarm').doc(this.email)
-                .set({
-                    count : this.userAlarmCount + 1
+            updateAlarmToFirebase(email) {       
+                fireDB.collection('Alarm').doc(email)
+                .update({
+                    count : firebase.firestore.FieldValue.increment(1)
                 })
             },
             getAlarmFromFirebase() {
@@ -1073,8 +1085,21 @@
                 form.append('postnum', num)
                 form.append('email', this.$store.state.userinfo.email)
 
+                let modalEmail = null;
+
+                http.get("/user/userinfo/{nickname}?nickname="+this.scrappost.nickname)
+                .then(Response => {
+                    modalEmail = Response.data.email
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
+
                 http.post('/postlike/like',form)
                 .then(response => {
+                    if(this.mynum!=this.scrappost.author) {
+                        this.updateAlarmToFirebase(modalEmail)
+                    }
                 })
                 .catch(Error => {
                      console.log(Error)
@@ -1147,7 +1172,7 @@
             scrapremoveComent(num, cmt) {
                 http.delete("/comment/comment?postnum=" + num + "&num="+ cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
                 .then(response => {
-                    //댓글 삭제(갱신까지)
+                    //댓글 삭제(갱신까지) 
                     this.scrapComment = response.data.object;
                     //댓글 수 갱신
                     http.get("/comment/count?postnum="+num)

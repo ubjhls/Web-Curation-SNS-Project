@@ -241,6 +241,9 @@
     import Axios from "axios";
     import http from '../../../http-common'
     import moment from 'moment'
+    import {fireDB} from '../../main'
+    import firebase from 'firebase'
+
     export default {
         components : {
         },
@@ -265,6 +268,12 @@
             }
         },
         methods: {
+            updateAlarmToFirebase(email) {       
+                fireDB.collection('Alarm').doc(email)
+                .update({
+                    count : firebase.firestore.FieldValue.increment(1)
+                })
+            },
             checkNewName() {
                 if(this.NewName.length!=0) {
                     this.canClick = true;
@@ -434,22 +443,30 @@
                 form.append('postnum', num)
                 form.append('email', this.email)
 
+                let modalEmail = null;
+
+                http.get("/user/userinfo/{nickname}?nickname="+this.postdetail.nickname)
+                .then(Response => {
+                    modalEmail = Response.data.email
+                })
+                .catch(Error => {
+                    console.log(Error)
+                })
                 http.post('/postlike/like',form)
                 .then(response => {
-                    
-
-                     http.get("/post/post/{postnum}?num=" + num +'&email=' + this.email)
+                    http.get("/post/post/{postnum}?num=" + num +'&email=' + this.email)
                     .then(Response => {
                         this.postdetail = Response.data.object
-                 
+                        if(this.mynum!=this.postdetail.author) {
+                            this.updateAlarmToFirebase(modalEmail)
+                        }
                     })
                     .catch(Error => {
                         console.log(Error)
                     })
-                     
                 })
                 .catch(Error => {
-                     console.log(Error)
+                    console.log(Error)
                 })
             },
             toggledelete(num, index) { //좋아요를 해제할때

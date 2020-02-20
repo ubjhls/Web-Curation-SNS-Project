@@ -139,11 +139,8 @@ import http from "../../../http-common"
       this.tmpimage = this.$route.params.image
       this.image = this.$route.params.image;
       this.type = this.$route.params.type 
-      console.log(this.$route.params.type)
 
-
-      
-      // this.image = this.$route.params.image;
+      this.content = this.content.replace(new RegExp("<br/>",'g'), '\n');
     },
     
     watch: {

@@ -30,9 +30,9 @@
           </v-list-item-avatar>
 
           <v-list-item-content @click="confirmAlarm(item.num)">
-            <v-list-item-title v-if="item.reason==2">"{{item.sender}}"님이 회원님을 팔로우했습니다.</v-list-item-title>
-            <v-list-item-title v-if="item.reason==3">"{{item.sender}}"님이 팔로우신청을 거절했습니다.</v-list-item-title>
-            <v-list-item-title v-if="item.reason==4">"{{item.sender}}"님이 회원님의 피드에 좋아요를 눌렀습니다.</v-list-item-title>
+            <v-list-item-title v-if="item.reason==2">"{{item.sender}}"님이<br/> 회원님을 팔로우했습니다.</v-list-item-title>
+            <v-list-item-title v-if="item.reason==3">"{{item.sender}}"님이<br/> 팔로우신청을 거절했습니다.</v-list-item-title>
+            <v-list-item-title v-if="item.reason==4">"{{item.sender}}"님이<br/> 회원님의 피드에좋아요를 눌렀습니다.</v-list-item-title>
             <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>

@@ -274,7 +274,7 @@
                                             <h5 style="width:25%; float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
                                             <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmts.comment }} 
                                             </div>
-                                            <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                            <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || item.author == mynum" @click="scrapremoveComent(scrappost.num,cmts)">X</span>
                                             <br>
                                             <div style="clear:both;"></div>
                                         </div>
@@ -672,13 +672,28 @@
                 form.append('postnum', num)
                 form.append('email', this.$store.state.userinfo.email)
 
-                http.post('/postlike/like',form)
-                .then(response => {
-                     this.post = response.data.object; 
-                     
+                let modalEmail = null;
+
+                http.get("/user/userinfo/{nickname}?nickname="+this.list[index].nickname)
+                .then(Response => {
+                    console.log("scrapnick " + this.list[index].nickname)
+                    modalEmail = Response.data.email
+                    console.log(modalEmail)
                 })
                 .catch(Error => {
-                     console.log(Error)
+                    console.log(Error)
+                })
+
+
+                http.post('/postlike/like',form)
+                .then(response => {
+                    this.post = response.data.object; 
+                    if(this.mynum!=this.list[index].author) {
+                        this.updateAlarmToFirebase(modalEmail)
+                    }
+                })
+                .catch(Error => {
+                    console.log(Error)
                 })
             },
             toggledelete(num, index) { //좋아요를 해제할때
@@ -687,8 +702,8 @@
 
                 http.delete("/postlike/unlike?postnum="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(response => {
-                     this.post = response.data.object
-                     
+                    //  this.post = response.data.object
+                    //  console.log(response)
                 })
                 .catch(Error => {
                      console.log(Error)
@@ -875,11 +890,25 @@
                 form.append('postnum', num)
                 form.append('email', this.$store.state.userinfo.email)
 
-                http.post('/postlike/like',form)
-                .then(response => {
+                let modalEmail = null;
+
+                http.get("/user/userinfo/{nickname}?nickname="+this.scrappost.nickname)
+                .then(Response => {
+                    console.log("scrapnick " + this.scrappost.nickname)
+                    modalEmail = Response.data.email
                 })
                 .catch(Error => {
-                     console.log(Error)
+                    console.log(Error)
+                })
+
+                http.post('/postlike/like',form)
+                .then(response => {
+                    if(this.mynum!=this.scrappost.author) {
+                        this.updateAlarmToFirebase(modalEmail)
+                    }
+                })
+                .catch(Error => {
+                    console.log(Error)
                 })
             },
             scraptoggledelete(num) { //좋아요를 해제할때
