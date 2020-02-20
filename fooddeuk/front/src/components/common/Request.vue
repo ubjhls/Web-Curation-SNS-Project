@@ -24,14 +24,21 @@
           :key="item.title"
         >
           <v-list-item-avatar>
-            <v-img :src="item.avatar"></v-img>
+            <v-img :src="item.picture"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content style="margin-left:20px;">
             <v-list-item-title>"{{item.sender}}"님이 팔로우 신청을 했습니다.</v-list-item-title>
             <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle>
+            <div>
+
+            <div style="width:20px; float:left">
             <v-btn small dark style="margin-right:20px; background-color:#a4c2f4ff; color:#ffffff" @click="accept(item.num, item.sender)">승인</v-btn>
+            </div>
+            <div style="width:20px; float:left; margin-left:40px">
             <v-btn small dark style="background-color:#e06666ff; color:#ffffff" @click="deny(item.num, item.sender)">거절</v-btn>
+            </div>
+            </div>
           </v-list-item-content>
         </v-list-item>
       </template>
@@ -102,10 +109,11 @@
       getTime(time) {
         return moment(time).fromNow();
       },
-      getAlarms() {
+      getAlarms() { 
         http.get("/follow/requestlist?mynickname=" + this.nickname)
         .then(Response => {
           this.items = Response.data
+          console.log(this.items)
         })
         .catch(Error => {
             console.log(Error)
