@@ -317,7 +317,7 @@
                                     </div>
                                 </div>
                             </div>
-
+<br>
                         <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn @click="scrapdialog = false">close</v-btn>

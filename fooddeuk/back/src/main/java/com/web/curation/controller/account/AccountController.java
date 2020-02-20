@@ -32,6 +32,7 @@ import com.web.curation.model.BasicResponse;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
 import com.web.curation.security.PasswordEncoding;
+import com.web.curation.service.IPostService;
 import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
 
@@ -56,8 +57,10 @@ public class AccountController {
 	private IProfileService profileService;
 	
 	@Autowired
-	private JwtService jwtService;
+	private IPostService postService;
 	
+	@Autowired
+	private JwtService jwtService;
 	
 	@PostMapping("/account/login")
 	@ApiOperation(value = "로그인")
@@ -78,6 +81,7 @@ public class AccountController {
 		} else {
 			if (user.getEmail().equalsIgnoreCase(email) && passwordEncoding.matches(password, user.getPassword())) {
 				// 우영이형 소스
+				user.setPicture(postService.getPicture(user.getNum()));
 				String token = jwtService.create("member", user, "user");
 				result.data = token;
 			} else {
@@ -203,7 +207,6 @@ public class AccountController {
                 nickName = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("nickname").getAsString();
                 email = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("email").getAsString();
                 name = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("name").getAsString();
-                
                 
                 User user = userService.getUserByEmail(email);
                 if(user == null) { 

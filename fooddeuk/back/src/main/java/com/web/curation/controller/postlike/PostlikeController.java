@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.curation.model.BasicResponse;
+import com.web.curation.model.alarm.Alarm;
 import com.web.curation.model.post.Post;
 import com.web.curation.model.postlike.Postlike;
+import com.web.curation.service.IAlarmService;
 import com.web.curation.service.IPostService;
 import com.web.curation.service.IPostlikeService;
+import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +38,12 @@ public class PostlikeController {
 	
 	@Autowired
 	private IPostService postService;
+	
+	@Autowired
+	private IAlarmService alarmService;
+	
+	@Autowired
+	private IProfileService profileService;
 	
 	@PostMapping("/postlike/like")
 	@ApiOperation(value = "좋아요")
@@ -62,6 +71,13 @@ public class PostlikeController {
 				list.get(i).setIslike(0);
 			}
 		}
+		
+		Alarm alarm = new Alarm();
+		alarm.setSender(userService.getEmail(myNum));
+		alarm.setReceiver(userService.getEmail(author));
+		alarm.setReason(4);
+		
+		alarmService.nonfollowSave(alarm);
 		
 		BasicResponse result = new BasicResponse();
 		

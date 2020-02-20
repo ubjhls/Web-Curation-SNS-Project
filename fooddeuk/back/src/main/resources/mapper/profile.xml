@@ -5,8 +5,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="profile">
 
 	<insert id="createProfile" parameterType="java.lang.Integer">
-		insert into profile(num)
-		values(#{num})
+		insert into profile(num, picture)
+		values(#{num}, 'https://i.imgur.com/JFutv5P.png')
 	</insert>
 	
 	<select id="getProfile" parameterType="java.lang.Integer" resultType="profile">
@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		update profile set picture = #{picture} where num=#{num}
 	</update>
 	<update id="deletePicture" parameterType="java.lang.Integer">
-		update profile set picture = null where num=#{num}
+		update profile set picture = 'https://i.imgur.com/JFutv5P.png' where num=#{num}
 	</update>
 
 	<select id="getPicture" parameterType="java.lang.Integer" resultType="java.lang.String">

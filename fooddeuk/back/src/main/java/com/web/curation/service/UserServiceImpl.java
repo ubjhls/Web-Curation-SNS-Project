@@ -103,5 +103,15 @@ public class UserServiceImpl implements IUserService {
 		return userdao.getNickname(num);
 	}
 
+	@Override
+	public String getEmail(int num) {
+		return userdao.getEmail(num);
+	}
+
+	@Override
+	public String getEmailByNickname(String nickname) {
+		return userdao.getEmailByNickname(nickname);
+	}
+
 	
 }

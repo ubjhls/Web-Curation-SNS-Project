@@ -77,5 +77,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select nickname from user where num=#{num}
 	</select>
 	
+	<select id="getEmail" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select email from user where num=#{num}
+	</select>
+	
+	<select id="getEmailByNickname" parameterType="java.lang.String" resultType="java.lang.String">
+		select email from user where nickname=#{nickname}
+	</select>
 	
  </mapper>

@@ -70,7 +70,7 @@
                     <v-card
                             max-width="100%"
                             class="mx-auto"
-                            style="margin-bottom:100px; position:relative"
+                            style="margin-bottom:40px; position:relative"
                     >
                     <v-list-item>
                         <v-list-item-avatar style="height:50px; width:50px">
@@ -355,7 +355,7 @@
                                     </div>
                                 </div>
                             </div>
-
+<br>
                         <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn @click="closeModal">close</v-btn>
@@ -368,7 +368,7 @@
                     <v-card
                             max-width="100%"
                             class="mx-auto"
-                            style="margin-bottom:100px; position:relative"
+                            style="margin-bottom:40px; position:relative"
                     >
                     <v-list-item>
                         <v-list-item-avatar style="height:50px; width:50px">
@@ -412,7 +412,7 @@
                             <br>
                             <v-card-text v-html="item.content">
                             </v-card-text>
-                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image" style="width:100%;">
+                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image" style="width:100%; height:200px">
                             <br>
                             주소 : {{item.address}} 
                             <!-- </v-card-text> -->
@@ -1173,9 +1173,7 @@
                 http.delete("/comment/comment?postnum=" + num + "&num="+ cmt.num + "&nickname=" + cmt.nickname + "&date=" + cmt.date)
                 .then(response => {
                     //댓글 삭제(갱신까지) 
-                  
                     this.scrapComment = response.data.object;
-                    
                     //댓글 수 갱신
                     http.get("/comment/count?postnum="+num)
                     .then(Response => {

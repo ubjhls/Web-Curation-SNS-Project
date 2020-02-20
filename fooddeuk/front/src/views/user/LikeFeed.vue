@@ -20,8 +20,8 @@
                             style="margin-bottom:40px; position:relative"
                     >
                     <v-list-item>
-                         <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px"><img :src="item.picture"></v-list-item-avatar>
-                                <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                         <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px" @click="goProfileByNickname(item.nickname)"><img :src="item.picture"></v-list-item-avatar>
+                                <v-list-item-avatar v-else style="height:50px; width:50px" @click="goProfileByNickname(item.nickname)"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">
                             <div style="float:left;">{{item.title}}</div>
@@ -305,8 +305,8 @@
                             style="margin-bottom:40px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px"><img :src="item.picture"></v-list-item-avatar>
-                        <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px" @click="goProfileByNickname(item.nickname)"><img :src="item.picture"></v-list-item-avatar>
+                        <v-list-item-avatar v-else style="height:50px; width:50px" @click="goProfileByNickname(item.nickname)"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">
                             <div style="float:left;">{{item.title}}</div>
