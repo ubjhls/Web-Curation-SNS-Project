@@ -21,4 +21,6 @@ public interface IUserService {
 	User getUserByNickname(String nickname);
 	int getAuth(int num);
 	String getNickname(int num);
+	String getEmail(int num);
+	String getEmailByNickname(String nickname);
 }

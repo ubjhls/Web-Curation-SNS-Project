@@ -7,6 +7,7 @@ public class Alarm {
 	int reason;
 	int confirm;
 	String date;
+	String picture;
 	
 	public Alarm() {
 
@@ -63,6 +64,12 @@ public class Alarm {
 	}
 	public void setDate(String date) {
 		this.date = date;
+	}
+	public String getPicture() {
+		return picture;
+	}
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 	
 }
