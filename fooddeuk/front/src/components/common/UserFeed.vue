@@ -51,8 +51,11 @@
                          <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px"><img :src="item.picture"></v-list-item-avatar>
                                 <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;"> {{item.title}}
-                            <div v-if="item.author === mynum">
+                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;"> 
+                            <div style="float:left">
+                            {{item.title}}
+                            </div>
+                            <div v-if="item.author === mynum" style="float:right">
                             <v-menu offset-y style="float:right;">
                             <template v-slot:activator="{ on }">
                                 <v-btn icon v-on="on" style="float:right">
@@ -191,7 +194,7 @@
                     >
                     <v-card>
                         <v-list-item style="width:100%;">
-                            <v-list-item-avatar v-if="item.scrappicture" style="height:50px; width:50px" @click="goProfileByNickname(scrapnickname)"><img :src="item.scrappicture"></v-list-item-avatar>
+                            <v-list-item-avatar v-if="scrappost.picture" style="height:50px; width:50px" @click="goProfileByNickname(scrapnickname)"><img :src="scrappost.picture"></v-list-item-avatar>
                             <v-list-item-avatar v-else style="height:50px; width:50px" @click="goProfileByNickname(scrapnickname)"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                             
                             <v-list-item-content style="padding-left:5%">
