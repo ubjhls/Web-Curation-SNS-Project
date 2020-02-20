@@ -85,6 +85,10 @@
                 }
                 this.watchAlarmFromFirebase();
             }, 200);
+            
+            if(this.$route.params.nickname){
+                this.getPropsNick(this.$route.params.nickname)
+            }
         },
         watch: {
         },

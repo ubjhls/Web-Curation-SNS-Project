@@ -211,14 +211,13 @@ import http from "../../../http-common"
             form.append('image', this.imageResult)
             
             http.patch("/post/post", form)
-            var router = this.$router;
             alert('게시물이 수정되었습니다.')
-              router.go(-1)
-            .then(Response => {
-            })
-            .catch(Error => {
-              console.log(Error)
-            })
+            var router = this.$router
+                 router.push({
+                    name: "MainPage",
+                    params: {
+                    }
+                });
           }
         },
         addressgo(){

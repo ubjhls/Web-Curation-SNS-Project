@@ -38,10 +38,9 @@
             <ul>
                 <li class="nick-list" v-for="(item,index) in searchResult" :key="item.nickName">
                     <div class="profile-card-search" style="margin-left:-20px">
-                        <a @click="goProfileByNickname(item.nickname)"><img src="" alt="profile card">
+                        <a @click="goProfileByNickname(item.nickname)"><img :src="item.picture" alt="profile card">
                         <p style="float:left; width:100px; color:gray; height:20px; margin-top:15px; margin-right:90px" v-html="searchAlias[index]"></p></a>
-                        <button style="margin-top:18px" @click="RemoveName(item)">
-                        X</button>
+                        
                     </div>
                     <br>
                 </li>
@@ -369,8 +368,8 @@
                 router.go(-1)
             },
             goProfileByNickname(nick) {
-
                 this.getUserInfoByNickname(nick);
+                console.log(nick)
                 this.$emit('child', nick)
             },
             checkchange(value){

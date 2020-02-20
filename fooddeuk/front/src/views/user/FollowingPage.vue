@@ -5,7 +5,7 @@
 
         <div class="header" style="width:100%; height:auto">
             <div style="width:35px; float:left;">
-            <button v-on:click="goBack">
+            <button v-on:click="goBack" style="float:left">
                 <img src="../../assets/images/backIcon.png" style="width:100%;">
             </button>
             </div>
@@ -25,7 +25,7 @@
       >
 
         <v-list-item-content>
-            <button @click="GoUserFeed(item.nickname)">
+            <button @click="GoUserFeed(item.nickname)" style="text-align:left">
             {{item.nickname}}
             </button>
           <v-list-item-subtitle v-text="item.email"></v-list-item-subtitle>

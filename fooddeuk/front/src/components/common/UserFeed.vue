@@ -289,8 +289,8 @@
                                 </p>
 
                                 <div v-if="isClickScrapComment[0]==true">
-                                    <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
-                                        <div style="margin-bottom:10px;" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <!-- <div v-for="cmt in scrapComment" v-bind:key="cmt.id" >         -->
+                                        <div style="margin-bottom:10px;" v-for="cmts in scrapComment" v-bind:key="cmts.id" >
                                             <h5 style="width:25%; float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
                                             <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmts.comment }} 
                                             </div>
@@ -298,7 +298,7 @@
                                             <br>
                                             <div style="clear:both;"></div>
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                         
                                     <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
                                         <button style="height:30px;" class="comment-ok" @click="scrapaddcomment(scrappost.num)"
@@ -509,13 +509,12 @@
                     console.log(Error)
                 })
             }
+            this.nickname = this.propsNickname;
             if(this.$route.params.nickname){
                 this.nickname = this.$route.params.nickname;
+                this.$route.params.nickname = null
             }
-            else{
-                this.nickname = this.propsNickname;
-            }
-            console.log(this.nickname)
+
             this.getProfile(this.nickname)
             //포스트 불러오기
             this.getUserByNickname(this.nickname);

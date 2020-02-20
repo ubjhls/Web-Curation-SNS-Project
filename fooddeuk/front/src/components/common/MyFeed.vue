@@ -64,7 +64,8 @@
             </div>
             <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
-                 <div v-for="(item,index) in list" v-bind:key="item.num">  
+                <div v-else>
+                 <div v-for="(item,index) in list" v-bind:key="item.id">  
                 <div v-if="item.type==='스크랩'">
                     <v-card
                             max-width="100%"
@@ -72,10 +73,19 @@
                             style="margin-bottom:100px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar style="height:50px; width:50px">
+                            <div v-if="picture">
+                                <img :src="picture" style="height:50px; width:50px">
+                            </div>
+                            <div v-else>
+                                <v-btn color="warning" fab x-large dark>
+                                <v-icon>mdi-account-circle</v-icon>
+                                </v-btn>
+                            </div>
+                        </v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; float:left;">
-                            <div style="float:left; font-size:20px">
+                            <div style="float:left; font-size:15px">
                             {{item.title}}
                             </div>
                             <div v-if="item.author === mynum">
@@ -91,7 +101,7 @@
                                     <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image,item.type)">수정</button>
                                 </v-list-item>
                                 <v-list-item>
-                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                    <button style="float:right" @click="removeFeed(item.num, index)">삭제</button>
                                 </v-list-item>
                             </v-list>
                             </v-menu>
@@ -103,13 +113,22 @@
                         <!-- <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle> -->
                         </v-list-item-content>
                         </v-list-item>
-                           <div style="margin-left:20px; margin-bottom:20px">
-                                {{ item.content }}<br>
+                           <div style="margin-left:20px; margin-bottom:20px" v-html="item.content">
+                                <br>
                             </div>
                             <v-card style="margin-left:13px; width:90%; height:auto;" @click.stop="showScrapPost(item.scrapnum, item.scarpnick)">
                                 <div style=" background-color:#F7A937;text-align:center">스크랩한 게시물</div>
                                 <v-list-item style="width:100%;">
-                                <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                                <v-list-item-avatar style="height:50px; width:50px">
+                                    <div v-if="item.scrappicture">
+                                        <img :src="item.scrappicture" style="height:50px; width:50px">
+                                    </div>
+                                    <div v-else>
+                                        <v-btn color="warning" fab x-large dark>
+                                    <v-icon>mdi-account-circle</v-icon>
+                                    </v-btn>
+                                    </div>
+                                </v-list-item-avatar>
                                 <v-list-item-content style="padding-left:5%">
                                 <v-list-item-title style="margin-top:5px; font-size:15px;">{{item.scraptitle}}
                                 <v-list-item-subtitle>{{item.scarpnick}} <br>
@@ -138,19 +157,19 @@
 
                     <div style="width:100%">
                     <div style="margin-bottom:10px; margin-top:15px; padding-left:5px">
-                        <div style="width:33%; float:left;">
+                        <div style="width:50%; float:left; text-align:center;">
 
                         <button class="animated rubberBand" v-if="like[index]===true" @click="toggledelete(item.num, index)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
                         <button v-if="like[index]===false" @click="toggleadd(item.num, index)"><img class="animated rubberBand" style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
                         </div>
-                        <div style="width:33%; float:left; text-align:center; margin-top:3px">
+                        <div style="width:50%; float:left; text-align:center; margin-top:3px">
 
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
-                          <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
+                          <!-- <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
                         <button @click="noscrap"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
 
-                        </div>
+                        </div> -->
                         <br>
                     </div>
                     <br>
@@ -176,12 +195,13 @@
 
                         <div v-if="coment[index]===true">
                             <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
-                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
-                                    <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                    <h5 style="float:left; ">{{ cmts.comment }} 
-                                    </h5>
-                                    <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
-                                    <br>                 
+                                <div style="margin-bottom:10px;" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <h5 style="width:25%; float:left; margin-left:5px; margin-right:20px; font-weight:bold; line-height:1em;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmts.comment }} 
+                                    </div>
+                                    <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>
+                                    <div style="clear:both;"></div>
                                 </div>
                             </div>
                   
@@ -208,7 +228,16 @@
                     >
                     <v-card>
                         <v-list-item style="width:100%;">
-                            <v-list-item-avatar style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                            <v-list-item-avatar style="height:50px; width:50px">
+                                <div v-if="scrappost.picture">
+                                        <img :src="scrappost.picture" style="height:50px; width:50px">
+                                    </div>
+                                    <div v-else>
+                                        <v-btn color="warning" fab x-large dark>
+                                    <v-icon>mdi-account-circle</v-icon>
+                                    </v-btn>
+                                    </div>
+                            </v-list-item-avatar>
                             <v-list-item-content style="padding-left:5%">
                             <v-list-item-title style="margin-top:5px; font-size:15px;">{{scrappost.title}}
                             <v-list-item-subtitle>{{scrapnickname}} <br>
@@ -256,12 +285,21 @@
                                 <v-row style="backgroud:white; float:right; margin-right:2px;" justify="center">
                                     <v-dialog v-model="dialog" persistent max-width="290" :retain-focus="false">
                                     <template v-slot:activator="{ on }">
-                                        <v-btn depressed color="white" v-on="on" @click="modal(item.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
+                                        <v-btn depressed color="white" v-on="on" @click="modal(scrappost.num)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></v-btn>
                                     </template>
                                     <v-card>
-                                        <v-card-title class="headline">{{scrappost.nickname}}님의 게시물</v-card-title>
-                                        <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle" hide-details="auto"></v-text-field>
-                                        <v-text-field style="color:blue; width:90%; margin-left:10px" label="내용입력" v-model="scrapcontent" id="scrapcontent" hide-details="auto"></v-text-field>
+                                        <v-card-title>{{scrappost.nickname}}님의 게시물</v-card-title>
+                                        <v-text-field style="color:blue; width:90%; margin-left:10px" label="제목입력" v-model="scraptitle" id="scraptitle"
+                                        counter
+                                        maxlength="13"
+                                        full-width
+                                        single-line>
+                                        </v-text-field>
+                                        <v-textarea style="color:blue; width:90%; margin-left:10px" label="내용입력" v-model="scrapcontent" id="scrapcontent"
+                                        counter
+                                        maxlength="50"
+                                        full-width
+                                        single-line></v-textarea>
                                         <v-card-actions>
                                         <v-spacer></v-spacer>
                                         <v-btn color="green darken-1" text @click="dialog = false">취소</v-btn>
@@ -294,13 +332,14 @@
                                 </p>
 
                                 <div v-if="isClickScrapComment[0]==true">
-                                    <div style="margin-bottom:1px" v-for="cmts in scrapComment" v-bind:key="cmts.id" >
-                                        <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                        <h5 style="float:left; ">{{ cmts.comment }} 
-                                        </h5>
-                                        <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="scrapremoveComent(scrappost.num,cmts)">X</span>
-                                        <br>                 
+                                <div style="margin-bottom:10px;" v-for="cmts in scrapComment" v-bind:key="cmts.id" >
+                                    <h5 style="width:25%; float:left; margin-left:5px; margin-right:20px; font-weight:bold; line-height:1em;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmts.comment }} 
                                     </div>
+                                    <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || scrappost.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>
+                                    <div style="clear:both;"></div>
+                                </div>
                         
                                     <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
                                         <button style="height:30px;" class="comment-ok" @click="scrapaddcomment(scrappost.num)"
@@ -317,7 +356,7 @@
 
                         <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn @click="scrapdialog = false">close</v-btn>
+                        <v-btn @click="closeModal">close</v-btn>
                         </v-card-actions>
                     </v-card>
                     </v-dialog>
@@ -335,7 +374,7 @@
                             </v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:10px;">
-                            <div style="float:left; font-size:20px">
+                            <div style="float:left; font-size:15px">
                             {{item.title}}
                             </div>
                             <v-menu offset-y style="float:right;">
@@ -349,7 +388,7 @@
                                     <button style="float:right" @click="updateFeed(item.num,item.title,item.content,item.count_star,item.address,item.image,item.type)">수정</button>
                                 </v-list-item>
                                 <v-list-item>
-                                    <button style="float:right" @click="removeFeed(item.num)">삭제</button>
+                                    <button style="float:right" @click="removeFeed(item.num, index)">삭제</button>
                                 </v-list-item>
                             </v-list>
                             </v-menu>
@@ -369,32 +408,29 @@
                                 </div>
                             </v-col>
                             <br>
-                            <v-card-text>
-                                {{item.content}}
-                                
-                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image" style="width:100%; heigh:200px; ">
-                            <br>
-                            <br><br><hr><br>
-                            주소 : {{item.address}} 
+                            <v-card-text v-html="item.content">
                             </v-card-text>
+                                <img v-if="item.image!=='null' || item.image!==null" v-bind:src="item.image" style="width:100%;">
+                            <br>
+                            주소 : {{item.address}} 
+                            <!-- </v-card-text> -->
                             <hr>
                         <v-spacer></v-spacer>
 
                     <div style="width:100%">
                     <div style="margin-bottom:10px; margin-top:10px; padding-left:5px">
-                        <div style="width:33%; float:left;">
+                        <div style="width:50%; float:left; text-align:center;">
 
                         <button class="animated rubberBand" v-if="like[index]===true" @click="toggledelete(item.num, index)"><img style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/likefill.png"></button>
                         <button v-if="like[index]===false" @click="toggleadd(item.num, index)"><img class="animated rubberBand" style="width:30px; margin-left:10px; margin-bottom:5px" src="../../assets/images/like.png"></button>
                         </div>
-                        <div style="width:33%; float:left; text-align:center; margin-top:3px">
+                        <div style="width:50%; float:left; text-align:center; margin-top:3px">
 
                         <button @click="commentview(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/comment.png"></button>
                         </div>
-                        <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
+                        <!-- <div style="width:33%; float:left; text-align:right; padding-right:10px; ; margin-top:3px">
                         <button @click="scrapfeed(item.num, index)"><img style="width:26px; margin-bottom:5px" src="../../assets/images/share.png"></button>
-
-                        </div>
+                        </div> -->
                         <br>
                     </div>
                     <br>
@@ -420,12 +456,13 @@
 
                         <div v-if="coment[index]===true">
                             <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
-                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
-                                    <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                    <h5 style="float:left; ">{{ cmts.comment }} 
-                                    </h5>
-                                    <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
-                                    <br>                 
+                                <div style="margin-bottom:10px;" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <h5 style="width:25%; float:left; margin-left:5px; margin-right:20px; font-weight:bold; line-height:1em;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmts.comment }} 
+                                    </div>
+                                    <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>
+                                    <div style="clear:both;"></div>
                                 </div>
                             </div>
                   
@@ -446,11 +483,12 @@
                 
                 </div>
             </div>
-             <div v-if="post">
-                <infinite-loading style="margin-top:-105px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
-                </div>
+                <infinite-loading style="margin-top:0px" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+            </div>
+             
         </div>
     </div>
+    <div style="margin-bottom:50px"></div>
     </div>
     </v-app>
 </template>
@@ -576,6 +614,12 @@
             getPostByNum(num) { //포스트가져오기
                 let form = new FormData()
                 form.append('num', num)
+
+                this.like = [];
+                this.likelist = [];
+                this.coment = [];
+                this.todolist = [];
+                this.commentcount = [];
                 
                 http.get("/post/post/{num}?num="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(Response => {
@@ -593,6 +637,9 @@
                         this.coment.push(false)
                         this.todolist.push([])
                         this.commentcount.push(this.post[index].count_comment)
+
+
+                        this.post[index].content = this.post[index].content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
                     }
                     if(this.post.length!=0){
                         this.infiniteHandler(this.state);
@@ -801,21 +848,19 @@
                 
             },
             
-            removeFeed(num){
+            removeFeed(num, index){
                  if (confirm("정말 삭제하시겠습니까??") == true){    //확인
                     http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
                     .then(response => {
                         alert('게시물이 삭제되었습니다.')
-                        this.post = response.data.object
-                        
+                        this.post = response.data.object;
+                        this.list.splice(index, 1);
                     })
                 .catch(Error =>{
                 })
 
                 }else{   //취소
-
                     return false;
-
                 }
 
             },
@@ -896,6 +941,8 @@
                 http.post("/post/scrap", form)
                 // console.log(num)
                 .then(Response => {
+                    alert("게시물이 스크랩되었습니다.")
+                    this.getPostByNum(this.num)
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -932,7 +979,7 @@
                         }
                     }
                     this.list = this.list.concat(temp);
-                    // console.log(this.list)
+                    console.log(this.list)
                     $state.loaded();
                  
                     if(this.list.length==this.post.length){
@@ -1114,6 +1161,11 @@
                 .catch(Error =>{
                 })
             },
+            closeModal() {
+                this.scrapdialog = false;
+                this.list = [];
+                this.getPostByNum(this.num);
+            }
         },
         data: () => {
             return {
