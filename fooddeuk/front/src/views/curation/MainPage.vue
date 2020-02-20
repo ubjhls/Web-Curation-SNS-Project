@@ -14,7 +14,7 @@
         </div>
         <NewsFeed v-if="menu.isHome" :propsNickname="nickname"></NewsFeed>
         <AlarmPage v-if="menu.isAlarm"></Alarmpage>      
-        <MyFeed v-if="menu.isProfile" :propsNickname="nickname"></MyFeed>
+        <MyFeed v-if="menu.isProfile" :propsNickname="nickname" @child="getPropsNick"></MyFeed>
         <AddFeed v-if="menu.isAdd" @child="updateAddFeedvalue"></AddFeed>
         <Searchname v-if="menu.isSearch" @child="getPropsNick"></Searchname>
         <UserFeed v-if="menu.isUserProfile" :propsNickname="propsNickname"></UserFeed>

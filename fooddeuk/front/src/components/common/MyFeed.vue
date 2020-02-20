@@ -89,7 +89,7 @@
                         </v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; float:left;">
-                            <div style="float:left; font-size:20px">
+                            <div style="float:left; font-size:16px">
                             {{item.title}}
                             </div>
                             <div v-if="item.author === mynum">
@@ -232,9 +232,9 @@
                     >
                     <v-card>
                         <v-list-item style="width:100%;">
-                            <v-list-item-avatar style="height:50px; width:50px">
+                            <v-list-item-avatar style="height:50px; width:50px;" @click="goProfileByNickname(scrapnickname)">
                                 <div v-if="scrappost.picture">
-                                        <img :src="scrappost.picture" style="height:50px; width:50px">
+                                        <img :src="scrappost.picture" style="height:50px; width:50px;">
                                     </div>
                                     <div v-else>
                                         <v-btn color="warning" fab x-large dark>
@@ -375,8 +375,8 @@
                             </div>
                             </v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
-                        <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:10px;">
-                            <div style="float:left; font-size:20px">
+                        <v-list-item-title style="margin-top:5px; font-size:10px;">
+                            <div style="float:left; font-size:16px;">
                             {{item.title}}
                             </div>
                             <v-menu offset-y style="float:right;">
@@ -943,7 +943,7 @@
                 // console.log(num)
                 .then(Response => {
                     alert("게시물이 스크랩되었습니다.")
-                    this.getPostByNum(this.num)
+                    this.getPostByNum(this.num);
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -1164,9 +1164,14 @@
             },
             closeModal() {
                 this.scrapdialog = false;
-                this.list = [];
-                this.getPostByNum(this.num);
-            }
+                this.list.unshift(this.post[0]);
+                // this.getPostByNum(this.num);
+            },
+            goProfileByNickname(nick) {
+                alert(nick + " 눌림!")
+                this.scrapdialog = false;
+                this.$emit('child', nick)
+            },
         },
         data: () => {
             return {
