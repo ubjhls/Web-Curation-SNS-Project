@@ -19,12 +19,12 @@
                         </div>
 
                         <div class="profile-card-inf">
-                            <div class="profile-card-inf__item">
+                            <div class="profile-card-inf__item" @click="goFollowerPage">
                                 <div class="profile-card-inf__title">{{follower}}</div>
                                 <div class="profile-card-inf__txt" style="color:black">Followers</div>
                             </div>
 
-                            <div class="profile-card-inf__item">
+                            <div class="profile-card-inf__item" @click="goFollowingPage">
                                 <div class="profile-card-inf__title">{{following}}</div>
                                 <div class="profile-card-inf__txt" style="color:black">Following</div>  
                             </div>
@@ -1043,7 +1043,22 @@
             },
             goProfileByNickname(nick) {
                 this.scrapdialog = false;
-                this.$emit('child', nick);
+                
+                this.nickname = nick;
+                this.list = [];
+
+                this.getProfile(this.nickname)
+                //포스트 불러오기
+                this.getUserByNickname(this.nickname);
+
+                //검색한 사용자와 팔로잉 체크
+                this.followcheck(this.nickname);
+            },
+            goFollowerPage() {
+                this.$router.push({name : 'FollowPage'})
+            },
+            goFollowingPage() {
+                this.$router.push({name : 'FollowingPage'})
             },
         },
         data: () => {
