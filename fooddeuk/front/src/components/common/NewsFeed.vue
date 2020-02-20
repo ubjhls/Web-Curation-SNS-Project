@@ -114,12 +114,13 @@
 
                         <div v-if="coment[index]===true">
                             <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
-                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
-                                    <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                    <h5 style="float:left; ">{{ cmts.comment }} 
-                                    </h5>
-                                    <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
-                                    <br>                 
+                                <div style="margin-bottom:10px;" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <h5 style="width:25%; float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmts.comment }} 
+                                    </div>
+                                    <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>
+                                    <div style="clear:both;"></div>
                                 </div>
                             </div>
                   
@@ -245,12 +246,13 @@
 
                         <div v-if="coment[index]===true">
                             <div v-for="cmt in todolist[index]" v-bind:key="cmt.id" >        
-                                <div style="margin-bottom:1px" v-for="cmts in cmt" v-bind:key="cmts.id" >
-                                    <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
-                                    <h5 style="float:left; ">{{ cmts.comment }} 
-                                    </h5>
-                                    <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
-                                    <br>                 
+                                <div style="margin-bottom:10px;" v-for="cmts in cmt" v-bind:key="cmts.id" >
+                                    <h5 style="width:25%; float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmts.nickname }}</h5> &nbsp; 
+                                    <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmts.comment }} 
+                                    </div>
+                                    <span style="width:5%; float:right; font-weight:lighter; color:red; line-height:1em;" v-if="cmts.author==mynum || item.author == mynum" @click="removeComent(item.num,cmts,index)">X</span>
+                                    <br>
+                                    <div style="clear:both;"></div>
                                 </div>
                             </div>
                   
