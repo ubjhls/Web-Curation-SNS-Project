@@ -191,8 +191,8 @@
                     >
                     <v-card>
                         <v-list-item style="width:100%;">
-                            <v-list-item-avatar v-if="item.scrappicture" style="height:50px; width:50px"><img :src="item.scrappicture"></v-list-item-avatar>
-                            <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                            <v-list-item-avatar v-if="item.scrappicture" style="height:50px; width:50px" @click="goProfileByNickname(scrapnickname)"><img :src="item.scrappicture"></v-list-item-avatar>
+                            <v-list-item-avatar v-else style="height:50px; width:50px" @click="goProfileByNickname(scrapnickname)"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                             
                             <v-list-item-content style="padding-left:5%">
                             <v-list-item-title style="margin-top:5px; font-size:15px;">{{scrappost.title}}
@@ -1040,6 +1040,10 @@
                 })
                 .catch(Error =>{
                 })
+            },
+            goProfileByNickname(nick) {
+                this.scrapdialog = false;
+                this.$emit('child', nick);
             },
         },
         data: () => {
