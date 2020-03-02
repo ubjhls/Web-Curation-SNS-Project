@@ -11,7 +11,7 @@
             <div v-else> 
                 <div v-if="auth==0 || (auth==1 && isfollow==1)">
                 <div v-if="!post" style="margin-top:20px; text-align:center"> 게시물이 없습니다.</div>
-                <div v-else-if="post">
+                <div v-else-if="post" style="margin-bottom:100px;">
                 <div v-for="(item,index) in list" v-bind:key="item.num">  
                 <div v-if="item.type==='스크랩'">
                     <v-card
@@ -20,8 +20,8 @@
                             style="margin-bottom:40px; position:relative"
                     >
                     <v-list-item>
-                         <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px"><img :src="item.picture"></v-list-item-avatar>
-                                <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar @click="GoUserFeed(item.nickname)" v-if="item.picture" style="height:50px; width:50px"><img :src="item.picture"></v-list-item-avatar>
+                        <v-list-item-avatar @click="GoUserFeed(item.nickname)" v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px; float:left">
                             <div style="float:left">
@@ -65,7 +65,7 @@
 
                             
                             
-                            <v-card style="margin-left:13px; width:90%; height:auto;" @click.stop="showScrapPost(item.scrapnum, item.scarpnick)">
+                            <v-card style="margin:auto; width:90%; height:auto;" @click.stop="showScrapPost(item.scrapnum, item.scarpnick)">
                                 <div style=" background-color:#F7A937;text-align:center">스크랩한 게시물</div>
                                 <v-list-item style="width:100%;">
                                 <v-list-item-avatar v-if="item.scrappicture" style="height:50px; width:50px"><img :src="item.scrappicture"></v-list-item-avatar>
@@ -147,13 +147,13 @@
                                 </div>
                             </div>
                   
-                            <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                            <div style="width:15%; float:right; margin-right:5px; margin-top:17px">
                                 <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
                                 :disabled="!isSubmit"
                                 :class="{disabled : !isSubmit}"
                                 >게시</button>
                             </div>
-                            <div style="margin-left:5px; width:60%;">
+                            <div style="margin-left:5px; width:85%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
                                 </v-text-field>
                             </div>
@@ -171,8 +171,8 @@
                     >
                     <v-card>
                         <v-list-item style="width:100%;">
-                            <v-list-item-avatar v-if="scrappost.picture" style="height:50px; width:50px" @click="goProfileByNickname(scrapnickname)"><img :src="scrappost.picture"></v-list-item-avatar>
-                            <v-list-item-avatar v-else style="height:50px; width:50px" @click="goProfileByNickname(scrapnickname)"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                            <v-list-item-avatar v-if="scrappost.picture" style="height:50px; width:50px" @click="GoUserFeed(scrapnickname)"><img :src="scrappost.picture"></v-list-item-avatar>
+                            <v-list-item-avatar v-else style="height:50px; width:50px" @click="GoUserFeed(scrapnickname)"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                             
                             <v-list-item-content style="padding-left:5%">
                             <v-list-item-title style="margin-top:5px; font-size:15px;">{{scrappost.title}}
@@ -280,20 +280,20 @@
                                         </div>
                                     <!-- </div> -->
                         
-                                    <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                                    <div style="width:15%; float:right; margin-right:5px; margin-top:17px">
                                         <button style="height:30px;" class="comment-ok" @click="scrapaddcomment(scrappost.num)"
                                         :disabled="!isSubmit"
                                         :class="{disabled : !isSubmit}"
                                         >게시</button>
                                     </div>
-                                    <div style="margin-left:5px; width:60%;">
+                                    <div style="margin-left:5px; width:85%;">
                                         <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
                                         </v-text-field>
                                     </div>
                                 </div>
                             </div>
 
-                        <v-card-actions>
+                        <v-card-actions style="clear:both;">
                         <v-spacer></v-spacer>
                         <v-btn @click="scrapdialog = false">close</v-btn>
                         </v-card-actions>
@@ -309,8 +309,8 @@
                             style="margin-bottom:40px; position:relative"
                     >
                     <v-list-item>
-                        <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px"><img :src="item.picture"></v-list-item-avatar>
-                        <v-list-item-avatar v-else style="height:50px; width:50px"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
+                        <v-list-item-avatar v-if="item.picture" style="height:50px; width:50px" @click="GoUserFeed(item.nickname)"><img :src="item.picture"></v-list-item-avatar>
+                        <v-list-item-avatar v-else style="height:50px; width:50px" @click="GoUserFeed(item.nickname)"><img src="../../assets/images/profile_default.png"></v-list-item-avatar>
                         <v-list-item-content style="padding-left:5%">
                         <v-list-item-title style="margin-left:5px; margin-top:5px; font-size:15px;">
                             <div style="float:left">
@@ -343,7 +343,7 @@
                          <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
                         </v-list-item-content>
                         </v-list-item>
-                            <v-col cols="12" sm="3">
+                            <v-col cols="15" sm="5">
                                 <div v-for="star in item.count_star" :key="star.num">
                                     <v-icon style="color:red; float : left">mdi-star</v-icon>
                                 </div>
@@ -436,13 +436,13 @@
                                 </div>
                             </div>
                   
-                            <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                            <div style="width:15%; float:right; margin-right:5px; margin-top:17px">
                                 <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
                                 :disabled="!isSubmit"
                                 :class="{disabled : !isSubmit}"
                                 >게시</button>
                             </div>
-                            <div style="margin-left:5px; width:60%;">
+                            <div style="margin-left:5px; width:85%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
                                 </v-text-field>
                             </div>
@@ -488,7 +488,7 @@
             if(this.$store.state.userinfo!=null) {
                 this.myEmail = this.$store.state.userinfo.email
                 this.nick = this.$store.state.userinfo.nickName
-                 http.get("/user/userinfo/{nickname}?nickname="+this.nick)
+                 http.get("/user/userinfo/nickname?nickname="+this.nick)
                 .then(Response => {
                     this.mynum = Response.data.num;
                 })
@@ -539,7 +539,6 @@
                 http.get("/profile/profile/?nickname=" + nick)
                 .then(Response => {
                     this.picture = Response.data.picture;
-                    // console.log(this.picture)
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -552,7 +551,7 @@
              getUserByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
-                http.get("/user/userinfo/{nickname}?nickname="+nick)
+                http.get("/user/userinfo/nickname?nickname="+nick)
                 .then(Response => {
                
                     this.num = Response.data.num;
@@ -573,7 +572,6 @@
                  http.get("/post/main?nickname="+this.$store.state.userinfo.nickName)
                 .then(Response => {
                     this.post = Response.data.object;
-                    console.log(this.post)
                     //좋아요와 댓글 토글용 배열 생성
                     if(this.post!=null){
 
@@ -643,10 +641,9 @@
                 this.isClickScrapComment = [];
                 this.scrapCommentCount = [];
 
-                 http.get('/post/post/{postnum}?num=' + scrapNum +'&email=' + this.myEmail)
+                 http.get('/post/post/postnum?num=' + scrapNum +'&email=' + this.myEmail)
                 .then(Response => {
                     this.scrappost = Response.data.object;
-                    console.log(this.scrappost)
                     if(this.scrappost!=null) {
                         if(this.scrappost.islike==1) {
                             this.scrapLike.push(true);
@@ -674,11 +671,9 @@
 
                 let modalEmail = null;
 
-                http.get("/user/userinfo/{nickname}?nickname="+this.list[index].nickname)
+                http.get("/user/userinfo/nickname?nickname="+this.list[index].nickname)
                 .then(Response => {
-                    console.log("scrapnick " + this.list[index].nickname)
                     modalEmail = Response.data.email
-                    console.log(modalEmail)
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -703,7 +698,6 @@
                 http.delete("/postlike/unlike?postnum="+num + '&email=' + this.$store.state.userinfo.email)
                 .then(response => {
                     //  this.post = response.data.object
-                    //  console.log(response)
                 })
                 .catch(Error => {
                      console.log(Error)
@@ -792,7 +786,6 @@
                     http.delete("/post/post?num=" + num + "&mynum=" + this.$store.state.userinfo.num)
                     .then(response => {
                         alert('게시물이 삭제되었습니다.')
-                        console.log(response.data)
                         this.post = response.data.object
                         this.list = this.list.splice(index, 1)
                     })
@@ -831,7 +824,6 @@
                         }
                     }
                     this.list = this.list.concat(temp);
-                    console.log(this.list)
                     $state.loaded();
                  
                     if(this.list.length==this.post.length){
@@ -884,7 +876,6 @@
             scraptoggleadd(num) {
                 this.scrapLikeCount[0]++;
                 this.$set(this.scrapLike, 0, !this.scrapLike[0])
-                console.log(this.scrapLike[0])
                 //좋아요 서버로 전송하기
                 let form = new FormData()
                 form.append('postnum', num)
@@ -892,9 +883,8 @@
 
                 let modalEmail = null;
 
-                http.get("/user/userinfo/{nickname}?nickname="+this.scrappost.nickname)
+                http.get("/user/userinfo/nickname?nickname="+this.scrappost.nickname)
                 .then(Response => {
-                    console.log("scrapnick " + this.scrappost.nickname)
                     modalEmail = Response.data.email
                 })
                 .catch(Error => {
@@ -930,7 +920,6 @@
                     .then(response => {
                         if(response.data.object!=null){
                             this.scrapComment = response.data.object;
-                            console.log(this.scrapComment)
                         } 
                     })
                     .catch(Error => {
@@ -994,19 +983,6 @@
                 .catch(Error =>{
                 })
             },
-            goProfileByNickname(nick) {
-                this.scrapdialog = false;
-                
-                this.nickname = nick;
-                this.list = [];
-
-                this.getProfile(this.nickname)
-                //포스트 불러오기
-                this.getUserByNickname(this.nickname);
-
-                //검색한 사용자와 팔로잉 체크
-                this.followcheck(this.nickname);
-            },
             goFollowerPage() {
                 this.$router.push({name : 'FollowPage'})
             },
@@ -1014,13 +990,6 @@
                 this.$router.push({name : 'FollowingPage'})
             },
             GoUserFeed(nick){
-                // var router = this.$router
-                //  router.push({
-                //     name: "MainPage",
-                //     params: {
-                //         "nickname": nick,
-                //     }
-                // });
                 this.$emit('child', nick)
             }
         },

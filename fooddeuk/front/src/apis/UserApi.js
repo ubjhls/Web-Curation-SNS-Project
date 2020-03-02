@@ -1,38 +1,11 @@
 import Axios from "axios";
 import http from '../../http-common'
-/*
- User API 예시
- */
-// const requestLogin = (data,callback,errorCallback) => {
-//     //백앤드와 로그인 통신하는 부분
-//     let form = new FormData()
-//     form.append('email', data.email)
-//     form.append('password', data.password)
-    
-//     Axios.post("http://192.168.31.103:8080/account/login", form)
-//         .then(Response => {
-//             console.log("response : ", JSON.stringify(Response, null, 2));
-//             if(Response.data.data == "success"){
-//                 callback("success", callback);
-//             } 
-//             else if(Response.data.data === "noemailcheck") {
-//                 callback("noemailcheck", callback);
-//             }
-//             else {
-//                 callback("failed", callback);
-//             }
-//         })
-//         .catch(Error => {
-//             console.log("failed", errorCallback);
-//             errorCallback();
-//         })
-// }
+
 const requestCheckNick = (data, callback, errorCallback) => {
     //백앤드와 닉네임 중복체크 통신하는 부분
     
     return http.get('/account/nickname?nickname='+ data.nickName).then( response => {
             callback(response.data.status);
-            // console.log('response', response.data);
         }).catch( error => {
             errorCallback();
             console.log('failed', error);
@@ -43,7 +16,6 @@ const requestCheckEmail= (data, callback, errorCallback) => {
     
     return http.get('/account/email?email=' + data.email).then( response => {
             callback(response.data.status);
-            // console.log('response', response.data);
         }).catch( error => {
             errorCallback();
             console.log('failed', error);
@@ -64,7 +36,6 @@ const requestJoin = (data,callback,errorCallback) => {
         intro:data.intro,
     })
         .then(Response => {
-            // console.log("response : ", JSON.stringify(Response, null, 2));
             if(Response.data.data == "hasNick") {
                 callback("hasNick", callback);
             } else if(Response.data.data == "hasEmail") {
@@ -75,8 +46,8 @@ const requestJoin = (data,callback,errorCallback) => {
                 callback("failed", callback);
             }
         })
-        .catch(Error => {
-            console.log("failed", errorCallback);
+        .catch(error => {
+            console.log("failed", error);
             errorCallback();
         })
 }
@@ -86,15 +57,14 @@ const requestFindPassword = (data,callback,errorCallback) => {
         form.append('email', data)
         http.post("/mail/certification", form)  //비밀번호 찾기시 이메일 보내기  이거해야댐!!!!   //추가해야됨 post(/mail/password) {email}
         .then(Response => {
-            // console.log("response : ", JSON.stringify(Response, null, 2));
             if(Response.data == "success"){
                 callback("success", callback);
             } else {
                 callback("failed", callback);
             }
         })
-        .catch(Error => {
-            console.log("failed", errorCallback);
+        .catch(error => {
+            console.log("failed", error);
             errorCallback();
         })
 }
@@ -103,15 +73,14 @@ const requestSendTempPassword = (data,callback,errorCallback) => {
     form.append('email', data.email)
     http.post("/mail/password", form)  //비밀번호 찾기시 이메일 보내기  이거해야댐!!!!   //추가해야됨 post(/mail/password) {email}
     .then(Response => {
-        console.log(Response);
         if(Response.data == "success"){
             callback("success", callback);
         } else {
             callback("failed", callback);
         }
     })
-    .catch(Error => {
-        console.log("failed", errorCallback);
+    .catch(error => {
+        console.log("failed", error);
         errorCallback();
     })
 }
@@ -122,18 +91,14 @@ const requestConfirmFindPassword = (data,callback,errorCallback) => {
     form.append('key', data.key)
     http.post("/mail/key", form)  //비밀번호 찾기시 이메일 보내기  이거해야댐!!!!   //추가해야됨 post(/mail/password) {email}
     .then(Response => {
-        // console.log("response : ", JSON.stringify(Response, null, 2));
-        console.log("비밀번호 인증키 : ")
-        console.log(Response)
         if(Response.data.data == "success"){
-            // alert("인증키 똑같넹")
             callback("success", callback);
         } else {
             callback("failed", callback);
         }
     })
-    .catch(Error => {
-        console.log("failed", errorCallback);
+    .catch(error => {
+        console.log("failed", error);
         errorCallback();
     })
 }
@@ -144,7 +109,6 @@ const requestEmailConfirm = (data,callback,errorCallback) => {
     form.append('key', data.key)
     http.patch("/mail/confirm", form)
     .then(Response => {
-        // console.log(Response)
         if(Response.data == "success"){
             callback("success", callback);
         } else {
@@ -152,7 +116,7 @@ const requestEmailConfirm = (data,callback,errorCallback) => {
         }
     })
     .catch(Error => {
-        console.log("failed", errorCallback);
+        console.log("failed", Error);
         errorCallback();
     })
 }
@@ -160,10 +124,8 @@ const requestEmailConfirm = (data,callback,errorCallback) => {
 const requestSendEmail = (data,callback,errorCallback) => {
     let form = new FormData()
     form.append('email', data.email)
-    // console.log(data.email);
     http.post("/mail/resend", form)
     .then(Response => {
-        // console.log(Response)
         if(Response.data == "success"){
             callback("success", callback);
         } else {
@@ -171,7 +133,7 @@ const requestSendEmail = (data,callback,errorCallback) => {
         }
     })
     .catch(Error => {
-        console.log("failed", errorCallback);
+        console.log("failed", Error);
         errorCallback();
     })
 }
@@ -179,14 +141,13 @@ const requestSendEmail = (data,callback,errorCallback) => {
 const requestGetAllSearch= (data,callback,errorCallback) => {
     let form = new FormData()
     form.append('email', data.email)
-    // console.log(data.email);
     http.get("/search/all?email=" + data.email)
     .then(Response => {
         if(Response!=null)
             callback(Response.data, callback);
     })
     .catch(Error => {
-        console.log("failed", errorCallback);
+        console.log("failed", Error);
         errorCallback();
     })
 }
@@ -194,13 +155,9 @@ const requestGetAllSearch= (data,callback,errorCallback) => {
 const requestSearchNickname= (data,callback,errorCallback) => {
     let form = new FormData()
     form.append('nickname', data.nickName)
-    // console.log(data.email);
-    // console.log(form.get('nickname'))
     http.get("/search/nickname?nickname=" + data.nickName)
     .then(Response => {
-    //    console.log(Response)
        if(Response.data.data!='failed'){
-             //alert(Response.data.object)
              callback(Response.data.object, callback)
        } else {
             callback({}, callback)
@@ -209,20 +166,18 @@ const requestSearchNickname= (data,callback,errorCallback) => {
         
     })
     .catch(Error => {
-        console.log("failed", errorCallback);
+        console.log("failed", Error);
         errorCallback();
     })
 }
 
 const requestDeleteSearch= (data,callback,errorCallback) => {
-    // console.log(data.email);
     let form = new FormData()
     form.append('myNick', data.myNick)
     form.append('otherNick', data.otherNick)
     
     http.delete("/search/search?myNick=" + data.myNick + "&otherNick="+data.otherNick)
     .then(Response => {
-        // console.log(Response)
         if(Response.data == "success"){
             callback("success", callback);
         } else {
@@ -230,7 +185,7 @@ const requestDeleteSearch= (data,callback,errorCallback) => {
         }
     })
     .catch(Error => {
-        console.log("failed", errorCallback);
+        console.log("failed", Error);
         errorCallback();
     })
 }
@@ -243,8 +198,6 @@ const requestModifyProfile = (data,callback,errorCallback) => {
     form.append('email', data.email)
     http.patch("/user/user?auth", form)
     .then(Response => {
-        // console.log("response : ", JSON.stringify(Response, null, 2));
-        // console.log(Response.data)
         if(Response.data == "success") {
             callback("success", callback);
         } else {
@@ -252,7 +205,7 @@ const requestModifyProfile = (data,callback,errorCallback) => {
         }
     })
     .catch(Error => {
-        console.log("failed", errorCallback);
+        console.log("failed", Error);
         errorCallback();
     })
 }

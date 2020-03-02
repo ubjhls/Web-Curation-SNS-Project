@@ -18,36 +18,49 @@
             </div>
 
     <br>
-    <h1 style="margin-top:60px" v-if="isSearch=='history'">최근 검색</h1>
-    <h1 style="margin-top:60px" v-if="isSearch=='search'">검색 결과</h1>
+    <h1 style="margin-top:60px;" v-if="isSearch=='history'">최근 검색</h1>
+    <h1 style="margin-top:60px;" v-if="isSearch=='search'">검색 결과</h1>
         <div v-if="history.length && isSearch=='history'" style="padding-top:20px">
-            <ul>
-                <li class="nick-list" v-for="item in history" :key="item.id">
-                    <div class="profile-card-search" style="margin-left:-20px">
-                        <img :src="item.picture" alt="picture">
-                        <p @click="goProfileByNickname(item.nickname)" style="float:left; width:100px; height:20px; margin-top:15px; margin-right:90px">{{ item.nickname }}</p>
-                        <button style="margin-top:18px" @click="RemoveName(item.nickname)">
-                        X</button>
-                    </div>
-                    <br>
-                </li>
-            </ul>
+            <template v-for="item in history">
+                <v-list-item
+                :key="item.id"
+                @click="item.id=item.id"
+                >
+                    <v-list-item-avatar @click="goProfileByNickname(item.nickname)">
+                        <v-img :src="item.picture"></v-img>
+                    </v-list-item-avatar>
+
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            <div @click="goProfileByNickname(item.nickname)" style="float:left; padding-left:5%; width:90%;"> {{ item.nickname }} </div>
+                            <button style="float:left; width:10%;" @click="RemoveName(item.nickname)">X</button>
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+            </template>
         </div>
         
         <div v-if="searchResult.length==0 && isSearch=='search'" style="padding-top:10px; text-align:center;">
             검색 결과가 없습니다.
         </div>
-        <div v-if="searchResult.length!=0 && isSearch=='search'" style="padding-top:10px">
-            <ul>
-                <li class="nick-list" v-for="(item,index) in searchResult" :key="item.nickName">
-                    <div class="profile-card-search" style="margin-left:-20px">
-                        <a @click="goProfileByNickname(item.nickname)"><img :src="item.picture" alt="profile card">
-                        <p style="float:left; width:100px; color:gray; height:20px; margin-top:15px; margin-right:90px" v-html="searchAlias[index]"></p></a>
-                        
-                    </div>
-                    <br>
-                </li>
-            </ul>
+        <div v-if="searchResult.length!=0 && isSearch=='search'" style="padding-top:20px">
+
+            <template v-for="(item, index) in searchResult">
+                <v-list-item
+                :key="item.id"
+                @click="item.id=item.id"
+                >
+                    <v-list-item-avatar @click="goProfileByNickname(item.nickname)">
+                        <v-img :src="item.picture"></v-img>
+                    </v-list-item-avatar>
+
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            <div @click="goProfileByNickname(item.nickname)" style="float:left; padding-left:5%; width:90%;" v-html="searchAlias[index]"></div>
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+            </template>
         </div>
     </div>
     <div v-if="fcheck">
@@ -114,7 +127,7 @@
                          <div style="margin-top:10px; margin-left:2px"> {{getTime(postdetail.date)}}</div> </v-list-item-subtitle>
                         </v-list-item-content>
                         </v-list-item>
-                            <v-col cols="12" sm="3">
+                            <v-col cols="15" sm="5">
                                 <div v-for="star in postdetail.count_star" :key="star.num">
                                     <v-icon style="color:red; float : left">mdi-star</v-icon>
                                 </div>
@@ -194,19 +207,18 @@
                         <div v-if="commentcheck==true">
                             <div v-for="cmt in todolist" v-bind:key="cmt.id" >        
                                     <h5 style="float:left; margin-left:5px; margin-right:20px; font-weight:bold;"> {{ cmt.nickname }}</h5> &nbsp; 
-                                    <h5 style="float:left; ">{{ cmt.comment }} 
-                                    </h5>
+                                    <div style="float:left; width:60%; height:auto; font-weight:lighter; line-height:1em;">{{ cmt.comment }}</div>
                                     <span style="float:right; margin-right:20px; font-weight:lighter; color:red" v-if="cmt.author==mynum || cmt.author == mynum" @click="removeComent(postdetail.num,cmt)">X</span>
                                     <br>                 
                             </div>
                           
-                            <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                            <div style="width:15%; float:right; margin-right:5px; margin-top:17px">
                                 <button style="height:30px;" class="comment-ok" @click="addcomment(postdetail.num)"
                                 :disabled="!isSubmit"
                                 :class="{disabled : !isSubmit}"
                                 >게시</button>
                             </div>
-                            <div style="margin-left:5px; width:60%;">
+                            <div style="margin-left:5px; width:85%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
                                 </v-text-field>
                             </div> 
@@ -214,15 +226,10 @@
                  
 
                     </v-card>
-                        <v-divider></v-divider>
+                        <v-divider style="clear:both;"></v-divider>
                         <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn style="float:right"
-                            color="primary"
-                        text
-                        @click="close()">
-                        닫기
-                        </v-btn>
+                        <v-btn @click="close()">close</v-btn>
                     </v-card-actions>
                 </v-card>
              </v-dialog>
@@ -296,7 +303,7 @@
                 getUserInfoByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
-                http.get("/user/userinfo/{nickname}?nickname=" + nick)
+                http.get("/user/userinfo/nickname?nickname=" + nick)
                 .then(Response => {
                     this.otherEmail = Response.data.email;
                     this.getUserInfo(this.otherEmail);
@@ -311,9 +318,6 @@
                 UserApi.requestGetAllSearch(data, res => {
                     if (res != null) {
                         this.history = res;
-                        console.log(this.history)
-                    } else {
-                        alert("데이터 없음");
                     }
                     this.isSubmit = true;
                 }, error => {
@@ -334,7 +338,6 @@
                 
                 let search = this.NewName
                 UserApi.requestSearchNickname(data, res => {
-                    console.log(res)
                     this.searchResult = res;
                     if(res.length!=0) {
                         for (let index = 0; index < this.searchResult.length; index++) {
@@ -397,12 +400,10 @@
                 }
             },
             serachFeed(){
-                console.log('serachFeed')
                 if(this.searchContents!=''){
                     http.get("/search/feed?keyword=" + this.searchContents +'&email=' + this.email)
                     .then(Response => {
                         this.post=[]
-                        console.log(Response)
                         if(Response.data.object!=null){
 
                             this.post=Response.data.object;
@@ -425,7 +426,6 @@
             detail(num){
                 this.postdetail = this.post[num];
 
-                console.log(this.postdetail)
                 this.postdetail.content = this.postdetail.content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
   
                 if(!this.dialog){
@@ -445,7 +445,7 @@
 
                 let modalEmail = null;
 
-                http.get("/user/userinfo/{nickname}?nickname="+this.postdetail.nickname)
+                http.get("/user/userinfo/nickname?nickname="+this.postdetail.nickname)
                 .then(Response => {
                     modalEmail = Response.data.email
                 })
@@ -454,7 +454,7 @@
                 })
                 http.post('/postlike/like',form)
                 .then(response => {
-                    http.get("/post/post/{postnum}?num=" + num +'&email=' + this.email)
+                    http.get("/post/post/postnum?num=" + num +'&email=' + this.email)
                     .then(Response => {
                         this.postdetail = Response.data.object
                         if(this.mynum!=this.postdetail.author) {
@@ -474,7 +474,7 @@
                 http.delete("/postlike/unlike?postnum="+num + '&email=' + this.email)
                 .then(response => {
 
-                     http.get("/post/post/{postnum}?num=" + num +'&email=' + this.email)
+                     http.get("/post/post/postnum?num=" + num +'&email=' + this.email)
                     .then(Response => {
                         this.postdetail = Response.data.object
                       

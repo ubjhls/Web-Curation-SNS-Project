@@ -58,7 +58,7 @@
 
                             
                             
-                            <v-card style="margin-left:13px; width:90%; height:auto;" @click.stop="showScrapPost(item.scrapnum, item.scarpnick)">
+                            <v-card style="margin:auto; width:90%; height:auto;" @click.stop="showScrapPost(item.scrapnum, item.scarpnick)">
                                 <div style=" background-color:#F7A937;text-align:center">스크랩한 게시물</div>
                                 <v-list-item style="width:100%;">
                                 <v-list-item-avatar v-if="item.scrappicture" style="height:50px; width:50px" @click="goProfileByNickname(item.scrapnick)"><img :src="item.scrappicture"></v-list-item-avatar>
@@ -140,13 +140,13 @@
                                 </div>
                             </div>
                   
-                            <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                            <div style="width:15%; float:right; margin-right:5px; margin-top:17px">
                                 <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
                                 :disabled="!isSubmit"
                                 :class="{disabled : !isSubmit}"
                                 >게시</button>
                             </div>
-                            <div style="margin-left:5px; width:60%;">
+                            <div style="margin-left:5px; width:85%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
                                 </v-text-field>
                             </div>
@@ -275,13 +275,13 @@
                                         </div>
                                     <!-- </div> -->
                         
-                                    <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                                    <div style="width:15%; float:right; margin-right:5px; margin-top:17px">
                                         <button style="height:30px;" class="comment-ok" @click="scrapaddcomment(scrappost.num)"
                                         :disabled="!isSubmit"
                                         :class="{disabled : !isSubmit}"
                                         >게시</button>
                                     </div>
-                                    <div style="margin-left:5px; width:60%;">
+                                    <div style="margin-left:5px; width:85%;">
                                         <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
                                         </v-text-field>
                                     </div>
@@ -289,7 +289,7 @@
                             </div>
 
                         <br>
-                        <v-card-actions>
+                        <v-card-actions style="clear:both;">
                         <v-spacer></v-spacer>
                         <v-btn @click="scrapdialog = false">close</v-btn>
                         </v-card-actions>
@@ -334,7 +334,7 @@
                          <div style="margin-top:10px; margin-left:2px"> {{getTime(item.date)}}</div> </v-list-item-subtitle>
                         </v-list-item-content>
                         </v-list-item>
-                            <v-col cols="12" sm="3">
+                            <v-col cols="15" sm="5">
                                 <div v-for="star in item.count_star" :key="star.num">
                                     <v-icon style="color:red; float : left">mdi-star</v-icon>
                                 </div>
@@ -427,13 +427,13 @@
                                 </div>
                             </div>
                   
-                            <div style="width:30%; float:right; margin-right:5px; margin-top:17px">
+                            <div style="width:15%; float:right; margin-right:5px; margin-top:17px">
                                 <button style="height:30px;" class="comment-ok" @click="addcomment(item.num,index)"
                                 :disabled="!isSubmit"
                                 :class="{disabled : !isSubmit}"
                                 >게시</button>
                             </div>
-                            <div style="margin-left:5px; width:60%;">
+                            <div style="margin-left:5px; width:85%;">
                                 <v-text-field style="color:blue; width:90%" label="댓글입력" v-model="newcomment" id="newcomment" hide-details="auto">
                                 </v-text-field>
                             </div>
@@ -476,7 +476,7 @@
                 this.myEmail = this.$store.state.userinfo.email
                 this.nick = this.$store.state.userinfo.nickName
                 this.nickname = this.$store.state.userinfo.nickName
-                 http.get("/user/userinfo/{nickname}?nickname="+this.nick)
+                 http.get("/user/userinfo/nickname?nickname="+this.nick)
                 .then(Response => {
                     this.mynum = Response.data.num;
                 })
@@ -525,7 +525,7 @@
              getUserByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
-                http.get("/user/userinfo/{nickname}?nickname="+nick)
+                http.get("/user/userinfo/nickname?nickname="+nick)
                 .then(Response => {
                     
                     this.num = Response.data.num;
@@ -580,7 +580,7 @@
 
                 let modalEmail = null;
 
-                http.get("/user/userinfo/{nickname}?nickname="+this.list[index].nickname)
+                http.get("/user/userinfo/nickname?nickname="+this.list[index].nickname)
                 .then(Response => {
                     modalEmail = Response.data.email
                 })
@@ -736,8 +736,6 @@
                 this.state = $state
                if(this.post.length!=0){
                 setTimeout(()=>{
-                    //alert("ㅎㅇ")
-             
                     const temp = [];
                     const size = this.list.length;
                     for (let i = size; i< size+3; i++) {
@@ -799,13 +797,6 @@
                 http.get("/comment/comment?num=" + num)
                 .then(response => {
                     this.comment = response.data.object
-                    // for(this.i=0; this.i< this.comment.length; this.i++){
-                    //     if (this.comment[this.i].num==num){
-                    //         alert('asd')
-                    //         this.comments.push(this.comment[this.i].comment)
-                    //     }
-                    // }
-                    
                 })
                 .catch(Error => {
                     console.log(Error)
@@ -841,7 +832,7 @@
                 this.isClickScrapComment = [];
                 this.scrapCommentCount = [];
 
-                 http.get('/post/post/{postnum}?num=' + scrapNum +'&email=' + this.myEmail)
+                 http.get('/post/post/postnum?num=' + scrapNum +'&email=' + this.myEmail)
                 .then(Response => {
                     this.scrappost = Response.data.object;
                     if(this.scrappost!=null) {
@@ -870,7 +861,7 @@
 
                 let modalEmail = null;
 
-                http.get("/user/userinfo/{nickname}?nickname="+this.scrappost.nickname)
+                http.get("/user/userinfo/nickname?nickname="+this.scrappost.nickname)
                 .then(Response => {
                     modalEmail = Response.data.email
                 })

@@ -76,7 +76,6 @@
       emitRequest() {
         let whoami = this;
         EventBus.$on('emitRequest', function() {
-          // alert("emitRequest 감지")
           whoami.getAlarms();
         })
       },
@@ -113,7 +112,6 @@
         http.get("/follow/requestlist?mynickname=" + this.nickname)
         .then(Response => {
           this.items = Response.data
-          console.log(this.items)
         })
         .catch(Error => {
             console.log(Error)
@@ -129,7 +127,6 @@
         http.post("/follow/followagree", form)
         .then(Response => {
           this.isfollow = 1;
-          // console.log(Response.data)
           this.getAlarms();
         })
         .catch(Error => {
@@ -144,10 +141,9 @@
         form.append('mynickname', otherNickname)
 
         var otherEmail;
-        http.get('/user/userinfo/{nickname}?nickname=' + otherNickname)
+        http.get('/user/userinfo/nickname?nickname=' + otherNickname)
         .then(Response => {
           otherEmail = Response.data.email;
-          // console.log(Response)
         })
         .catch(Error => {
           console.log(Error)
@@ -156,7 +152,6 @@
         form.append('agree', '0')
         http.post("/follow/followagree", form)
         .then(Response => {
-          // console.log(Response.data)
           this.getAlarms();
           this.downAlarmToFirebase(this.email);
           this.upAlarmToFirebase(otherEmail);

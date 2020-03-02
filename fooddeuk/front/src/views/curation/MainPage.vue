@@ -3,7 +3,7 @@
     <div>
         <header class="headMenu" style="text-align:center; z-index:6">
             <div style="height:40px; margin-top:px; text-align:center">
-            <img src="../../assets/images/fooddeuk_logoo.png" style="height:60px; margin-left:37px">
+            <img src="../../assets/images/fooddeuk_logoo.png" style="height:60px; padding-left:45px; margin:auto;">
             <button style="float:right;" @click="searchName" :disabled="menu.isNavi">
                 <img src="../../assets/images/search.png" style="height:30px; margin-right:15px; margin-top:15px">
             </button>

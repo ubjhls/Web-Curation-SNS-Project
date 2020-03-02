@@ -13,7 +13,7 @@
                     v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
                     @keyup.enter="login({
                     email, password})"
-                    style="color:blue"
+                    style="color:blue; border:none;"
                     id="email"></v-text-field>
                 </div>
                 <div class="error-text" v-if="error.email">

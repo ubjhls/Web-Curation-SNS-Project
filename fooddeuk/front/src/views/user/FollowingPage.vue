@@ -88,9 +88,8 @@
                 this.$router.go(-1);
             },
             getFollowing(num){
-              http.get("follow/getFollowing/{num}?num="+ num)
+              http.get("follow/getFollowing/num?num="+ num)
               .then(Response => {
-                console.log(Response)
                 this.items = Response.data.object;
                 this.isfollow = Response.data.object2;
 
@@ -99,7 +98,7 @@
             getUserByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
-                http.get("/user/userinfo/{nickname}?nickname=" + nick)
+                http.get("/user/userinfo/nickname?nickname=" + nick)
                 .then(Response => {
                     this.num = Response.data.num;
                     this.email = Response.data.email;
@@ -125,7 +124,6 @@
                     .then(Response => {
                         this.$set(this.isfollow,index,1)
                         this.updateAlarmToFirebase(this.items[index].email);
-                        // console.log(Response.data)
                     })
                     .catch(Error => {
                         console.log(Error)
@@ -139,7 +137,6 @@
                     
                     http.post("/follow/nonfollow", form)
                     .then(Response => {
-                        console.log(Response)
                         this.updateAlarmToFirebase(this.items[index].email);
                         if(Response.data==='success') {
                             alert("팔로우가 요청되었습니다.")
@@ -162,8 +159,6 @@
                 http.post("/follow/unFollow", form)
                 .then(Response => {
                   this.$set(this.isfollow,index,0)
-                    console.log(this.isfollow)
-                    // console.log(Response.data)
                 })
                 .catch(Error => {
                     console.log(Error)

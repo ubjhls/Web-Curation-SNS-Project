@@ -98,7 +98,7 @@ import http from '../../../http-common'
        if(this.$store.state.userinfo!=null) {
                 this.nick = this.$store.state.userinfo.nickName
                 this.email = this.$store.state.userinfo.email;
-                http.get("/user/userinfo/{nickname}?nickname="+this.nick)
+                http.get("/user/userinfo/nickname?nickname="+this.nick)
                 .then(Response => {
                     this.mynum = Response.data.num;
                 })
@@ -167,7 +167,6 @@ import http from '../../../http-common'
         form.append('email', this.email)
         http.get("/follow/follower?email="+this.email)
         .then(Response => {
-          // console.log(Response)
           this.follower = Response.data;
         })
         .catch(Error => {
@@ -178,7 +177,6 @@ import http from '../../../http-common'
         let form = new FormData()
         http.get("/follow/following?email="+this.email)
         .then(Response => {
-          // console.log(Response)
           this.following = Response.data;
         })
         .catch(Error => {
@@ -230,7 +228,6 @@ import http from '../../../http-common'
           let num = this.mynum
           http.get("profile/deletePicture/?num=" + num)
           .then(Reponse =>{
-              console.log(Response)
               this.picture = 'https://i.imgur.com/JFutv5P.png';
               this.dialog = false
           })
@@ -243,7 +240,6 @@ import http from '../../../http-common'
           http.get("/profile/profile/?nickname=" + nick)
           .then(Response => {
               this.picture = Response.data.picture;
-              console.log(this.picture)
           })
           .catch(Error => {
               console.log(Error)

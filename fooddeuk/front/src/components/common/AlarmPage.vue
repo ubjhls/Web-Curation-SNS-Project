@@ -49,11 +49,9 @@
             }
           },
           emitAlarm() {
-            // alert("emitAlarm 전송")
             EventBus.$emit('emitAlarm')
           },
           emitRequest() {
-            // alert("emitRequest 전송")
             EventBus.$emit('emitRequest')
           },
         },

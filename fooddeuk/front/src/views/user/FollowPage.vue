@@ -41,27 +41,6 @@
     </v-list>
 
     <v-divider></v-divider>
-
-    <v-list subheader>
-      <v-subheader>아직 수락하지 않은 사람들</v-subheader>
-
-      <v-list-item
-        v-for="item in items2"
-        :key="item.title"
-      >
-        <v-list-item-avatar>
-          <v-img :src="item.avatar"></v-img>
-        </v-list-item-avatar>
-
-        <v-list-item-content>
-          닉네임:<v-list-item-title v-text="item.title"></v-list-item-title>
-        </v-list-item-content>
-
-        <v-list-item-content>
-          이메일:<v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
   </v-card>
     </div>
 </v-app>
@@ -113,20 +92,17 @@
                 });
             },
             getFollower(num){
-              http.get("follow/getFollower/{num}?num="+ num)
+              http.get("follow/getFollower/num?num="+ num)
               .then(Response => {
-                // console.log(Response)
                 this.items = Response.data.object;
                 this.isfollow = Response.data.object2;
-                console.log(this.isfollow)
               })
             },
             getUserByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
-                http.get("/user/userinfo/{nickname}?nickname=" + nick)
+                http.get("/user/userinfo/nickname?nickname=" + nick)
                 .then(Response => {
-                    // console.log(Response)
                     this.num = Response.data.num;
                     this.email = Response.data.email;
                     this.getFollower(this.num);
@@ -145,7 +121,6 @@
                     .then(Response => {
                         this.$set(this.isfollow,index,1)
                         this.updateAlarmToFirebase(this.items[index].email);
-                        // console.log(Response.data)
                     })
                     .catch(Error => {
                         console.log(Error)
@@ -159,7 +134,6 @@
                     
                     http.post("/follow/nonfollow", form)
                     .then(Response => {
-                        console.log(Response)
                         this.updateAlarmToFirebase(this.items[index].email);
                         if(Response.data==='success') {
                             alert("팔로우가 요청되었습니다.")
@@ -182,8 +156,6 @@
                 http.post("/follow/unFollow", form)
                 .then(Response => {
                   this.$set(this.isfollow,index,0)
-                    console.log(this.isfollow)
-                    // console.log(Response.data)
                 })
                 .catch(Error => {
                     console.log(Error)

@@ -30,9 +30,9 @@
           </v-list-item-avatar>
 
           <v-list-item-content @click="confirmAlarm(item.num)">
-            <v-list-item-title v-if="item.reason==2">"{{item.sender}}"님이<br/> 회원님을 팔로우했습니다.</v-list-item-title>
-            <v-list-item-title v-if="item.reason==3">"{{item.sender}}"님이<br/> 팔로우신청을 거절했습니다.</v-list-item-title>
-            <v-list-item-title v-if="item.reason==4">"{{item.sender}}"님이<br/> 회원님의 피드에좋아요를 눌렀습니다.</v-list-item-title>
+            <v-list-item-title v-if="item.reason==2" style="white-space:normal;">"{{item.sender}}"님이 회원님을 팔로우했습니다.</v-list-item-title>
+            <v-list-item-title v-if="item.reason==3" style="white-space:normal;">"{{item.sender}}"님이 팔로우 신청을 거절했습니다.</v-list-item-title>
+            <v-list-item-title v-if="item.reason==4" style="white-space:normal;">"{{item.sender}}"님이 회원님의 피드에 좋아요를 눌렀습니다.</v-list-item-title>
             <v-list-item-subtitle>{{getTime(item.date)}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -76,7 +76,6 @@
       emitAlarm() {
         let whoami = this;
         EventBus.$on('emitAlarm', function() {
-          // alert("emitAlarm 감지")
           whoami.getAlarms();
         })
       },
@@ -108,7 +107,6 @@
         http.patch("/follow/alarmconfirm?num=" + num)
         .then(Response => {
           this.items = Response.data
-          // console.log(Response.data)
           this.getAlarms()
           this.updateAlarmToFirebase();
         })
@@ -123,7 +121,6 @@
         http.get("/follow/alarmlist?mynickname=" + this.nickname)
         .then(Response => {
           this.items = Response.data
-          console.log(Response.data)
         })
         .catch(Error => {
             console.log(Error)
@@ -137,7 +134,6 @@
         http.post("/follow/followagree", form)
         .then(Response => {
           this.isfollow = 1;
-          // console.log(Response.data)
           this.getAlarms();
         })
         .catch(Error => {

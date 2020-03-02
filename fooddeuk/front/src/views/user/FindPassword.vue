@@ -1,4 +1,5 @@
 <template>
+<v-app>
     <div class="user" id="login">
         <div class="header" style="width:100%; height:40px">
             <div style="float:left;">
@@ -42,6 +43,7 @@
             </div>
         </div>
     </div>
+</v-app>
 </template>
 
 <script>
@@ -98,8 +100,6 @@
                 if (this.isSubmit) {
                     this.isSubmit = false;
                     UserApi.requestFindPassword(this.email, res => {
-                        // alert("성공")
-                        // console.log(res)
                         if (res == 'success') {
                             var router = this.$router;
                             router.push({

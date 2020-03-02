@@ -1,4 +1,5 @@
 <template>
+<v-app>
     <div class="user join">
         <div class="header" style="width:100%; height:40px">
             <div style="float:left;">
@@ -35,7 +36,8 @@
                 </button>
             </div>
 
-        </div>       
+        </div>   
+</v-app>    
 </template>
 
 <script>

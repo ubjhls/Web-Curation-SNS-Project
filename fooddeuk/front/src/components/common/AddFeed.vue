@@ -10,7 +10,7 @@
       single-line
       full-width
     ></v-text-field>
-    <v-col cols="12" sm="3">
+    <v-col cols="15" sm="5">
             <v-btn v-if="star1==1" text icon style="color:red" @click="star1go()">
               <v-icon>mdi-star</v-icon>
             </v-btn>
@@ -63,14 +63,15 @@
       single-line
     ></v-textarea>
 
-<div style="margin-bottom: 90px">
-    <v-text-field style="font-size:13px; margin-top: 10px; margin-left:20px; margin-right:5px; width:70%; float:left" disabled="disabled"
+<div style="margin-bottom: 90px;">
+    <v-text-field style="font-size:13px; margin-top: 10px; margin-left:5%; margin-right:5px; width:70%; float:left;" readonly
       v-model="address"
       label="주소"
       value=""
       single-line
       full-width
       hide-details
+      @click="addressgo()"
     ></v-text-field>
     <div style="width:20%; float:left; margin-top:40px">
         <button style="height:30px" class="check-button" @click="addressgo()">주소검색</button>
@@ -81,7 +82,7 @@
     />
    </div>
 </div>
-    <v-file-input style="width:80%; margin-left:15px"
+    <v-file-input style="width:95%; margin:auto;"
       input-type="file"
       @change="processFile($event)"
       label="File input"
@@ -210,7 +211,6 @@ import http from "../../../http-common"
          
           this.address = fullAddress
           this.open = false;
-          // console.log(fullAddress) // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
         },
         star1go(){
           if(this.star1==0){
@@ -262,9 +262,6 @@ import http from "../../../http-common"
           }
         },
         processFile(event){
-           
-          console.log(event)
-          // alert(this.$refs.photoimage.files)
           this.image = event
           if(this.image!=null){
             if(!this.overlay){

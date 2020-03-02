@@ -71,13 +71,14 @@
     ></v-textarea>
 
   <div v-if="type=='일반'" style="margin-bottom: 90px">
-      <v-text-field style="font-size:13px; margin-top: 10px; margin-left:20px; margin-right:5px; width:70%; float:left" disabled="disabled"
+      <v-text-field style="font-size:13px; margin-top: 10px; margin-left:20px; margin-right:5px; width:70%; float:left" readonly
         v-model="address"
         label="주소"
         value=""
         single-line
         full-width
         hide-details
+        @click="addressgo()"
       ></v-text-field>
       <div style="width:20%; float:left; margin-top:40px">
           <button style="height:30px" class="check-button" @click="addressgo()">주소검색</button>
@@ -239,7 +240,6 @@ import http from "../../../http-common"
          
           this.address = fullAddress
           this.open = false;
-          // console.log(fullAddress) // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
         },
         star1go(){
           if(this.star1==0){
@@ -291,8 +291,6 @@ import http from "../../../http-common"
           }
         },
         processFile(event){
-          console.log(event)
-          // alert(this.$refs.photoimage.files)
           this.image = event
 
           let formdata = new FormData()
@@ -301,10 +299,9 @@ import http from "../../../http-common"
           Axios.post('https://api.imgur.com/3/image',formdata, {headers:{Authorization: 'Client-ID d15c5b033075c6e'}})
           .then(Response => {
               this.imageResult = Response.data.data.link;
-              alert("갔다옴")
             })
           .catch(Error => {
-
+            console.log(Error)
           })
         }
     },

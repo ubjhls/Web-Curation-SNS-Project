@@ -83,8 +83,6 @@
                 }
             },
             selectedMonth : function(v) {
-                console.log(this.selectedMonth)
-                
                 if(this.selectedYear===0) {
                     this.message = "년도를 선택해주세요"
                 }
@@ -101,7 +99,7 @@
             getUserByNickname(nick) {
                 let form = new FormData()
                 form.append('nickname', nick)
-                http.get("/user/userinfo/{nickname}?nickname="+nick)
+                http.get("/user/userinfo/nickname?nickname="+nick)
                 .then(Response => {
                     this.num = Response.data.num;
                     this.email = Response.data.email;
@@ -114,9 +112,8 @@
                 })
             },
             getAllCount() {
-                http.get("/stats/{num}?num="+ this.num)
+                http.get("/stats/num?num="+ this.num)
                 .then(Response => {
-                    // console.log(Response.data.object)
                     this.allCountList = Response.data.object;
                 })
                 .catch(Error => {
@@ -131,10 +128,9 @@
                 }
             },
             getGraphData() {
-                http.get("/stats/date/{num}?num="+ this.num + "&year="+this.selectedYear + "&month=" + this.selectedMonth)
+                http.get("/stats/date/num?num="+ this.num + "&year="+this.selectedYear + "&month=" + this.selectedMonth)
                 .then(Response => {
                     var res = Response.data.object;
-                    console.log(res)
                     this.chartData = [
                         ['title', 'count'],
                         ['게시글 수', res.post_count],

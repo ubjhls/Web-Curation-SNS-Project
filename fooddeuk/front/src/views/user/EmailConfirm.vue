@@ -1,4 +1,5 @@
 <template>
+<v-app>
     <div class="user" id="login">
         <div class="header" style="width:100%; height:40px">
             <div style="float:left;">
@@ -44,6 +45,7 @@
             </div>
         </div>
     </div>
+    </v-app>
 </template>
 
 <script>
@@ -109,7 +111,7 @@
                                 count : 0
                             })
                         } else {
-                            alert("키 값이 일치하지 않습니다.");
+                            alert("인증키 값이 일치하지 않습니다.");
                         }
                         this.isSubmit = true;
                     }, error => {

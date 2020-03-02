@@ -41,7 +41,6 @@
                 var router = this.$router;
                 var email = this.$route.params.email;
                 var route = this.$route.params.route;
-                console.log(route)
                 router.push({email:email, name:route})
             }
         }
