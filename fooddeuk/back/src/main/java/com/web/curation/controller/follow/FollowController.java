@@ -23,7 +23,6 @@ import com.web.curation.service.IAlarmService;
 import com.web.curation.service.IFollowService;
 import com.web.curation.service.IProfileService;
 import com.web.curation.service.IUserService;
-import com.web.curation.service.ProfileServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -280,15 +279,20 @@ public class FollowController {
 		log.info("GET : /follow/alarmlist");
 		
 		List<Alarm> list = alarmService.alarmtlist(userService.getEmailByNickname(mynickname));
+		List<Alarm> result = new ArrayList<>();
 
 		for (int i = 0; i < list.size(); i++) {
 			int num = userService.getNumByEmail(list.get(i).getSender());
+			if(userService.getNickname(num).equals(mynickname)) {
+				continue;
+			}
 			list.get(i).setPicture(profileService.getPicture(num));
 			list.get(i).setSender(userService.getNickname(num));
 			list.get(i).setReceiver(mynickname);
+			result.add(list.get(i));
 		}
 		
-		return list;
+		return result;
 	}
 	
 	@PatchMapping("/follow/alarmconfirm")

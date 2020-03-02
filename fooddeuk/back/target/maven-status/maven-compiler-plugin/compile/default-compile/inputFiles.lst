@@ -1,4 +1,5 @@
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\SearchServiceImpl.java
+C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\StatisticsServiceImpl.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\dao\PostlikeDaoImpl.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\model\user\User.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\controller\user\UserController.java
@@ -13,6 +14,7 @@ C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\dao\UserDaoImpl.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\model\alarm\Alarm.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\IAlarmService.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\dao\AlarmDaoImpl.java
+C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\controller\statistics\StatisticsController.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\PostlikeServiceImpl.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\jwt\WebConfig.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\model\follow\Follow.java
@@ -22,6 +24,8 @@ C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\ProfileServic
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\model\user\AuthenticationRequest.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\PostServiceImpl.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\model\curation\Curation.java
+C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\security\PasswordEncoding.java
+C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\IStatisticsService.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\dao\CommentDaoImpl.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\config\SwaggerConfig.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\controller\mail\MailUtil.java
@@ -41,11 +45,13 @@ C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\AlarmService.
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\WebCurationApplication.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\controller\postlike\PostlikeController.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\controller\search\SearchController.java
+C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\model\statistics\Statistics.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\controller\post\PostController.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\ICommentService.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\CommentService.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\FollowServiceImpl.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\model\comment\Comment.java
+C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\dao\StatisticsDaoImpl.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\service\IUserService.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\jwt\JwtServiceImpl.java
 C:\s02p13b103\fooddeuk\back\src\main\java\com\web\curation\jwt\JwtService.java
