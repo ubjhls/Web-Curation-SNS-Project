@@ -178,7 +178,7 @@
                 isSubmit: false,
                 component: this,    
                 CLIENT_ID: 'OmIgPMkxDFxNbKvzwMAw',
-                redirectURI: 'http://192.168.31.103:8080/account/naverlogin',
+                redirectURI: 'https://i02b103.p.ssafy.io/api/account/naverlogin',
                 state: 123,
                 naverLoginURL: 'https://nid.naver.com/oauth2.0/authorize?response_type=code',
                 access_token: ''

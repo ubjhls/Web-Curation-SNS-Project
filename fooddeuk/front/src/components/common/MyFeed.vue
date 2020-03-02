@@ -610,25 +610,24 @@
                 .then(Response => {
                     this.post = Response.data.object;
                     //좋아요와 댓글 토글용 배열 생성
-                    for (let index = 0; index < this.post.length; index++) {
-                     
-                        if(this.post[index].islike==1){
-                            this.like.push(true)
-                        }else{
-                            this.like.push(false)
+                    if(this.post.length!=0) {
+                        for (let index = 0; index < this.post.length; index++) {
+                        
+                            if(this.post[index].islike==1){
+                                this.like.push(true)
+                            }else{
+                                this.like.push(false)
+                            }
+                            this.likelist.push(this.post[index].count_like);
+                            this.coment.push(false)
+                            this.todolist.push([])
+                            this.commentcount.push(this.post[index].count_comment)
+
+
+                            this.post[index].content = this.post[index].content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
                         }
-                        this.likelist.push(this.post[index].count_like);
-                        this.coment.push(false)
-                        this.todolist.push([])
-                        this.commentcount.push(this.post[index].count_comment)
-
-
-                        this.post[index].content = this.post[index].content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-                    }
-                    if(this.post.length!=0){
                         this.infiniteHandler(this.state);
                     }
-                    
                 })
             },
             followcheck(nick) { //보는 유저와 팔로우 되어 있는지 확인하기

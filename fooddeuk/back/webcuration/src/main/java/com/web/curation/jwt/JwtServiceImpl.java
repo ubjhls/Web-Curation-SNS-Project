@@ -38,11 +38,7 @@ public class JwtServiceImpl implements JwtService{
 		try {
 			key = SALT.getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e) {
-//			if(log.isInfoEnabled()){
-//				e.printStackTrace();
-//			}else{
-//				log.error("Making JWT Key Error ::: {}", e.getMessage());
-//			}
+			
 		}
 		
 		return key;
@@ -57,17 +53,7 @@ public class JwtServiceImpl implements JwtService{
 			return true;
 			
 		}catch (Exception e) {
-			
-//			if(log.isInfoEnabled()){
-//				e.printStackTrace();
-//			}else{
-//				log.error(e.getMessage());
-//			}
 			throw new UnauthorizedException();
-
-			/*개발환경!!!
-			 * return false;*/
-			 
 		}
 	}
 	
@@ -81,17 +67,7 @@ public class JwtServiceImpl implements JwtService{
 						 .setSigningKey(SALT.getBytes("UTF-8"))
 						 .parseClaimsJws(jwt);
 		} catch (Exception e) {
-//			if(log.isInfoEnabled()){
-//				e.printStackTrace();
-//			}else{
-//				log.error(e.getMessage());
-//			}
 			throw new UnauthorizedException();
-			
-			/*개발환경
-			Map<String,Object> testMap = new HashMap<>();
-			testMap.put("memberId", 2);
-			return testMap;*/
 		}
 		@SuppressWarnings("unchecked")
 		Map<String, Object> value = (LinkedHashMap<String, Object>)claims.getBody().get(key);

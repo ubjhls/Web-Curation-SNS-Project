@@ -6,7 +6,7 @@
 
             </div>
             <div v-if="auth==1 && isfollow==0" style="margin-top:20px; text-align:center">
-                비공개 계정입니다.
+                
             </div>
             <div v-else> 
                 <div v-if="auth==0 || (auth==1 && isfollow==1)">

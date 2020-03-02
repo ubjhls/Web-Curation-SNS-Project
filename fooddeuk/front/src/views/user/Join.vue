@@ -90,9 +90,9 @@
             <br>
             <label>
                 <input v-model="isTerm" type="checkbox" id="term"/>
-                <span>이용약관동의</span>
+                <span>(필수) 회원정보를 제공하는 것에 동의합니다.</span>
             </label>
-            <span class="right" @click="termPopup=true">약관보기</span><br/>
+
             <div class="btn_wrap">
                 <button class="btn btn--back btn--ok" v-on:click="submit"
                 :disabled="!isSubmit"

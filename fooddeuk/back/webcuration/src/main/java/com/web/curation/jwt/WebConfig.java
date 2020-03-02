@@ -10,8 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer{
 	private static final String[] EXCLUDE_PATHS = {
 			"/swagger-ui.html",
-			"/account/naverlogin/"
-			
+			"/account/naverlogin/",
+			"/account/loginToken/"
 			};
 
 	@Autowired

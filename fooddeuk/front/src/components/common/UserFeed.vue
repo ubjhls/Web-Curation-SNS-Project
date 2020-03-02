@@ -1071,10 +1071,14 @@
                 }
             },
             goFollowerPage(nick) {
-                this.$router.push({name : 'FollowPage', params :{nickname : this.nickname}})
+                if(this.auth==0) {
+                    this.$router.push({name : 'FollowPage', params :{nickname : this.nickname}})
+                }
             },
             goFollowingPage(nick) {
-                this.$router.push({name : 'FollowingPage', params :{nickname : this.nickname}})
+                if(this.auth==0) {
+                    this.$router.push({name : 'FollowingPage', params :{nickname : this.nickname}})
+                }
             },
         },
         data: () => {

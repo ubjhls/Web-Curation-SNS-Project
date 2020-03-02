@@ -207,7 +207,6 @@ public class AccountController {
                 nickName = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("nickname").getAsString();
                 email = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("email").getAsString();
                 name = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("name").getAsString();
-                
                 User user = userService.getUserByEmail(email);
                 if(user == null) { 
                 	// 없는 사용자임!! 회원가입(df주입)
@@ -222,19 +221,18 @@ public class AccountController {
                 	userService.signUp(user);
                 	createProfile(email);
                 }
-                              
+                       
                 access_token = jwtService.create("member", user, "user");
             }
         } catch (Exception e) {
            	log.error(e+"");
         }
-        //return "redirect:http://localhost:8081/mypage?token=" + acc+ess_token;
-        return new RedirectView("http://192.168.31.135:8080/#/?token="+access_token);
+        return new RedirectView("https://i02b103.p.ssafy.io/#/?token="+access_token);
     }
 	
 	// 네이버에서 받아오는 함수
 	private String getUserInfo(String access_token) {
-		log.info("METHOD : sendMailForJoin");
+		log.info("METHOD : getUserInfo");
 		
         String header = "Bearer " + access_token; // Bearer 다음에 공백 추가
         try {
@@ -244,6 +242,7 @@ public class AccountController {
             con.setRequestMethod("GET");
             con.setRequestProperty("Authorization", header);
             int responseCode = con.getResponseCode();
+       
             BufferedReader br;
             if(responseCode==200) { // 정상 호출
                 br = new BufferedReader(new InputStreamReader(con.getInputStream()));
